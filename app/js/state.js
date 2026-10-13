@@ -325,6 +325,21 @@ export function findTaskWithProject(taskId) {
   return null;
 }
 
+// The tasks still in the way of t (#3). A blocker is an ordinary task; once it is done or deleted
+// it no longer blocks, so nothing ever has to be cleared by hand.
+export function openBlockers(t) {
+  return (t.blockedBy || []).map(findTaskWithProject).filter((f) => f && f.task.status !== 'done').map((f) => f.task);
+}
+
+// The open tasks that t is in the way of: the reverse of openBlockers, for the blocker's own row.
+export function tasksBlockedBy(t) {
+  const out = [];
+  state.projects.forEach((p) => p.tasks.forEach((o) => {
+    if (o.status !== 'done' && (o.blockedBy || []).includes(t.id)) out.push(o);
+  }));
+  return out;
+}
+
 // Stands in for a label id to mean "tasks with no labels" (the focus picker's Unlabelled card).
 export const UNLABELLED = '__none__';
 
@@ -343,7 +358,7 @@ export function openTasksMatching({ categoryId, projectId } = {}) {
   state.projects.forEach((p) => {
     if (projectId && p.id !== projectId) return;
     p.tasks.forEach((t) => {
-      if (t.status === 'done') return;
+      if (t.status === 'done' || openBlockers(t).length) return; // a blocked task waits; its blockers are dealt instead
       const cats = t.categoryIds || [];
       if (categoryId === UNLABELLED ? cats.length : (categoryId && !cats.includes(categoryId))) return;
       ids.push(t.id);

@@ -95,6 +95,17 @@ export function addTask(projectId, title, deadline, categoryIds, steps, priority
   return task;
 }
 
+// "What's in the way?" (#3): the blocker becomes its own task, in the same project with the same
+// labels so it is dealt from the same card, and the blocked task waits on it.
+export function addBlocker(taskId, text) {
+  const found = findTaskWithProject(taskId);
+  const title = String(text || '').trim();
+  if (!found || !title) return null;
+  const blocker = addTask(found.project.id, title, null, (found.task.categoryIds || []).slice());
+  updateTaskFields(taskId, { blockedBy: (found.task.blockedBy || []).concat(blocker.id) });
+  return blocker;
+}
+
 export function updateTaskFields(taskId, fields) {
   const found = findTaskWithProject(taskId);
   if (!found) return;

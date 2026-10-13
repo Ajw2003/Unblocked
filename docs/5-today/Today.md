@@ -16,10 +16,18 @@ overview, Markdown) can be built without risking the Focus Deck the user relies 
 No new feature yet: the plan becomes issues first, and the repo they live in does not exist yet.
 Not checked in a browser yet.
 
+## Later the same day
+
+- #1 merged and deployed; the user confirmed on an S26 that Focus Deck's data is untouched.
+- Issues #2 (parent) and #3-#8 opened, one per milestone.
+- Blockers (#3) built on `AjsAgent/blockers`: 185/185 unit tests, `scripts/check-blockers-browser.mjs`
+  20/20 at 390 and 1440 wide. Screenshots were looked at; a clipped chip and an over-tall editor box
+  were fixed before committing.
+
 ## Next, in order
 
-1. The user creates the empty `Ajw2003/Unblocked` repo; push, enable Pages, check it installs.
-2. Issues for U2-U7, then build U2 (blockers) first.
+1. The user tests and merges the blockers pull request.
+2. #4, "what can I do right now" by energy.
 
 ---
 

@@ -1,0 +1,385 @@
+<title>Fold and Suggest</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&family=Kalam:wght@400;700&display=swap">
+<style>
+/* Layout: reading column; the model (Projects, Focus, Settings tabs) beside the "things to try" list, stacking on a phone; then the rigidity ledger as a scrollable table and what changes in the real app. Tokens follow Unblock's app.css. */
+:root{
+  --bg:#E4E8EF; --surface:#FBFAF7; --surface-2:#EEF1F6; --ink:#1C2438; --ink-soft:#59627A; --line:#C7CEDB;
+  --accent:#8F5A06; --ok:#3F6E53; --warn:#9F0C3D;
+  --paper:#FFFEFA; --paper-ink:#1D2733; --paper-soft:#4E5A68; --rule:#C3CEDD; --suggest:#FFF6D6; --suggest-ink:#2B2412;
+  --note:#FFE27A; --note-fold:#E2C055; --note-ink:#2B2412; --note-soft:#6B5520;
+  --shadow:0 1px 2px rgba(40,52,80,.12), 0 6px 18px rgba(40,52,80,.12);
+  --font-display:'Young Serif', Georgia, serif; --font-ui:'Figtree', system-ui, -apple-system, sans-serif; --font-note:'Kalam', 'Comic Sans MS', cursive;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111829; --surface:#18213A; --surface-2:#212C4A; --ink:#E9E4D8; --ink-soft:#9BA3B8; --line:#2A3555;
+  --accent:#F2B45A; --ok:#8FBF9F; --warn:#FF96B9; --paper:#EFEADF; --note:#EFCB66; --note-fold:#C9A243;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35); color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#111829; --surface:#18213A; --surface-2:#212C4A; --ink:#E9E4D8; --ink-soft:#9BA3B8; --line:#2A3555;
+  --accent:#F2B45A; --ok:#8FBF9F; --warn:#FF96B9; --paper:#EFEADF; --note:#EFCB66; --note-fold:#C9A243;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35); color-scheme:dark; }
+
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--font-ui); font-size:16px; line-height:1.55; padding-inline:16px; padding-block:28px 64px}
+.wrap{max-width:1000px; margin:0 auto; display:flex; flex-direction:column; gap:44px}
+.read{max-width:64ch}
+h1,h2,h3{font-family:var(--font-display); font-weight:400; line-height:1.2; text-wrap:balance; margin:0}
+h1{font-size:2.2rem} h2{font-size:1.45rem} h3{font-size:1.1rem}
+p{margin:0}
+.eyebrow{font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); font-weight:600}
+.lead{font-size:1.08rem; color:var(--ink-soft)}
+.hint{font-size:.9rem; color:var(--ink-soft)}
+section{display:flex; flex-direction:column; gap:14px}
+button{font:inherit; color:inherit; cursor:pointer}
+button:focus-visible, input:focus-visible, select:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.proto{display:grid; grid-template-columns:minmax(0,400px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:780px){ .proto{grid-template-columns:minmax(0,1fr)} }
+.phone{background:var(--surface-2); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); display:flex; flex-direction:column; min-height:520px; overflow:hidden}
+.phone-top{display:flex; justify-content:space-between; align-items:center; padding:12px 14px 0}
+.phone-top b{font-family:var(--font-display); font-weight:400; font-size:1.05rem}
+.reset{background:none; border:0; color:var(--accent); font-weight:600; font-size:.85rem; padding:2px}
+.screen{flex:1; padding:12px; display:flex; flex-direction:column; gap:10px}
+.tabs{display:flex; border-top:1px solid var(--line); background:var(--surface)}
+.tabs button{flex:1; background:none; border:0; padding:11px 0; font-weight:600; font-size:.88rem; color:var(--ink-soft)}
+.tabs button[aria-pressed="true"]{color:var(--accent)}
+
+.card{background:var(--paper); color:var(--paper-ink); border-radius:10px; padding:4px 12px; box-shadow:var(--shadow)}
+.task{border-top:1px solid var(--rule); padding:10px 0; display:flex; flex-direction:column; gap:7px}
+.task:first-child{border-top:0}
+.line{display:flex; gap:10px; align-items:center}
+.ttl{flex:1; min-width:0; font-weight:600; background:none; border:0; padding:0; text-align:left; color:var(--paper-ink); display:flex; gap:6px; align-items:center}
+.caret{font-size:.75rem; color:var(--paper-soft); width:12px; flex:none}
+.task.done .ttl{text-decoration:line-through; opacity:.55}
+.ready{font-size:.8rem; font-weight:700; color:#3F6E53}
+.tick{width:22px; height:22px; flex:none; accent-color:#8F5A06; margin:0}
+.meter{display:flex; gap:3px; align-items:center; font-size:.78rem; color:var(--paper-soft); white-space:nowrap}
+.dot{width:8px; height:8px; border-radius:50%; border:1.5px solid #8A93A6}
+.dot.on{background:#3F6E53; border-color:#3F6E53}
+.suggest{display:flex; gap:8px; align-items:center; margin-left:32px; background:var(--suggest); color:var(--suggest-ink); border-radius:8px; padding:7px 8px; font-size:.92rem}
+.suggest .what{flex:1; min-width:0}
+.suggest small, .lbl{display:block; font-size:.72rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#6B5520}
+.notnow{background:none; border:0; color:#6B5520; font-weight:600; font-size:.8rem; padding:4px; white-space:nowrap; text-decoration:underline; text-underline-offset:2px}
+.skipped{margin-left:32px; font-size:.82rem; color:var(--paper-soft); display:flex; gap:6px; align-items:baseline; flex-wrap:wrap}
+.skipped button{background:none; border:0; padding:0; color:#8F5A06; font-weight:600; text-decoration:underline; text-underline-offset:2px}
+.list{margin-left:32px; padding-left:10px; border-left:2px dashed var(--rule); display:flex; flex-direction:column}
+.b{display:flex; gap:8px; align-items:center; padding:5px 0; font-size:.92rem}
+.b .bt{flex:1; min-width:0}
+.b .also{display:block; font-size:.75rem; color:var(--paper-soft)}
+.b.done .bt{text-decoration:line-through; opacity:.55}
+.b.is-skipped .bt{opacity:.6}
+.pill{flex:none; font-size:.68rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; border-radius:6px; padding:2px 6px}
+.pill.next{background:var(--suggest); color:#6B5520}
+.pill.later{background:none; border:1px dashed var(--rule); color:var(--paper-soft)}
+.mv{background:none; border:1px solid var(--rule); border-radius:6px; width:30px; height:28px; padding:0; color:var(--paper-ink); font-size:.85rem; flex:none}
+.mv:disabled{opacity:.3; cursor:default}
+.add{display:flex; flex-direction:column; gap:6px; padding:6px 0 2px}
+.add-row{display:flex; gap:6px}
+.add input{flex:1; min-width:0; font:inherit; font-size:.9rem; padding:6px 8px; border:1px solid var(--rule); border-radius:8px; background:#FFFFFF; color:#1D2733}
+.add button[type="submit"]{background:#8F5A06; color:#FFFFFF; border:0; border-radius:8px; padding:6px 10px; font-weight:700; font-size:.85rem}
+.matches{display:flex; flex-direction:column; gap:4px}
+.matches button{background:var(--suggest); color:var(--suggest-ink); border:1px dashed #C9A243; border-radius:8px; padding:6px 8px; text-align:left; font-size:.85rem}
+
+.deal{display:flex; flex-wrap:wrap; gap:8px}
+.deal button{flex:1 1 100px; background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:10px; text-align:left}
+.deal b{display:block}
+.deal span{font-size:.8rem; color:var(--ink-soft)}
+.note{background:var(--note); color:var(--note-ink); padding:14px 16px 22px; border-radius:2px; box-shadow:var(--shadow); transform:rotate(-1deg); position:relative; display:flex; flex-direction:column; gap:8px}
+.note::after{content:""; position:absolute; right:0; bottom:0; width:22px; height:22px; background:linear-gradient(135deg, var(--note) 50%, var(--note-fold) 50%)}
+.note .title{font-family:var(--font-note); font-size:1.6rem; line-height:1.2}
+.helps{display:flex; flex-direction:column; gap:4px; font-size:.9rem}
+.helps .h{display:flex; justify-content:space-between; gap:8px; align-items:center}
+.helps .meter{color:var(--note-soft)}
+.helps .dot{border-color:#6B5520}
+.acts{display:flex; flex-wrap:wrap; gap:8px; justify-content:center; align-items:center}
+.btn{background:var(--accent); color:var(--surface); border:0; border-radius:8px; padding:8px 14px; font-weight:700}
+.link{background:none; border:0; padding:4px 2px; color:var(--accent); font-weight:600; text-decoration:underline; text-underline-offset:3px}
+.empty{color:var(--ink-soft); font-size:.92rem; text-align:center}
+.setting{background:var(--paper); color:var(--paper-ink); border-radius:10px; padding:12px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:8px}
+.setting label{font-weight:600}
+.setting .hint{color:var(--paper-soft)}
+.setting .link{color:#8F5A06}
+.setting select{font:inherit; padding:6px 8px; border:1px solid var(--rule); border-radius:8px; background:#FFFFFF; color:#1D2733}
+.toast{font-size:.86rem; color:var(--ink-soft); min-height:1.3em; text-align:center; padding:0 12px 8px}
+.undo{background:none; border:0; color:var(--accent); font-weight:700; text-decoration:underline; padding:0 4px}
+
+.cando{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:10px}
+.cando h4{margin:0; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft)}
+.cando ul{margin:0; padding-left:1.2em; display:flex; flex-direction:column; gap:6px; font-size:.95rem}
+
+.ledger-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:640px; font-size:.92rem}
+th,td{text-align:left; vertical-align:top; padding:10px 12px; border-top:1px solid var(--line)}
+th{font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); border-top:0}
+td:first-child{font-weight:600}
+.v{font-weight:700; white-space:nowrap}
+.v.keep{color:var(--ok)} .v.soft{color:var(--accent)} .v.drop{color:var(--warn)} .v.new{color:var(--ink)}
+.changes{margin:0; padding-left:1.2em; display:flex; flex-direction:column; gap:8px}
+@media (prefers-reduced-motion: reduce){ .note{transform:none} }
+</style>
+
+<div class="wrap">
+  <header class="read" style="display:flex;flex-direction:column;gap:10px">
+    <p class="eyebrow">Unblock design · Steps, round 4 · Your answers built in</p>
+    <h1>Fold and suggest</h1>
+    <p class="lead">Each task stays one line. Its steps fold under it, with one suggested next step showing. When you ask for something to do, Unblock hands you that step and tells you which tasks it moves forward. Skip anything, in any order; how long a skip lasts is up to you.</p>
+  </header>
+
+  <section>
+    <h2>Try it</h2>
+    <div class="proto">
+      <div class="phone" aria-label="Unblock model">
+        <div class="phone-top"><b>Unblock</b><button class="reset" id="reset" type="button">Start over</button></div>
+        <div class="screen" id="screen"></div>
+        <div class="toast" id="toast" aria-live="polite"></div>
+        <nav class="tabs">
+          <button type="button" data-tab="projects">Projects</button>
+          <button type="button" data-tab="focus">Focus</button>
+          <button type="button" data-tab="settings">Settings</button>
+        </nav>
+      </div>
+      <aside class="cando">
+        <h3>Things to try</h3>
+        <h4>One step, several tasks</h4>
+        <ul>
+          <li>Projects → unfold <b>Mop the floor</b>, type <i>soap</i>. Unblock offers the soap step the dishes already have. Tap it instead of making a duplicate.</li>
+        </ul>
+        <h4>The deal hands you the step</h4>
+        <ul>
+          <li>Focus → <b>Chore</b>. You get a step, not a blocked task, with the tasks it helps listed under it.</li>
+          <li>Deal until you get <b>Buy dish soap</b>: it now helps the dishes and mopping. Tick it and both move forward.</li>
+        </ul>
+        <h4>Not now, remembered</h4>
+        <ul>
+          <li>Tap <b>Not now</b> on a step. It shows as skipped, with <b>Bring back</b>, so it's out of the way but not gone.</li>
+          <li>Settings → choose how long a skip lasts. <b>Close the app</b> there shows the default at work.</li>
+        </ul>
+        <h4>Ticking a whole task</h4>
+        <ul>
+          <li>Tick a task with steps still open. Its own steps finish with it; a step another task needs stays open for that one, and Undo puts it all back.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section>
+    <h2>Rigidity ledger</h2>
+    <p class="read hint">Each rule with what it takes away and what it adds. New rows come from your answers.</p>
+    <div class="ledger-wrap">
+      <table>
+        <thead><tr><th>Rule</th><th>Takes friction away</th><th>Adds friction</th><th>Call</th></tr></thead>
+        <tbody>
+          <tr><td>Steps live inside their task</td><td>The list never grows</td><td>Hidden detail can be forgotten</td><td><span class="v keep">Keep.</span> Meter and suggestion stay visible while folded.</td></tr>
+          <tr><td>One suggested next step</td><td>No choosing</td><td>Feels bossy if it's wrong</td><td><span class="v soft">Keep, soft.</span> Not now, or tick any other step.</td></tr>
+          <tr><td>Must finish steps in order</td><td>Nothing</td><td>Stops you doing what you can do now</td><td><span class="v drop">Drop.</span></td></tr>
+          <tr><td>Task can't be ticked with steps open</td><td>Stops accidents</td><td>The app argues with real life</td><td><span class="v drop">Drop.</span> Ticking clears its own steps, with Undo.</td></tr>
+          <tr><td>The deal hands you a step, not a blocked task</td><td>Never handed something you can't do yet</td><td>You might want the whole task</td><td><span class="v new">Your call.</span> The note names the tasks it helps, so the bigger picture stays in view.</td></tr>
+          <tr><td>A step can belong to several tasks</td><td>Buy soap once and both tasks move; no duplicates</td><td>Ticking a task needs care: the shared step must stay open for the other</td><td><span class="v new">Keep.</span> Ticking a task lets go of shared steps instead of finishing them.</td></tr>
+          <tr><td>A skip lasts until you choose</td><td>The same thing doesn't bounce straight back</td><td>A skipped step could sit forgotten</td><td><span class="v new">Your call.</span> Default "until I close the app"; skipped steps stay listed with Bring back.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="read">
+    <h2>What changes in the real app</h2>
+    <ul class="changes">
+      <li><b>Steps replace blockers.</b> The app's old steps (one per line, hidden in the editor) become this list. The task's existing steps carry over as its first steps.</li>
+      <li><b>GitHub sees them.</b> Steps already go into the issue as a checklist, so the gap from the first build closes.</li>
+      <li><b>Pull request #9 gets reworked</b> to this design before you test it: no blocker rows in the list.</li>
+      <li><b>One thing to decide later:</b> should a step that turns out to be big (three steps of its own) be able to grow into a task? Not built; noted for when it happens.</li>
+    </ul>
+  </section>
+</div>
+
+<script>
+(() => {
+  const fresh = () => {
+    const steps = {
+      soap: { t: 'Buy dish soap', done: false }, dw: { t: 'Empty the dishwasher', done: false }, counter: { t: 'Clear the counter', done: false },
+      sink: { t: 'Unclog the sink', done: false }, sweep: { t: 'Sweep first', done: false }, bags: { t: 'Buy trash bags', done: false },
+      pickup: { t: 'Check pickup day', done: false }, rinse: { t: 'Rinse the recycling', done: false },
+    };
+    return {
+      steps, skips: {}, tab: 'projects', open: null, focus: null, skipFor: 'close', toast: '', undo: null,
+      tasks: [
+        { id: 'dishes', title: 'Do the dishes', label: 'Chore', done: false, order: ['soap', 'dw', 'counter', 'sink'] },
+        { id: 'mop', title: 'Mop the floor', label: 'Chore', done: false, order: ['sweep'] },
+        { id: 'trash', title: 'Take out the trash', label: 'Chore', done: false, order: ['bags', 'pickup', 'rinse'] },
+        { id: 'doctor', title: 'Call the doctor', label: 'Call', done: false, order: [] },
+      ],
+    };
+  };
+  let s = fresh(), n = 0;
+  const $ = (id) => document.getElementById(id);
+  const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const task = (id) => s.tasks.find((t) => t.id === id);
+  const openSteps = (t) => t.order.filter((k) => !s.steps[k].done);
+  const skipped = (k) => !!s.skips[k];
+  const tasksFor = (k) => s.tasks.filter((t) => !t.done && t.order.includes(k));
+  // Suggested next: the first open step in this task's order that isn't skipped.
+  const suggestion = (t) => openSteps(t).find((k) => !skipped(k)) || null;
+  const SKIP_WORDS = { close: 'until you close the app', hour: 'for an hour', tomorrow: 'until tomorrow', manual: 'until you bring it back' };
+
+  function meter(t) {
+    if (!t.order.length) return '';
+    const doneN = t.order.length - openSteps(t).length;
+    return '<span class="meter" aria-label="' + doneN + ' of ' + t.order.length + ' steps done">' + t.order.map((k) => '<span class="dot' + (s.steps[k].done ? ' on' : '') + '"></span>').join('') + '&nbsp;' + doneN + '/' + t.order.length + '</span>';
+  }
+
+  function projects() {
+    return '<div class="card">' + s.tasks.map((t) => {
+      const sug = !t.done && suggestion(t), unfolded = s.open === t.id;
+      const skippedHere = t.done ? [] : openSteps(t).filter(skipped);
+      let h = '<div class="task' + (t.done ? ' done' : '') + '"><div class="line">'
+        + '<input type="checkbox" class="tick" data-a="task" data-t="' + t.id + '" aria-label="Done: ' + esc(t.title) + '"' + (t.done ? ' checked' : '') + '>'
+        + '<button class="ttl" data-a="fold" data-t="' + t.id + '" aria-expanded="' + unfolded + '"><span class="caret" aria-hidden="true">' + (unfolded ? '▾' : '▸') + '</span>' + esc(t.title) + '</button>'
+        + (!t.done && t.order.length && !openSteps(t).length ? '<span class="ready">Ready</span>' : meter(t)) + '</div>';
+      if (!unfolded) {
+        if (sug) h += '<div class="suggest"><input type="checkbox" class="tick" data-a="step" data-k="' + sug + '" aria-label="Done: ' + esc(s.steps[sug].t) + '">'
+          + '<span class="what"><small>Suggested next</small>' + esc(s.steps[sug].t) + '</span><button class="notnow" data-a="skip" data-k="' + sug + '">Not now</button></div>';
+        if (skippedHere.length) h += '<div class="skipped">' + skippedHere.length + ' skipped ' + SKIP_WORDS[s.skipFor] + '<button data-a="unskip-all" data-t="' + t.id + '">Bring back</button></div>';
+      } else {
+        h += '<div class="list">' + t.order.map((k, i) => {
+          const st = s.steps[k], others = tasksFor(k).filter((o) => o.id !== t.id);
+          return '<div class="b' + (st.done ? ' done' : '') + (skipped(k) && !st.done ? ' is-skipped' : '') + '">'
+            + '<input type="checkbox" class="tick" data-a="step" data-k="' + k + '" aria-label="Done: ' + esc(st.t) + '"' + (st.done ? ' checked' : '') + '>'
+            + '<span class="bt">' + esc(st.t) + (others.length ? '<span class="also">also helps ' + others.map((o) => esc(o.title)).join(', ') + '</span>' : '') + '</span>'
+            + (k === sug ? '<span class="pill next">Next</span>' : skipped(k) && !st.done ? '<button class="pill later" data-a="unskip" data-k="' + k + '" title="Bring back">Skipped</button>' : '')
+            + '<button class="mv" data-a="up" data-t="' + t.id + '" data-i="' + i + '" aria-label="Move ' + esc(st.t) + ' up"' + (i === 0 ? ' disabled' : '') + '>↑</button>'
+            + '<button class="mv" data-a="down" data-t="' + t.id + '" data-i="' + i + '" aria-label="Move ' + esc(st.t) + ' down"' + (i === t.order.length - 1 ? ' disabled' : '') + '>↓</button></div>';
+        }).join('')
+          + '<form class="add" data-t="' + t.id + '"><div class="add-row"><input id="add-' + t.id + '" autocomplete="off" placeholder="What needs to happen?" aria-label="Add a step to ' + esc(t.title) + '"><button type="submit">Add</button></div><div class="matches" id="match-' + t.id + '"></div></form></div>';
+      }
+      return h + '</div>';
+    }).join('') + '</div><p class="empty">Tap a task name to unfold its steps.</p>';
+  }
+
+  // What the deal can hand you: a task's suggested step (once, even if shared), or a task with no open steps.
+  function dealable(label) {
+    const out = [], seen = new Set();
+    s.tasks.forEach((t) => {
+      if (t.done || (label && t.label !== label)) return;
+      if (!openSteps(t).length) { out.push({ kind: 'task', id: t.id }); return; }
+      const k = suggestion(t);
+      if (k && !seen.has(k)) { seen.add(k); out.push({ kind: 'step', id: k }); }
+    });
+    return out;
+  }
+
+  function focus() {
+    if (s.focus) {
+      const f = s.focus;
+      if (f.kind === 'step') {
+        const st = s.steps[f.id], helps = tasksFor(f.id);
+        return '<div class="note"><span class="lbl">Next step</span><div class="title">' + esc(st.t) + '</div>'
+          + '<div class="helps"><span class="lbl">Helps</span>' + helps.map((t) => '<span class="h"><span>' + esc(t.title) + '</span>' + meter(t) + '</span>').join('') + '</div></div>'
+          + '<div class="acts"><button class="btn" data-a="done-focus">I&rsquo;ve done it</button><button class="link" data-a="skip-focus">Not now</button><button class="link" data-a="back">Back</button></div>';
+      }
+      const t = task(f.id);
+      return '<div class="note"><span class="lbl">' + esc(t.label) + '</span><div class="title">' + esc(t.title) + '</div>' + (t.order.length ? '<span class="lbl">All steps done</span>' : '') + '</div>'
+        + '<div class="acts"><button class="btn" data-a="done-focus">I&rsquo;ve done it</button><button class="link" data-a="back">Back</button></div>';
+    }
+    const card = (label, name) => '<button data-a="deal" data-l="' + label + '"><b>' + name + '</b><span>' + dealable(label).length + ' ready</span></button>';
+    return '<h3 style="text-align:center">What&rsquo;s your focus right now?</h3><div class="deal">' + card('Chore', 'Chore') + card('Call', 'Call') + card('', 'Anything') + '</div>'
+      + '<p class="empty">You get one thing you can do now. If a task needs something first, you get that, and see what it helps.</p>';
+  }
+
+  function settings() {
+    const opt = (v, txt) => '<option value="' + v + '"' + (s.skipFor === v ? ' selected' : '') + '>' + txt + '</option>';
+    const count = Object.keys(s.skips).length;
+    return '<div class="setting"><label for="skipfor">&ldquo;Not now&rdquo; lasts</label>'
+      + '<select id="skipfor">' + opt('close', 'Until I close the app (default)') + opt('hour', 'For an hour') + opt('tomorrow', 'Until tomorrow') + opt('manual', 'Until I bring it back') + '</select>'
+      + '<p class="hint">Skipped steps always stay listed under their task with Bring back.</p></div>'
+      + '<div class="setting"><span>Pretend time passes</span><div class="acts" style="justify-content:flex-start">'
+      + '<button class="link" data-a="close-app">Close the app</button><button class="link" data-a="next-day">Next morning</button></div>'
+      + '<p class="hint">' + count + ' step' + (count === 1 ? '' : 's') + ' skipped right now.</p></div>';
+  }
+
+  function paint() {
+    $('screen').innerHTML = s.tab === 'projects' ? projects() : s.tab === 'focus' ? focus() : settings();
+    document.querySelectorAll('[data-tab]').forEach((b) => b.setAttribute('aria-pressed', b.dataset.tab === s.tab));
+    $('toast').innerHTML = esc(s.toast) + (s.undo ? ' <button class="undo" data-a="undo">Undo</button>' : '');
+    s.toast = '';
+  }
+
+  // A skip remembers which setting it was made under; the "time passes" buttons let each setting show.
+  const skip = (k) => { s.skips[k] = { kind: s.skipFor }; };
+  function lapse(event) {
+    Object.keys(s.skips).forEach((k) => {
+      const kind = s.skips[k].kind;
+      if ((event === 'close' && kind === 'close') || (event === 'day' && kind !== 'manual')) delete s.skips[k];
+    });
+  }
+  function finishStep(k) {
+    s.steps[k].done = true; delete s.skips[k];
+    const ready = tasksFor(k).filter((t) => !openSteps(t).length);
+    return ready.length ? ready.map((t) => t.title).join(' and ') + (ready.length > 1 ? ' are' : ' is') + ' ready.' : s.steps[k].t + ', done.';
+  }
+
+  document.addEventListener('click', (e) => {
+    const tabBtn = e.target.closest('[data-tab]');
+    if (tabBtn) { s.tab = tabBtn.dataset.tab; paint(); return; }
+    const el = e.target.closest('[data-a]'); if (!el || !el.closest('.phone')) return;
+    const a = el.dataset.a, k = el.dataset.k, t = el.dataset.t && task(el.dataset.t);
+    if (a !== 'undo') s.undo = null;
+    if (a === 'fold') s.open = s.open === t.id ? null : t.id;
+    else if (a === 'skip') { skip(k); s.toast = 'Skipped ' + SKIP_WORDS[s.skipFor] + '.'; }
+    else if (a === 'unskip') { delete s.skips[k]; s.toast = 'Brought back.'; }
+    else if (a === 'unskip-all') { openSteps(t).forEach((x) => delete s.skips[x]); s.toast = 'Brought back.'; }
+    else if (a === 'step') { if (el.checked) s.toast = finishStep(k); else s.steps[k].done = false; }
+    else if (a === 'up' || a === 'down') { const i = +el.dataset.i, j = a === 'up' ? i - 1 : i + 1; [t.order[i], t.order[j]] = [t.order[j], t.order[i]]; }
+    else if (a === 'task') {
+      if (!el.checked) { t.done = false; }
+      else {
+        // A task's own steps finish with it; a step another open task also needs stays open for that one.
+        const open = openSteps(t), finished = [], letGo = [];
+        open.forEach((x) => { (tasksFor(x).length > 1 ? letGo : finished).push(x); });
+        const keptFor = letGo.length ? tasksFor(letGo[0]).filter((o) => o.id !== t.id).map((o) => o.title).join(', ') : '';
+        s.undo = open.length ? { id: t.id, finished, letGo: letGo.map((x) => [x, t.order.indexOf(x)]) } : null;
+        finished.forEach((x) => { s.steps[x].done = true; });
+        t.order = t.order.filter((x) => !letGo.includes(x));
+        t.done = true;
+        s.toast = 'Done.' + (finished.length ? ' Finished ' + finished.length + ' step' + (finished.length > 1 ? 's' : '') + '.' : '')
+          + (letGo.length ? ' Kept ' + letGo.map((x) => s.steps[x].t).join(', ') + ' open for ' + keptFor + '.' : '');
+      }
+    }
+    else if (a === 'undo' && s.undo) {
+      const u = task(s.undo.id); u.done = false; s.undo.finished.forEach((x) => { s.steps[x].done = false; });
+      s.undo.letGo.sort((p, q) => p[1] - q[1]).forEach(([x, i]) => u.order.splice(i, 0, x)); s.undo = null; s.toast = 'Undone.';
+    }
+    else if (a === 'deal') {
+      const pool = dealable(el.dataset.l);
+      if (!pool.length) s.toast = 'Nothing ready there right now.'; else s.focus = pool[Math.floor(Math.random() * pool.length)];
+    }
+    else if (a === 'done-focus') {
+      const f = s.focus; s.focus = null;
+      if (f.kind === 'step') s.toast = finishStep(f.id); else { task(f.id).done = true; s.toast = 'Done.'; }
+    }
+    else if (a === 'skip-focus') { skip(s.focus.id); s.focus = null; s.toast = 'Skipped ' + SKIP_WORDS[s.skipFor] + '. Deal again for something else.'; }
+    else if (a === 'back') s.focus = null;
+    else if (a === 'close-app') { lapse('close'); s.toast = 'App closed and reopened. Skips made "until I close the app" are back.'; }
+    else if (a === 'next-day') { lapse('day'); s.toast = 'Next morning. Only "until I bring it back" skips are still skipped.'; }
+    else if (a === 'use') { if (!t.order.includes(k)) t.order.push(k); s.toast = 'Linked "' + s.steps[k].t + '". It now helps ' + tasksFor(k).map((o) => o.title).join(' and ') + '.'; }
+    paint();
+  });
+  document.addEventListener('change', (e) => { if (e.target.id === 'skipfor') { s.skipFor = e.target.value; s.toast = 'New skips last ' + SKIP_WORDS[s.skipFor] + '.'; paint(); } });
+  // While typing a step, offer an open step from another task with a matching name instead of a duplicate.
+  document.addEventListener('input', (e) => {
+    const form = e.target.closest('.add'); if (!form) return;
+    const t = task(form.dataset.t), q = e.target.value.trim().toLowerCase(), box = $('match-' + t.id);
+    const hits = q.length < 3 ? [] : Object.keys(s.steps).filter((k) => !s.steps[k].done && !t.order.includes(k) && s.steps[k].t.toLowerCase().includes(q));
+    box.innerHTML = hits.map((k) => '<button type="button" data-a="use" data-k="' + k + '" data-t="' + t.id + '">Use &ldquo;' + esc(s.steps[k].t) + '&rdquo;, already a step for ' + tasksFor(k).map((o) => esc(o.title)).join(', ') + '</button>').join('');
+  });
+  document.addEventListener('submit', (e) => {
+    const form = e.target.closest('.add'); if (!form) return;
+    e.preventDefault();
+    const t = task(form.dataset.t), input = form.querySelector('input'), text = input.value.trim();
+    if (!text) return;
+    const k = 'n' + (++n); s.steps[k] = { t: text, done: false }; t.order.push(k); s.toast = '"' + text + '" added at the end.';
+    paint(); const again = $('add-' + t.id); if (again) again.focus();
+  });
+  $('reset').onclick = () => { s = fresh(); s.toast = 'Started over.'; paint(); };
+  paint();
+})();
+</script>

@@ -4,6 +4,57 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-13 — Steps replace blockers; the deal hands you the step; skips last as long as you set
+
+**Context.** Three questions left by `docs/plans/blockers-fold-and-suggest.html`, answered by the user.
+
+**Decision.**
+- Steps and blockers are one list, called steps. The user had never seen the existing "steps"
+  field (a hidden textarea in the task editor), so it becomes this list; a task's old steps carry
+  over as its first steps. Steps already go into a linked issue as a checklist, so GitHub sees them.
+- A step can belong to more than one task (the user: "tell me what main tasks it contributes
+  towards"). Typing a step offers a matching open step from another task instead of a duplicate.
+  Ticking a task finishes only the steps no other open task needs; shared ones stay open for the
+  others. Undo restores both.
+- When a task has open steps, the deal hands you its suggested next step, never the blocked task,
+  and the note lists every task that step helps with each one's progress.
+- "Not now" is remembered for as long as Settings says: until the app is closed (default), for an
+  hour, until tomorrow, or until brought back by hand. Skipped steps stay listed under their task
+  with Bring back, so a skip never hides a step completely.
+
+**Status.** Standing.
+
+## 2026-10-13 — Blockers fold under their task, with a suggested next step that never locks
+
+**Context.** The first blockers build listed every blocker as its own task, so two chores with seven
+blockers became nine rows. The user: "that is just the kind of overwhelming we are aiming to fix".
+Three directions were prototyped in `docs/plans/hidden-not-forgotten.html`.
+
+**Decision.** Blockers live inside their task (idea A, folded), and the folded task shows how much is
+cleared plus one suggested next step (idea B). The suggestion follows the blockers' order, which the
+user can change. It can be skipped ("Not now") without reordering anything, and any blocker can be
+ticked at any time. Ticking the task itself clears its open blockers, with Undo. Model and ledger:
+`docs/plans/blockers-fold-and-suggest.html`.
+
+**Principle (the user's).** "Rigidity doesn't buy us anything unless it's for a reason". Every rule
+is weighed for the friction it removes against the friction it adds, and the call is recorded in that
+page's rigidity ledger. The goal is fewer barriers and an app that is easy to use.
+
+**Status.** Standing. Supersedes how pull request #9 shows blockers (as top-level tasks).
+
+## 2026-10-13 — Each feature is walked through and prototyped before it is built
+
+**Context.** Blockers (#3, pull request #9) was built straight from the brief. The user asked to slow
+down: "you've done a whole lot and explained none of it and visualized none of it".
+
+**Decision.** Every feature gets a walkthrough page first, in `docs/plans/<feature>-walkthrough.html`
+and published as an artifact. Each page shows the problem it solves, a tappable model of how it
+works, and the choices made with their alternatives. Code starts only after the user has tried the
+model and settled the choices. Blockers was built first, so its walkthrough
+(`docs/plans/blockers-walkthrough.html`) comes after the code, and pull request #9 waits on it.
+
+**Status.** Standing.
+
 ## 2026-10-13 — Unblock is a separate copy of Focus Deck; energy comes back as "how much I have now"
 
 **Context.** The user asked for one place for every idea, task and reminder, with visible blockers,

@@ -1,0 +1,247 @@
+<title>Hidden, Not Forgotten</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a reading column that opens on the 2-becomes-9 problem, then three tappable phone models of the same deck side by side (stacking on a phone), then the memory mechanisms and the questions. Tokens follow Unblock's app.css. */
+:root{
+  --bg:#E4E8EF; --surface:#FBFAF7; --surface-2:#EEF1F6; --ink:#1C2438; --ink-soft:#59627A; --line:#C7CEDB;
+  --accent:#8F5A06; --accent-ink:#FFFFFF; --ok:#3F6E53; --warn:#9F0C3D;
+  --paper:#FFFEFA; --paper-ink:#1D2733; --paper-soft:#4E5A68; --rule:#C3CEDD; --pale:#EEF1F6;
+  --shadow:0 1px 2px rgba(40,52,80,.12), 0 6px 18px rgba(40,52,80,.12);
+  --font-display:'Young Serif', Georgia, serif; --font-ui:'Figtree', system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111829; --surface:#18213A; --surface-2:#212C4A; --ink:#E9E4D8; --ink-soft:#9BA3B8; --line:#2A3555;
+  --accent:#F2B45A; --accent-ink:#2A1B05; --ok:#8FBF9F; --warn:#FF96B9; --paper:#EFEADF;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35); color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#111829; --surface:#18213A; --surface-2:#212C4A; --ink:#E9E4D8; --ink-soft:#9BA3B8; --line:#2A3555;
+  --accent:#F2B45A; --accent-ink:#2A1B05; --ok:#8FBF9F; --warn:#FF96B9; --paper:#EFEADF;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35); color-scheme:dark; }
+
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--font-ui); font-size:16px; line-height:1.55; padding-inline:16px; padding-block:28px 64px}
+.wrap{max-width:1100px; margin:0 auto; display:flex; flex-direction:column; gap:44px}
+.read{max-width:64ch}
+h1,h2,h3{font-family:var(--font-display); font-weight:400; line-height:1.2; text-wrap:balance; margin:0}
+h1{font-size:2.2rem} h2{font-size:1.45rem} h3{font-size:1.1rem}
+p{margin:0}
+.eyebrow{font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); font-weight:600}
+.lead{font-size:1.08rem; color:var(--ink-soft)}
+.hint{font-size:.9rem; color:var(--ink-soft)}
+section{display:flex; flex-direction:column; gap:14px}
+button{font:inherit; color:inherit; cursor:pointer}
+button:focus-visible, input:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+/* 2 becomes 9 */
+.compare{display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap:14px}
+.mini{background:var(--paper); color:var(--paper-ink); border-radius:10px; padding:12px 14px; box-shadow:var(--shadow); display:flex; flex-direction:column; gap:2px}
+.mini .cap{font-size:.78rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--paper-soft); margin-bottom:4px}
+.mini .li{padding:5px 0; border-top:1px solid var(--rule); font-size:.92rem}
+.mini .li:first-of-type{border-top:0}
+.mini .li.sub{color:var(--paper-soft)}
+.mini .tally{margin-top:6px; font-weight:700; font-size:.9rem}
+
+/* Concepts */
+.concepts{display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 320px), 1fr)); gap:18px; align-items:start}
+.concept{display:flex; flex-direction:column; gap:10px; min-width:0}
+.concept .tag{font-size:.75rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--accent)}
+.phone{background:var(--surface-2); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:12px; display:flex; flex-direction:column; gap:10px; min-height:360px}
+.phone-top{display:flex; justify-content:space-between; align-items:center; font-size:.85rem}
+.phone-top b{font-family:var(--font-display); font-weight:400; font-size:1rem}
+.reset{background:none; border:0; color:var(--accent); font-weight:600; font-size:.82rem; padding:2px}
+.card{background:var(--paper); color:var(--paper-ink); border-radius:10px; padding:4px 12px; box-shadow:var(--shadow)}
+.task{border-top:1px solid var(--rule); padding:10px 0; display:flex; flex-direction:column; gap:6px}
+.task:first-child{border-top:0}
+.task-line{display:flex; gap:10px; align-items:center}
+.task-title{flex:1; min-width:0; font-weight:600; background:none; border:0; padding:0; text-align:left; color:var(--paper-ink)}
+.task.ready .task-title::after{content:" · ready"; font-weight:600; color:#3F6E53; font-size:.82rem}
+.tick{width:20px; height:20px; flex:none; accent-color:#8F5A06; margin:0}
+.meter{display:flex; gap:3px; align-items:center; font-size:.78rem; color:var(--paper-soft); white-space:nowrap}
+.dot{width:8px; height:8px; border-radius:50%; border:1.5px solid #8A93A6}
+.dot.on{background:#3F6E53; border-color:#3F6E53}
+.subs{display:flex; flex-direction:column; gap:2px; margin-left:30px; padding-left:10px; border-left:2px dashed var(--rule)}
+.sub{display:flex; gap:8px; align-items:center; font-size:.9rem; padding:3px 0}
+.sub.done span{text-decoration:line-through; opacity:.55}
+.where{font-size:.72rem; font-weight:700; color:var(--paper-soft); border:1px solid var(--rule); border-radius:99px; padding:1px 7px; white-space:nowrap}
+.next{display:flex; gap:8px; align-items:center; margin-left:30px; font-size:.92rem; background:#FFF6D6; color:#2B2412; border-radius:8px; padding:6px 8px}
+.next b{font-weight:700}
+.peek{background:none; border:0; padding:0; color:#8F5A06; font-weight:600; font-size:.82rem; margin-left:30px; text-align:left}
+.queue{margin-left:30px; font-size:.85rem; color:var(--paper-soft); display:flex; flex-direction:column; gap:2px}
+.banner{display:flex; justify-content:space-between; align-items:center; gap:8px; background:var(--paper); color:var(--paper-ink); border:1px dashed #59627A; border-radius:10px; padding:9px 12px; font-size:.9rem}
+.banner button{background:#8F5A06; color:#FFFFFF; border:0; border-radius:8px; padding:6px 10px; font-weight:700; font-size:.82rem}
+.shelf{display:flex; flex-direction:column; gap:10px}
+.shelf h4{margin:0; font-size:.78rem; letter-spacing:.06em; text-transform:uppercase; color:var(--paper-soft)}
+.for{font-size:.75rem; color:var(--paper-soft)}
+.back{background:none; border:0; color:var(--accent); font-weight:600; font-size:.85rem; padding:0; align-self:flex-start}
+.toast{font-size:.85rem; color:var(--ink-soft); min-height:1.3em; text-align:center}
+.verdict{display:flex; flex-direction:column; gap:4px; font-size:.9rem}
+.verdict p::before{font-weight:700; margin-right:4px}
+.verdict .plus::before{content:"Good:"; color:var(--ok)}
+.verdict .minus::before{content:"Risk:"; color:var(--warn)}
+
+/* Memory mechanisms */
+.mechs{display:grid; grid-template-columns:repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap:12px}
+.mech{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:6px}
+.mech .eg{font-size:.85rem; background:var(--surface-2); border-radius:8px; padding:6px 9px}
+.qs{margin:0; padding-left:1.3em; display:flex; flex-direction:column; gap:10px}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important} }
+</style>
+
+<div class="wrap">
+  <header class="read" style="display:flex;flex-direction:column;gap:10px">
+    <p class="eyebrow">Unblock design · Blockers, round 2</p>
+    <h1>Hidden, not forgotten</h1>
+    <p class="lead">A task needs room for detail: what's in the way, the steps, the bits you only remember halfway through. That detail must never make the list longer. It needs to stay out of sight until it's useful, without disappearing from memory.</p>
+  </header>
+
+  <section>
+    <h2>What went wrong in the first version</h2>
+    <p class="read hint">The first build made each blocker its own task in the list. Two chores with seven blockers between them became nine rows.</p>
+    <div class="compare">
+      <div class="mini"><span class="cap">What you think about</span>
+        <span class="li">Do the dishes</span><span class="li">Take out the trash</span>
+        <span class="tally">2 things</span></div>
+      <div class="mini"><span class="cap">What the first build showed</span>
+        <span class="li">Do the dishes</span><span class="li sub">Buy dish soap</span><span class="li sub">Empty the dishwasher</span><span class="li sub">Clear the counter</span><span class="li sub">Unclog the sink</span>
+        <span class="li">Take out the trash</span><span class="li sub">Buy trash bags</span><span class="li sub">Check pickup day</span><span class="li sub">Rinse the recycling</span>
+        <span class="tally">9 things, and overwhelmed</span></div>
+    </div>
+    <p class="read hint">The rule for every idea below: <b>the list always shows 2.</b> The seven blockers belong to their tasks and only show when they help.</p>
+  </section>
+
+  <section>
+    <h2>Three ways to do it</h2>
+    <p class="read hint">Same deck in each. Tick things off and see how each one feels. They can also be mixed.</p>
+    <div class="concepts">
+      <div class="concept">
+        <span class="tag">Idea A</span><h3>Folded under the task</h3>
+        <p class="hint">Each task shows a small meter of what's cleared. Tap it to unfold its blockers right beneath it, and fold them away again.</p>
+        <div class="phone" id="a"></div>
+        <div class="verdict"><p class="plus">Everything is one tap away, in the place you'd look.</p><p class="minus">Unfolded, a task with four blockers is still a wall of five lines.</p></div>
+      </div>
+      <div class="concept">
+        <span class="tag">Idea B</span><h3>Only the next step</h3>
+        <p class="hint">Each task shows one thing: the next thing to clear. The rest wait in line behind it. Tick it and the next one steps up.</p>
+        <div class="phone" id="b"></div>
+        <div class="verdict"><p class="plus">You never see more than one small thing per task. The deck idea, applied inside a task.</p><p class="minus">The order matters. If the next step can't be done today, the task looks stuck.</p></div>
+      </div>
+      <div class="concept">
+        <span class="tag">Idea C</span><h3>Clear the way, by place</h3>
+        <p class="hint">The list stays clean. One quiet line counts what's in the way and opens a shelf grouped by where you'd fix it: at the store, at home, on the phone.</p>
+        <div class="phone" id="c"></div>
+        <div class="verdict"><p class="plus">Errands batch themselves: at the store you see soap and bags together.</p><p class="minus">One more place to go. The link from blocker to task is a small label.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How hidden things stay remembered</h2>
+    <p class="read hint">Folding things away only works if they come back at the right time. These are the ways a hidden blocker can get your attention again. Any of them can go with any idea above.</p>
+    <div class="mechs">
+      <div class="mech"><h3>A count that never hides</h3><p class="hint">The task always shows how much is in the way, even folded.</p><span class="eg">Do the dishes · 1 of 4 cleared</span></div>
+      <div class="mech"><h3>Age</h3><p class="hint">A blocker that sits too long gets louder, gently.</p><span class="eg">Waiting on soap for 4 days</span></div>
+      <div class="mech"><h3>The deal hands it to you</h3><p class="hint">Ask for a chore and you get the next doable step, phrased with its reason.</p><span class="eg">Buy dish soap, so the dishes can happen</span></div>
+      <div class="mech"><h3>Place and moment</h3><p class="hint">Blockers come back when you're where they can be fixed.</p><span class="eg">Going to the store? 2 things on the list</span></div>
+    </div>
+  </section>
+
+  <section class="read">
+    <h2>Questions for you</h2>
+    <ol class="qs">
+      <li><b>Which idea feels lightest when you use it?</b> Or which parts of each would you mix? For example, A's fold with B's "next step" shown while it's folded.</li>
+      <li><b>Are blockers and steps the same thing to you?</b> The app already has "steps" on a task. "Buy soap" is something that has to happen before; "rinse, wash, dry" is the doing itself. They could be one list or two.</li>
+      <li><b>Which way of being reminded</b> would actually reach you, and which would just become more noise?</li>
+      <li><b>Can a blocker be dealt on its own?</b> If you ask for a chore, should "Buy dish soap" come up, or only whole tasks?</li>
+    </ol>
+    <p class="hint">Pull request #9 stays unmerged. Whatever direction you pick replaces how it shows blockers.</p>
+  </section>
+</div>
+
+<script>
+(() => {
+  const DECK = () => [
+    { id: 'dishes', title: 'Do the dishes', short: 'the dishes', done: false, blockers: [
+      { t: 'Buy dish soap', where: 'Store', done: false }, { t: 'Empty the dishwasher', where: 'Home', done: false },
+      { t: 'Clear the counter', where: 'Home', done: false }, { t: 'Unclog the sink', where: 'Home', done: false } ] },
+    { id: 'trash', title: 'Take out the trash', short: 'the trash', done: false, blockers: [
+      { t: 'Buy trash bags', where: 'Store', done: false }, { t: 'Check pickup day', where: 'Phone', done: false },
+      { t: 'Rinse the recycling', where: 'Home', done: false } ] },
+  ];
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const left = (task) => task.blockers.filter((b) => !b.done);
+  const meter = (task) => {
+    const n = task.blockers.length, c = n - left(task).length;
+    return '<span class="meter" aria-label="' + c + ' of ' + n + ' cleared">' + task.blockers.map((b) => '<span class="dot' + (b.done ? ' on' : '') + '"></span>').join('') + '&nbsp;' + c + '/' + n + '</span>';
+  };
+  const tick = (key, checked, label, disabled) => '<input type="checkbox" class="tick" data-k="' + key + '" aria-label="' + esc(label) + '"' + (checked ? ' checked' : '') + (disabled ? ' disabled' : '') + '>';
+
+  function model(rootId, render) {
+    const root = document.getElementById(rootId);
+    const s = { deck: DECK(), open: null, view: 'list', peek: null, toast: '' };
+    const paint = () => {
+      root.innerHTML = '<div class="phone-top"><b>Chores</b><button class="reset" data-act="reset" type="button">Start over</button></div>' + render(s) + '<div class="toast" aria-live="polite">' + esc(s.toast) + '</div>';
+      s.toast = '';
+    };
+    root.addEventListener('click', (e) => {
+      const el = e.target.closest('[data-act], [data-k]'); if (!el) return;
+      if (el.dataset.act === 'reset') Object.assign(s, { deck: DECK(), open: null, view: 'list', peek: null, toast: 'Started over.' });
+      else if (el.dataset.act === 'open') s.open = s.open === el.dataset.id ? null : el.dataset.id;
+      else if (el.dataset.act === 'peek') s.peek = s.peek === el.dataset.id ? null : el.dataset.id;
+      else if (el.dataset.act === 'view') s.view = el.dataset.v;
+      else if (el.dataset.k) {
+        const [tid, bi] = el.dataset.k.split(':'); const task = s.deck.find((t) => t.id === tid);
+        if (bi === undefined) task.done = el.checked;
+        else {
+          task.blockers[+bi].done = el.checked;
+          if (el.checked) s.toast = left(task).length ? task.blockers[+bi].t + ', cleared.' : task.title + ' is ready.';
+        }
+      }
+      paint();
+    });
+    paint();
+  }
+
+  // A: folded under the task
+  model('a', (s) => '<div class="card">' + s.deck.map((task) => {
+    const ready = !left(task).length;
+    const subs = s.open === task.id ? '<div class="subs">' + task.blockers.map((b, i) => '<label class="sub' + (b.done ? ' done' : '') + '">' + tick(task.id + ':' + i, b.done, b.t) + '<span>' + esc(b.t) + '</span></label>').join('') + '</div>' : '';
+    return '<div class="task' + (ready && !task.done ? ' ready' : '') + '"><div class="task-line">' + tick(task.id, task.done, task.title, !ready)
+      + '<button class="task-title" data-act="open" data-id="' + task.id + '" aria-expanded="' + (s.open === task.id) + '">' + esc(task.title) + '</button>' + meter(task) + '</div>' + subs + '</div>';
+  }).join('') + '</div><p class="hint" style="text-align:center">Tap a task name to fold or unfold.</p>');
+
+  // B: only the next step
+  model('b', (s) => '<div class="card">' + s.deck.map((task) => {
+    const rest = left(task), ready = !rest.length;
+    let body = '';
+    if (!ready) {
+      const i = task.blockers.indexOf(rest[0]);
+      body = '<label class="next">' + tick(task.id + ':' + i, false, rest[0].t) + '<span>Next: <b>' + esc(rest[0].t) + '</b></span></label>';
+      if (rest.length > 1) {
+        body += '<button class="peek" data-act="peek" data-id="' + task.id + '">' + (s.peek === task.id ? 'Hide the rest' : '+' + (rest.length - 1) + ' after this') + '</button>';
+        if (s.peek === task.id) body += '<div class="queue">' + rest.slice(1).map((b) => '<span>then ' + esc(b.t) + '</span>').join('') + '</div>';
+      }
+    }
+    return '<div class="task' + (ready && !task.done ? ' ready' : '') + '"><div class="task-line">' + tick(task.id, task.done, task.title, !ready) + '<span class="task-title">' + esc(task.title) + '</span></div>' + body + '</div>';
+  }).join('') + '</div>');
+
+  // C: clear the way, grouped by place
+  model('c', (s) => {
+    const all = []; s.deck.forEach((task) => task.blockers.forEach((b, i) => all.push({ task, b, i })));
+    const open = all.filter((x) => !x.b.done);
+    if (s.view === 'shelf') {
+      const places = ['Store', 'Home', 'Phone'];
+      return '<button class="back" data-act="view" data-v="list">← Back to chores</button><div class="card shelf" style="padding:12px">'
+        + places.map((p) => {
+          const here = all.filter((x) => x.b.where === p);
+          if (!here.length) return '';
+          return '<div><h4>' + (p === 'Store' ? 'At the store' : p === 'Home' ? 'At home' : 'On the phone') + '</h4>' + here.map((x) => '<label class="sub' + (x.b.done ? ' done' : '') + '">' + tick(x.task.id + ':' + x.i, x.b.done, x.b.t) + '<span>' + esc(x.b.t) + ' <span class="for">for ' + esc(x.task.short) + '</span></span></label>').join('') + '</div>';
+        }).join('') + '</div>';
+    }
+    return (open.length ? '<div class="banner"><span>' + open.length + ' things in the way</span><button data-act="view" data-v="shelf" type="button">Clear the way</button></div>' : '')
+      + '<div class="card">' + s.deck.map((task) => {
+        const n = left(task).length;
+        return '<div class="task' + (!n && !task.done ? ' ready' : '') + '"><div class="task-line">' + tick(task.id, task.done, task.title, n > 0) + '<span class="task-title">' + esc(task.title) + '</span>' + (n ? '<span class="where">' + n + ' in the way</span>' : '') + '</div></div>';
+      }).join('') + '</div>';
+  });
+})();
+</script>

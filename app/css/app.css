@@ -328,6 +328,11 @@ button.chip.proj-chip:hover{background:var(--line);}
 .chip.deadline-chip.due-white{background:var(--surface-2); color:var(--ink-soft);}
 .chip.deadline-chip.due-yellow{background:color-mix(in srgb, var(--due-soon) 18%, transparent); color:var(--due-soon); border-color:color-mix(in srgb, var(--due-soon) 60%, transparent); font-weight:700;}
 .chip.deadline-chip.due-red{background:color-mix(in srgb, var(--due-now) 18%, transparent); color:var(--due-now); border-color:color-mix(in srgb, var(--due-now) 60%, transparent); font-weight:700;}
+/* Blockers (#3): a dashed edge says "something is in the way" by shape, not by an alarm colour. */
+.chip.blocked-chip,.chip.unblocks-chip{display:inline-block; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; border-style:dashed; background:transparent;}
+.chip.blocked-chip{border-color:var(--ink-soft); color:var(--ink);}
+.blocker-list{flex:1 1 100%; margin:0; font-size:var(--text-sm); color:var(--ink-soft);}
+.focus-blockers{display:flex; flex-wrap:wrap; justify-content:center; align-items:baseline; gap:4px 10px; margin:2px 0 8px; font-size:var(--text-sm); color:var(--ink-soft);}
 .chip.gh-chip{border-color:transparent; background:var(--surface-2); color:var(--ink-soft); text-decoration:none;}
 .chip.gh-chip.small{font-size:var(--text-sm); padding:3px 8px;}
 .chip.gh-chip:hover{color:var(--accent);}

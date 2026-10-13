@@ -15,8 +15,8 @@ saves a captured thought under its own key).
 
 | # | Unblock milestone | % | Status |
 |---|---|---|---|
-| U1 | Separate copy of Focus Deck | ~85% | Pushed, checked in Chromium; not deployed: no `main`, and GitHub Pages on a free plan needs a public repo |
-| U2 | Blockers | 0% | Not started |
+| U1 | Separate copy of Focus Deck | 100% | Merged (#1), deployed, checked by the user on an S26 alongside Focus Deck in the same Chrome |
+| U2 | Blockers (#3) | ~30% | Back in design: the first build put each blocker in the list as its own task, which the user rejected (2 chores with 7 blockers became 9 rows). Design settled 2026-10-13 (`docs/plans/blockers-fold-and-suggest.html`, Decisions 2026-10-13): steps fold under the task, shared steps, the deal hands you the step, configurable Not now. Pull request #9 to be reworked to match, not merged as is |
 | U3 | "What can I do right now" by energy | 0% | Not started |
 | U4 | Voice capture | 0% | Not started |
 | U5 | Life overview | 0% | Not started |
