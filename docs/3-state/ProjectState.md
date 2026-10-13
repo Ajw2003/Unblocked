@@ -4,11 +4,16 @@
 
 Unblock was copied from Focus Deck `main` (`f231bfd`) on 2026-10-13 and renamed so the two apps
 cannot share data. All 176 inherited tests pass after the rename (`node --test app/js/*.test.mjs`).
-Not yet on GitHub: the `Ajw2003/unblock` repo does not exist yet. Not yet checked in a browser.
+On GitHub as `Ajw2003/Unblocked` (private), branch `AjsAgent/start-unblock`, which is the repo's
+only branch; no `main` yet, so the deploy workflow (`.github/workflows/deploy.yml`, push to `main`)
+has not run. Checked in real Chromium on 2026-10-13: `scripts/check-service-worker-browser.mjs`
+4/4 (installs, works offline), `scripts/check-onboarding-browser.mjs` 49/49 (first run), and the new
+`scripts/check-isolation-browser.mjs` 9/9 twice (Focus Deck's keys and cache untouched while Unblock
+saves a captured thought under its own key).
 
 | # | Unblock milestone | % | Status |
 |---|---|---|---|
-| U1 | Separate copy of Focus Deck | ~80% | Copied, renamed, tests pass; waiting on the empty GitHub repo to push and deploy |
+| U1 | Separate copy of Focus Deck | ~85% | Pushed, checked in Chromium; not deployed: no `main`, and GitHub Pages on a free plan needs a public repo |
 | U2 | Blockers | 0% | Not started |
 | U3 | "What can I do right now" by energy | 0% | Not started |
 | U4 | Voice capture | 0% | Not started |
