@@ -1,0 +1,229 @@
+<title>Fold and Suggest</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: reading column; the model sits beside the "what you can do" list (stacking on a phone); then the rigidity ledger as a table and the open questions. Tokens follow Unblock's app.css. */
+:root{
+  --bg:#E4E8EF; --surface:#FBFAF7; --surface-2:#EEF1F6; --ink:#1C2438; --ink-soft:#59627A; --line:#C7CEDB;
+  --accent:#8F5A06; --ok:#3F6E53; --warn:#9F0C3D;
+  --paper:#FFFEFA; --paper-ink:#1D2733; --paper-soft:#4E5A68; --rule:#C3CEDD; --suggest:#FFF6D6; --suggest-ink:#2B2412;
+  --shadow:0 1px 2px rgba(40,52,80,.12), 0 6px 18px rgba(40,52,80,.12);
+  --font-display:'Young Serif', Georgia, serif; --font-ui:'Figtree', system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111829; --surface:#18213A; --surface-2:#212C4A; --ink:#E9E4D8; --ink-soft:#9BA3B8; --line:#2A3555;
+  --accent:#F2B45A; --ok:#8FBF9F; --warn:#FF96B9; --paper:#EFEADF;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35); color-scheme:dark; } }
+:root[data-theme="dark"]{
+  --bg:#111829; --surface:#18213A; --surface-2:#212C4A; --ink:#E9E4D8; --ink-soft:#9BA3B8; --line:#2A3555;
+  --accent:#F2B45A; --ok:#8FBF9F; --warn:#FF96B9; --paper:#EFEADF;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.35); color-scheme:dark; }
+
+*{box-sizing:border-box}
+body{background:var(--bg); color:var(--ink); font-family:var(--font-ui); font-size:16px; line-height:1.55; padding-inline:16px; padding-block:28px 64px}
+.wrap{max-width:1000px; margin:0 auto; display:flex; flex-direction:column; gap:44px}
+.read{max-width:64ch}
+h1,h2,h3{font-family:var(--font-display); font-weight:400; line-height:1.2; text-wrap:balance; margin:0}
+h1{font-size:2.2rem} h2{font-size:1.45rem} h3{font-size:1.1rem}
+p{margin:0}
+.eyebrow{font-size:.78rem; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-soft); font-weight:600}
+.lead{font-size:1.08rem; color:var(--ink-soft)}
+.hint{font-size:.9rem; color:var(--ink-soft)}
+section{display:flex; flex-direction:column; gap:14px}
+button{font:inherit; color:inherit; cursor:pointer}
+button:focus-visible, input:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+
+.proto{display:grid; grid-template-columns:minmax(0,400px) minmax(0,1fr); gap:20px; align-items:start}
+@media (max-width:780px){ .proto{grid-template-columns:minmax(0,1fr)} }
+.phone{background:var(--surface-2); border:1px solid var(--line); border-radius:20px; box-shadow:var(--shadow); padding:12px; display:flex; flex-direction:column; gap:10px; min-height:420px}
+.phone-top{display:flex; justify-content:space-between; align-items:center}
+.phone-top b{font-family:var(--font-display); font-weight:400; font-size:1.05rem}
+.reset{background:none; border:0; color:var(--accent); font-weight:600; font-size:.85rem; padding:2px}
+.card{background:var(--paper); color:var(--paper-ink); border-radius:10px; padding:4px 12px; box-shadow:var(--shadow)}
+.task{border-top:1px solid var(--rule); padding:10px 0; display:flex; flex-direction:column; gap:7px}
+.task:first-child{border-top:0}
+.line{display:flex; gap:10px; align-items:center}
+.ttl{flex:1; min-width:0; font-weight:600; background:none; border:0; padding:0; text-align:left; color:var(--paper-ink); display:flex; gap:6px; align-items:center}
+.caret{font-size:.75rem; color:var(--paper-soft); width:12px; flex:none}
+.task.done .ttl{text-decoration:line-through; opacity:.55}
+.ready{font-size:.8rem; font-weight:700; color:#3F6E53}
+.tick{width:22px; height:22px; flex:none; accent-color:#8F5A06; margin:0}
+.meter{display:flex; gap:3px; align-items:center; font-size:.78rem; color:var(--paper-soft); white-space:nowrap}
+.dot{width:8px; height:8px; border-radius:50%; border:1.5px solid #8A93A6}
+.dot.on{background:#3F6E53; border-color:#3F6E53}
+.suggest{display:flex; gap:8px; align-items:center; margin-left:32px; background:var(--suggest); color:var(--suggest-ink); border-radius:8px; padding:7px 8px; font-size:.92rem}
+.suggest .what{flex:1; min-width:0}
+.suggest small{display:block; font-size:.72rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; color:#6B5520}
+.notnow{background:none; border:0; color:#6B5520; font-weight:600; font-size:.8rem; padding:4px; white-space:nowrap; text-decoration:underline; text-underline-offset:2px}
+.list{margin-left:32px; padding-left:10px; border-left:2px dashed var(--rule); display:flex; flex-direction:column}
+.b{display:flex; gap:8px; align-items:center; padding:5px 0; font-size:.92rem}
+.b .bt{flex:1; min-width:0}
+.b.done .bt{text-decoration:line-through; opacity:.55}
+.b.is-next .bt{font-weight:700}
+.nextpill{flex:none; font-size:.7rem; font-weight:700; letter-spacing:.04em; text-transform:uppercase; background:var(--suggest); color:#6B5520; border-radius:6px; padding:2px 6px}
+.mv{background:none; border:1px solid var(--rule); border-radius:6px; width:30px; height:28px; padding:0; color:var(--paper-ink); font-size:.85rem; flex:none}
+.mv:disabled{opacity:.3; cursor:default}
+.add{display:flex; gap:6px; padding:6px 0 2px}
+.add input{flex:1; min-width:0; font:inherit; font-size:.9rem; padding:6px 8px; border:1px solid var(--rule); border-radius:8px; background:#FFFFFF; color:#1D2733}
+.add button{background:#8F5A06; color:#FFFFFF; border:0; border-radius:8px; padding:6px 10px; font-weight:700; font-size:.85rem}
+.toast{font-size:.86rem; color:var(--ink-soft); min-height:1.3em; text-align:center}
+.undo{background:none; border:0; color:var(--accent); font-weight:700; text-decoration:underline; padding:0 4px}
+
+.cando{background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:14px; display:flex; flex-direction:column; gap:10px}
+.cando ul{margin:0; padding-left:1.2em; display:flex; flex-direction:column; gap:6px; font-size:.95rem}
+
+.ledger-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:var(--surface)}
+table{border-collapse:collapse; width:100%; min-width:640px; font-size:.92rem}
+th,td{text-align:left; vertical-align:top; padding:10px 12px; border-top:1px solid var(--line)}
+th{font-size:.75rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft); border-top:0}
+td:first-child{font-weight:600}
+.v{font-weight:700; white-space:nowrap}
+.v.keep{color:var(--ok)} .v.soft{color:var(--accent)} .v.drop{color:var(--warn)}
+.qs{margin:0; padding-left:1.3em; display:flex; flex-direction:column; gap:10px}
+</style>
+
+<div class="wrap">
+  <header class="read" style="display:flex;flex-direction:column;gap:10px">
+    <p class="eyebrow">Unblock design · Blockers, round 3 · Your direction</p>
+    <h1>Fold and suggest</h1>
+    <p class="lead">Each task stays one line. Folded, it shows how much is cleared and one suggested next step. Unfolded, it shows every blocker in order, and you can tick any of them, reorder them, or pick a different one to do next. The suggestion saves you choosing, but it never stops you.</p>
+  </header>
+
+  <section>
+    <h2>Try it</h2>
+    <div class="proto">
+      <div class="phone" id="model" aria-label="Unblock model"></div>
+      <aside class="cando">
+        <h3>Things to try</h3>
+        <ul>
+          <li>Tick the <b>suggested</b> step straight from the folded task.</li>
+          <li>Tap <b>Not now</b>: the suggestion moves on, and stays off that blocker until the others have had a turn. Nothing is reordered for good.</li>
+          <li>Tap a task name to unfold. Tick any blocker, in any order.</li>
+          <li>Use <b>↑ ↓</b> to change the order. The top open blocker is what gets suggested.</li>
+          <li>Add a blocker from the unfolded task.</li>
+          <li>Tick a whole task while blockers are still open. It works; Unblock clears the rest and offers Undo.</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <section>
+    <h2>Rigidity ledger</h2>
+    <p class="read hint">Every rule either takes friction away or adds it. Each rule is listed with both sides, and with what the model does about it.</p>
+    <div class="ledger-wrap">
+      <table>
+        <thead><tr><th>Rule</th><th>Takes friction away</th><th>Adds friction</th><th>Call</th></tr></thead>
+        <tbody>
+          <tr><td>Blockers live inside their task</td><td>The list never grows; detail is where you'd look for it</td><td>Hidden detail can be forgotten</td><td><span class="v keep">Keep.</span> The meter and the suggestion stay visible while folded.</td></tr>
+          <tr><td>One suggested next step</td><td>No choosing; one small, concrete thing</td><td>Feels bossy if it's the wrong one</td><td><span class="v soft">Keep, soft.</span> "Not now" skips it, and any blocker can be ticked instead.</td></tr>
+          <tr><td>Blockers have an order</td><td>The suggestion follows your thinking ("soap first")</td><td>Keeping an order up to date is work</td><td><span class="v soft">Keep, optional.</span> New blockers go to the end; reorder only if you care.</td></tr>
+          <tr><td>Must finish in order</td><td>Nothing</td><td>Blocks you from doing what you can do now</td><td><span class="v drop">Drop.</span> Any blocker can be ticked at any time.</td></tr>
+          <tr><td>Task can't be ticked while blocked</td><td>Stops ticking things off by accident</td><td>Life skips steps (you borrowed soap); the app would argue with you</td><td><span class="v drop">Drop.</span> Ticking clears the rest, with Undo.</td></tr>
+          <tr><td>"Not now" changes the order for good</td><td>Remembers what you avoid</td><td>A passing mood rewrites your plan</td><td><span class="v drop">Drop.</span> It only skips for now; the order stays yours.</td></tr>
+          <tr><td>Blocked tasks are never dealt</td><td>You're never handed something you can't do</td><td>The task vanishes from the deck</td><td><span class="v soft">Open.</span> See question 1.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="read">
+    <h2>Questions left</h2>
+    <ol class="qs">
+      <li><b>When you ask for a chore and the dishes are blocked,</b> what should the deal hand you? (a) skip the dishes, (b) "Do the dishes, start with: Buy dish soap", or (c) just "Buy dish soap" on its own. I lean to (b): you see the task and the small thing you can do right now.</li>
+      <li><b>Should a "Not now" be remembered</b> until tomorrow, so the same suggestion doesn't come straight back? Or only until you close the app?</li>
+      <li><b>Steps and blockers:</b> the app already has "steps" on a task. Should they become this same list, so there's one list of "what this task needs", or stay separate?</li>
+    </ol>
+  </section>
+</div>
+
+<script>
+(() => {
+  const DECK = () => [
+    { id: 'dishes', title: 'Do the dishes', done: false, bl: ['Buy dish soap', 'Empty the dishwasher', 'Clear the counter', 'Unclog the sink'].map((t) => ({ t, done: false })) },
+    { id: 'trash', title: 'Take out the trash', done: false, bl: ['Buy trash bags', 'Check pickup day', 'Rinse the recycling'].map((t) => ({ t, done: false })) },
+    { id: 'doctor', title: 'Call the doctor', done: false, bl: [] },
+  ];
+  const root = document.getElementById('model');
+  let s, undo = null;
+  const fresh = () => { s = { deck: DECK(), open: null, skip: {}, toast: '' }; undo = null; };
+  fresh();
+  const esc = (x) => String(x).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const find = (id) => s.deck.find((t) => t.id === id);
+  const openBl = (t) => t.bl.filter((b) => !b.done);
+  // The suggestion is the first open blocker in your order that you haven't skipped. Once everything
+  // open has been skipped, the skips are forgotten and it starts from the top again.
+  function suggestion(t) {
+    const open = openBl(t); if (!open.length) return null;
+    const skipped = s.skip[t.id] || (s.skip[t.id] = new Set());
+    let pick = open.find((b) => !skipped.has(b));
+    if (!pick) { skipped.clear(); pick = open[0]; }
+    return pick;
+  }
+  const meter = (t) => t.bl.length ? '<span class="meter" aria-label="' + (t.bl.length - openBl(t).length) + ' of ' + t.bl.length + ' cleared">' + t.bl.map((b) => '<span class="dot' + (b.done ? ' on' : '') + '"></span>').join('') + '&nbsp;' + (t.bl.length - openBl(t).length) + '/' + t.bl.length + '</span>' : '';
+
+  function render() {
+    const rows = s.deck.map((t) => {
+      const sug = !t.done && suggestion(t), unfolded = s.open === t.id;
+      let html = '<div class="task' + (t.done ? ' done' : '') + '"><div class="line">'
+        + '<input type="checkbox" class="tick" data-a="task" data-t="' + t.id + '" aria-label="Done: ' + esc(t.title) + '"' + (t.done ? ' checked' : '') + '>'
+        + '<button class="ttl" data-a="fold" data-t="' + t.id + '" aria-expanded="' + unfolded + '"><span class="caret" aria-hidden="true">' + (t.bl.length ? (unfolded ? '▾' : '▸') : '') + '</span>' + esc(t.title) + '</button>'
+        + (!t.done && t.bl.length && !openBl(t).length ? '<span class="ready">Ready</span>' : meter(t)) + '</div>';
+      if (sug && !unfolded) {
+        const i = t.bl.indexOf(sug);
+        html += '<div class="suggest"><input type="checkbox" class="tick" data-a="bl" data-t="' + t.id + '" data-i="' + i + '" aria-label="Done: ' + esc(sug.t) + '">'
+          + '<span class="what"><small>Suggested next</small>' + esc(sug.t) + '</span>'
+          + (openBl(t).length > 1 ? '<button class="notnow" data-a="skip" data-t="' + t.id + '">Not now</button>' : '') + '</div>';
+      }
+      if (unfolded) {
+        html += '<div class="list">' + t.bl.map((b, i) => '<div class="b' + (b.done ? ' done' : '') + (b === sug ? ' is-next' : '') + '">'
+          + '<input type="checkbox" class="tick" data-a="bl" data-t="' + t.id + '" data-i="' + i + '" aria-label="Done: ' + esc(b.t) + '"' + (b.done ? ' checked' : '') + '>'
+          + '<span class="bt">' + esc(b.t) + '</span>' + (b === sug ? '<span class="nextpill">Next</span>' : '')
+          + '<button class="mv" data-a="up" data-t="' + t.id + '" data-i="' + i + '" aria-label="Move ' + esc(b.t) + ' up"' + (i === 0 ? ' disabled' : '') + '>↑</button>'
+          + '<button class="mv" data-a="down" data-t="' + t.id + '" data-i="' + i + '" aria-label="Move ' + esc(b.t) + ' down"' + (i === t.bl.length - 1 ? ' disabled' : '') + '>↓</button></div>').join('')
+          + '<form class="add" data-t="' + t.id + '"><input id="add-' + t.id + '" placeholder="What else is in the way?" aria-label="Add a blocker to ' + esc(t.title) + '"><button type="submit">Add</button></form></div>';
+      }
+      return html + '</div>';
+    }).join('');
+    root.innerHTML = '<div class="phone-top"><b>Chores</b><button class="reset" data-a="reset" type="button">Start over</button></div>'
+      + '<div class="card">' + rows + '</div>'
+      + '<div class="toast" aria-live="polite">' + esc(s.toast) + (undo ? ' <button class="undo" data-a="undo">Undo</button>' : '') + '</div>';
+    s.toast = '';
+  }
+
+  root.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-a]'); if (!el) return;
+    const a = el.dataset.a, t = el.dataset.t && find(el.dataset.t), i = +el.dataset.i;
+    if (a !== 'undo') undo = null;
+    if (a === 'reset') { fresh(); s.toast = 'Started over.'; }
+    else if (a === 'fold') s.open = s.open === t.id ? null : t.id;
+    else if (a === 'skip') { suggestion(t); s.skip[t.id].add(suggestion(t)); s.toast = 'Skipped for now. The order is unchanged.'; }
+    else if (a === 'bl') {
+      t.bl[i].done = el.checked;
+      if (el.checked) s.toast = openBl(t).length ? t.bl[i].t + ', cleared.' : t.title + ' is ready to do.';
+    }
+    else if (a === 'up' || a === 'down') {
+      const j = a === 'up' ? i - 1 : i + 1; [t.bl[i], t.bl[j]] = [t.bl[j], t.bl[i]]; s.skip[t.id] = new Set(); // a new order is a fresh plan
+    }
+    else if (a === 'task') {
+      if (el.checked) {
+        const open = openBl(t);
+        undo = { id: t.id, idx: open.map((b) => t.bl.indexOf(b)) };
+        t.done = true; open.forEach((b) => { b.done = true; });
+        s.toast = open.length ? 'Done. Cleared ' + open.length + ' blocker' + (open.length > 1 ? 's' : '') + ' with it.' : 'Done.';
+        if (!open.length) undo = null;
+      } else t.done = false;
+    }
+    else if (a === 'undo' && undo) {
+      const ut = find(undo.id); ut.done = false; undo.idx.forEach((k) => { ut.bl[k].done = false; }); undo = null; s.toast = 'Undone.';
+    }
+    render();
+  });
+  root.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const t = find(e.target.dataset.t), input = e.target.querySelector('input'), text = input.value.trim();
+    if (!text) return;
+    t.bl.push({ t: text, done: false }); s.toast = '"' + text + '" added at the end.'; undo = null;
+    render(); const again = document.getElementById('add-' + t.id); if (again) again.focus();
+  });
+  render();
+})();
+</script>

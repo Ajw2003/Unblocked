@@ -4,6 +4,24 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-13 — Blockers fold under their task, with a suggested next step that never locks
+
+**Context.** The first blockers build listed every blocker as its own task, so two chores with seven
+blockers became nine rows. The user: "that is just the kind of overwhelming we are aiming to fix".
+Three directions were prototyped in `docs/plans/hidden-not-forgotten.html`.
+
+**Decision.** Blockers live inside their task (idea A, folded), and the folded task shows how much is
+cleared plus one suggested next step (idea B). The suggestion follows the blockers' order, which the
+user can change. It can be skipped ("Not now") without reordering anything, and any blocker can be
+ticked at any time. Ticking the task itself clears its open blockers, with Undo. Model and ledger:
+`docs/plans/blockers-fold-and-suggest.html`.
+
+**Principle (the user's).** "Rigidity doesn't buy us anything unless it's for a reason". Every rule
+is weighed for the friction it removes against the friction it adds, and the call is recorded in that
+page's rigidity ledger. The goal is fewer barriers and an app that is easy to use.
+
+**Status.** Standing. Supersedes how pull request #9 shows blockers (as top-level tasks).
+
 ## 2026-10-13 — Each feature is walked through and prototyped before it is built
 
 **Context.** Blockers (#3, pull request #9) was built straight from the brief. The user asked to slow
