@@ -4,6 +4,26 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-13 — Steps replace blockers; the deal hands you the step; skips last as long as you set
+
+**Context.** Three questions left by `docs/plans/blockers-fold-and-suggest.html`, answered by the user.
+
+**Decision.**
+- Steps and blockers are one list, called steps. The user had never seen the existing "steps"
+  field (a hidden textarea in the task editor), so it becomes this list; a task's old steps carry
+  over as its first steps. Steps already go into a linked issue as a checklist, so GitHub sees them.
+- A step can belong to more than one task (the user: "tell me what main tasks it contributes
+  towards"). Typing a step offers a matching open step from another task instead of a duplicate.
+  Ticking a task finishes only the steps no other open task needs; shared ones stay open for the
+  others. Undo restores both.
+- When a task has open steps, the deal hands you its suggested next step, never the blocked task,
+  and the note lists every task that step helps with each one's progress.
+- "Not now" is remembered for as long as Settings says: until the app is closed (default), for an
+  hour, until tomorrow, or until brought back by hand. Skipped steps stay listed under their task
+  with Bring back, so a skip never hides a step completely.
+
+**Status.** Standing.
+
 ## 2026-10-13 — Blockers fold under their task, with a suggested next step that never locks
 
 **Context.** The first blockers build listed every blocker as its own task, so two chores with seven
