@@ -4,6 +4,19 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-13 — Each feature is walked through and prototyped before it is built
+
+**Context.** Blockers (#3, pull request #9) was built straight from the brief. The user asked to slow
+down: "you've done a whole lot and explained none of it and visualized none of it".
+
+**Decision.** Every feature gets a walkthrough page first, in `docs/plans/<feature>-walkthrough.html`
+and published as an artifact. Each page shows the problem it solves, a tappable model of how it
+works, and the choices made with their alternatives. Code starts only after the user has tried the
+model and settled the choices. Blockers was built first, so its walkthrough
+(`docs/plans/blockers-walkthrough.html`) comes after the code, and pull request #9 waits on it.
+
+**Status.** Standing.
+
 ## 2026-10-13 — Unblock is a separate copy of Focus Deck; energy comes back as "how much I have now"
 
 **Context.** The user asked for one place for every idea, task and reminder, with visible blockers,
