@@ -1,0 +1,325 @@
+# GitHub Sync
+
+## What it owns
+
+`js/github-sync.js` keeps local tasks/projects in sync with GitHub issues: pulling
+issues into tasks, pushing local category changes back as labels, mirroring
+completion state (open/closed) in both directions, and linking/unlinking individual
+tasks to specific issues.
+
+## How it works
+
+### Labels to categories, priority and flags — `applyLabels` (js/github-sync.js)
+
+A task carries every label on its issue: `task.categoryIds` is a list with one category
+per label, in the issue's order. Each label that isn't reserved maps to the category with
+the same name (ignoring case, spaces, hyphens and underscores), or becomes a new category.
+A new one takes the label's own GitHub colour (`labelColors`, kept by `mapIssue` in
+js/github.js), so "lighting" arrives yellow. On every sync GitHub is the source of truth:
+a label removed on the issue is removed from the task, and the priority is re-read.
+
+Until 2026-09-26 a task held a single `categoryId`, set from the first matching label, and
+every other label was dropped. `normalizeTaskCategories` (js/state.js) folds an old
+`categoryId` into the list on load and after every Gist merge, so saves from older versions,
+and devices still running one, carry over.
+
+Priority and status labels (see `priorityFromLabels`/`statusFromLabels`) are never mistaken
+for a category; these are listed in `RESERVED_LABELS`. "good first issue" and "easy" used to
+be reserved as energy hints; the energy system (and the `energyFromLabels`/`resolveIssueEnergy`
+functions and `js/complexity.js` that backed it) was deleted on 2026-09-26 — see
+`docs/6-decisions/Decisions.md` — so they're ordinary labels now, with no special reading at all.
+
+The provenance labels `Claude created this` and `Claude completed this` are also
+reserved, and are read into `task.claudeCreated` / `task.claudeCompleted` in the same
+pass (see [claude-integration.md](./claude-integration.md)).
+
+### Auto-sync
+
+`syncGithub` also runs by itself (`autoSyncGithub` in js/app.js) when the app opens and whenever it
+comes back to the foreground, if a token is saved. It starts only after the Gist sync for that
+moment has settled (`initSyncLifecycle(afterSync)` in js/sync.js), so the two never change the same
+state at once. Automatic runs are at least a minute apart (`AUTO_SYNC_MIN_GAP_MS`), so quick app
+switching doesn't hammer GitHub. The **Sync GitHub** button still runs one any time, and errors show
+in the toast like any sync.
+
+### Repo sync — `upsertRepoProject` (js/github-sync.js)
+
+Turns one repo's open-issue list into its project's tasks. Only **labelled** open issues are
+imported as new tasks, so a repo's unlabelled noise stays out. But any open issue already linked
+to a task counts as open, labelled or not. A linked task is marked done only when its issue has
+left the open list (closed on GitHub). Only tasks linked to *this* repo are checked, so a task in
+the project that is linked to another repo's issue is left for the standalone pass below.
+
+### Reopen cleanup and closed-issue label refresh — `dropStaleCompletedLabel`, `refreshClosedTaskLabels`
+
+`claudeCompleted` only means something while a task is done, so when a task is no longer
+done but its issue still carries `Claude completed this`, `dropStaleCompletedLabel`
+removes that label from the issue (best-effort; errors are surfaced, never rolled back).
+It runs in the repo-wide pass, the standalone-linked pass, and `linkTaskToIssue`.
+`refreshClosedTaskLabels` covers the opposite blind spot: a newly closed issue leaves the
+open-issue list, so its labels would never be read; each task `upsertRepoProject` newly
+marked done gets its issue fetched once and its labels applied if it is closed.
+
+### Pushing categories back to GitHub — `pushCategoriesToIssue` (js/github-sync.js)
+
+When a linked task's labels are edited, adds the labels for the categories it gained
+(creating each on the repo first if needed) and removes the ones it lost. Every other
+label on the issue (priority, status, anything unrelated) is left untouched.
+
+### Priority — `priorityFromLabels`, `pushPriorityToIssue` (js/github-sync.js)
+
+`task.priority` is `urgent`, `high`, `medium`, `low` or null (`PRIORITY` in js/state.js).
+On GitHub it is a label: Focus Deck writes `priority: urgent`, `priority: high`,
+`priority: medium` and `priority: low`, and also reads common aliases (`P0`–`P4`,
+`critical`, `blocker`, `urgent`, `high priority`, `low priority`). A canonical label wins
+over an alias; among several, the most urgent wins. `task.priorityLabel` remembers the
+exact label name it came from, so changing the priority removes that label, whatever it
+was called, and adds the canonical one. Linking a task to an issue with no priority label
+keeps the task's own priority and pushes it over. `createGithubIssueFromTask` includes the
+priority label. Unlinked tasks keep their priority locally.
+
+This replaced energy (Low/Medium/High bandwidth) in the UI on 2026-09-26; the energy system
+itself was deleted outright the same day. See the two 2026-09-26 entries in
+`docs/6-decisions/Decisions.md`.
+
+### Completion sync — `syncIssueCompletion` (js/github-sync.js:90)
+
+Closes or reopens a task's linked issue to match its local status. Fire-and-forget:
+local state already reflects the toggle by the time this is called, so a failure
+here just means GitHub didn't follow — it's surfaced but never rolled back locally.
+
+### Linking a task to an issue — `linkTaskToIssue` (js/github-sync.js:123)
+
+Links an existing task (manual or already GitHub-sourced) to a specific issue: pulls
+the issue's title/state/labels in immediately, and if the task already had a local
+category but the issue has no category-equivalent label, pushes that category onto
+the issue so both sides end up in sync rather than the pull silently winning.
+
+### Where the GitHub controls live
+
+As of PR 4 (2026-09-27), the task row shows nothing GitHub-related at all — no `#N` chip, no Unlink,
+no Create/Link. Every GitHub control lives in the edit form, which tapping the title always opens
+now (linked or not, see docs/4-systems/styling.md#task-rows-and-the-editor): the GitHub line
+(`renderTaskGithubLine`, js/render.js) still holds **Unlink** for a linked task (keeps the task
+here, stops syncing it; deleting it instead closes the issue, see below) and **+ Create issue** /
+**Link to an existing issue** for an unlinked one; the editor's own action row
+(`renderTaskEditActions`) adds **Open issue ↗ owner/repo#N** (a real link, new tab) for a linked
+task only. Before PR 4, a linked task's title was itself the link to its issue, and Unlink/Create/Link
+had already moved off the row into the form on 2026-09-26 — with issues created automatically they
+were rarely needed, and they crowded every row.
+
+Unsorted items can be given labels (the same label picker as the task forms) before a project chip
+is tapped to file them. Filing into a GitHub project creates the issue with those labels.
+
+### Opening a linked task's issue
+
+A linked task's title opens the editor, the same as any other task's (PR 4, 2026-09-27) — it is no
+longer itself a link to the issue. Its issue opens from **Open issue ↗** inside the editor instead.
+Before PR 4, a linked task's title was an `<a>` to the issue and a separate **Edit** button on the
+row opened the editor.
+
+### Unlinking a task — `unlinkTask` (js/github-sync.js:161)
+
+Detaches a task from its linked issue without touching either side's content: the
+task stays exactly as it is locally (now a manual task), the issue is untouched on
+GitHub, and the issue is remembered as excluded so the next repo-wide sync doesn't
+recreate a duplicate task for it.
+
+### Deleting a linked task — `closeIssueForDeletedTask` (js/github-sync.js)
+
+Deleting a task that is linked to an issue (`deleteTask` in js/mutations.js) closes the issue with
+GitHub's `not_planned` reason, so it reads as crossed off rather than done and can still be
+reopened. GitHub's REST API can't delete an issue, and permanent deletion (GraphQL, repo admin
+only) can't be undone, so Focus Deck doesn't do it. The issue is also added to
+`state.excludedIssues` before the close is attempted, so a sync never re-imports it even if the
+close fails (offline) or the issue is reopened; that list syncs across devices. Linking the issue
+to a task by hand removes it from the list again, as it does after **Unlink**. The delete
+confirmation names the issue that will be closed. Before 2026-09-26, deleting a linked task left
+the issue open, and the next sync re-imported it as a new task.
+
+### Creating an issue from a task — `createGithubIssueFromTask` (js/github-sync.js:176)
+
+Creates a brand-new GitHub issue from a task that doesn't have one yet, and links the
+two — the reverse of `linkTaskToIssue` (which attaches to an issue that already
+exists). The task's steps (if any) become the issue body as a checklist, and its
+category (if any) becomes a label, created on the repo first if it isn't there yet.
+If the task is already marked done locally, the new issue is opened and then
+immediately closed to match.
+
+It runs from **+ Create issue** in the task's edit form, and automatically for every task added
+to, or filed from Unsorted into, a GitHub project (a project with `repoFullName`;
+`createIssueIfGithubProject` in js/app.js, #9). If it fails there, the task stays local, the error
+shows in the toast, and **+ Create issue** retries.
+
+Before creating anything it pulls the repo's open issues (`listIssues`) and looks for
+one whose title matches the task's (`sameIssueTitle`: ignoring case and extra
+whitespace). This stops a duplicate when the issue already exists on GitHub, whether
+it was made on the website, by Claude, or by a teammate on a shared repo. On a match:
+
+- If no other task is linked to that issue, the task is linked to it through
+  `linkTaskToIssue`. The existing issue wins, so its title, open/closed state and labels
+  replace the task's, and the task's steps are not copied into it.
+- If another task is already linked to it, nothing is created or linked, and the
+  sync-error line says which task holds it.
+
+Only exact title matches count, and only the first 100 open issues are checked (the
+limit of one `listIssues` page). A closed issue with the same title does not block a
+new one.
+
+### Standalone-linked-tasks reconciliation pass — `syncGithub` (js/github-sync.js:348-374)
+
+Tasks manually linked (via `linkTaskToIssue`) to an issue in a repo that isn't itself
+being synced in the main candidates loop (e.g. the task lives in an unrelated
+project) still need their status/labels reconciled — this pass fetches each such
+issue individually and applies the same completion/category sync as the normal
+repo-wide path.
+
+### Moving a task to another project
+
+A task dragged into another project (`moveTaskTo`, `js/app.js`) moves in Focus Deck first, keeping its
+id; the GitHub part runs after. `planTaskMove(task, fromProject, toProject)` (`js/task-move.js`)
+decides, and asks first unless the answer is `local`:
+
+| Target project | Task | Kind | What happens |
+|---|---|---|---|
+| no repo | any | `local` | moves, no message; a linked task keeps its link |
+| has a repo | hand-made | `create-issue` | asks; then `createGithubIssueFromTask` creates the issue in that repo (labels pushed as it always does) and links |
+| the task's own repo | linked | `local` | plain move, no message |
+| a repo, same owner as the task's | linked | `transfer` | asks; then `transferTaskIssue` |
+| a repo, another owner | linked | `cross-owner` | asks; moves in Focus Deck only, keeps the link |
+
+Owners and repo names compare without case. The messages are in `planTaskMove` and quoted in
+`js/task-move.test.mjs`.
+
+**`transferTaskIssue`** (`js/github-sync.js`, `transferIssue` in `js/github.js`): GET the issue and the
+target repo for their `node_id`, then `POST /graphql` with the `transferIssue` mutation
+(`issueId`, `repositoryId`), asking for the new `number` and `url`. GraphQL reports a refusal as HTTP
+200 with an `errors` array, which `transferIssue` turns into an error. On success the task's
+`repoFullName`, `issueNumber` and `url` become the transferred issue's and the toast says so. On any
+failure the task stays where it was dropped, keeps its old link, and the toast says "GitHub refused to
+move the issue: <why>" and which issue it stays linked to. Needs a token that can write issues in both
+repos. GitHub keeps only the labels the target repo also has; the next sync corrects the task's labels
+from the issue.
+
+**Create-issue failure.** The task stays moved and unlinked, and the toast is "Moved “<title>” to
+<project>, but it stays unlinked." plus the usual "Could not create the issue: ..." text; **+ Create
+issue** in the editor retries. If an issue with the same title already exists in that repo the task is
+linked to it instead (existing behaviour of `createGithubIssueFromTask`).
+
+**The de-duplication rule.** `upsertRepoProject` matches an issue to a task across **every** project by
+`repoFullName` + `issueNumber` (before, only inside the repo's own project). A task linked to that issue
+that lives in another project (dragged there) is refreshed where it is and is not imported again; its
+issue leaving the open list marks it done wherever it lives (`completedLog` names the project it is in);
+and a repo with no project of its own gets none created for such a task. So neither a moved task nor a
+transferred one comes back in its old project: after a transfer the old repo simply no longer lists the
+issue and the new repo's sync finds the task already linked to it. Tested in
+`js/task-move.test.mjs` and, against stubbed GitHub in Chromium, in the PR 11 checks.
+
+### Label colors — `ensureLabelExists` (js/github.js:101), `pushCategoryColorToLinkedIssues` (js/github-sync.js:92)
+
+<!-- ref:0c0e -->
+Creates the repo label if it doesn't exist yet, so adding a category to an issue
+never fails just because that category has never been used as a label in this repo
+before. `color` (a hex string, with or without a leading #) is Focus Deck's own
+color for the category — when given, it's applied on create and, if the label
+already exists with a different color, patched to match, so a category's color
+stays in sync going forward instead of drifting from whatever GitHub's default was.
+Omitting it keeps the old gray-default create-only behavior.
+
+<!-- ref:fce6 -->
+`pushCategoryColorToLinkedIssues` is fire-and-forget, called after a category is
+recolored (see `setCategoryColor` in `mutations.js`). It pushes the new color to
+that category's label in every repo a github-sourced task is currently using it in
+— recoloring doesn't change any task's `categoryIds`, so nothing else would ever
+tell those repos' labels to catch up.
+
+### The "+ New" panel: tracking, creating and linking (PR 7, 2026-09-28)
+
+<!-- ref:17bf -->
+The project list's "+ New" button (`renderProjectSidebar`, js/render.js) opens a panel with **New
+project** and **GitHub repo** tabs (state in `ui.newPanel*`, not persisted; see
+docs/4-systems/styling.md). Its **Your repos** list is `untrackedRepos(repos, projects,
+excludedRepos)` (js/github-sync.js, pure, tested): every repo `listYourRepos()` returns (now
+`/user/repos` with `affiliation=owner,collaborator,organization_member`, so a repo you only
+collaborate on or reach through an org shows up too — before PR 7 `listRepos()` only asked for
+`affiliation=owner`), minus one already tracked by a project (matched on `repoFullName`,
+case-insensitively — GitHub itself treats `owner/repo` as case-insensitive) and minus one in
+`state.excludedRepos`. That list holds repos the user deliberately removed as a project
+(`excludeRepo`, js/mutations.js) — surfacing one there in the picker would invite tracking it right
+back the moment it was dropped, so it's left out; pasting the same `owner/repo` or using **Create**
+still works regardless, since both paths (`addRepoManually`) already un-exclude on success. Picking
+a repo from the list, or pasting one, both go through `addRepoManually` — the same path PR 4's old
+bottom field used. **Create a new repo** posts to `/user/repos` (`createRepo`, js/github.js) and
+then tracks the result the same way (`createRepoAndTrack`); it needs a token with **Administration:
+Read and write** (settings.html says so), and a 403/404 from GitHub is read as that permission being
+missing, a 422 as the name being taken or invalid — `ghFetch` attaches GitHub's own `message` to the
+thrown error (`err.githubMessage`) so the panel can show it verbatim. `ghFetch` doesn't expose
+response headers, so `listYourRepos()` only reads the first 100 repos (one page) — further pages
+(the `Link` header) aren't followed.
+
+Linking a hand-made project to a repo (`linkProjectToRepo`, js/github-sync.js, pure) keeps the
+project's id, name, colour and category, and leaves its hand-made tasks exactly as they are — still
+`source:'manual'`, unlinked to anything on GitHub — while setting `source:'github'`, `repoFullName`,
+`htmlUrl` and `private`. It refuses (no change made) when another project already tracks that repo,
+naming it in the message. The network half (`linkProjectToRepoOnGithub`) pins the repo
+(`state.pinnedRepos`) and un-excludes it, then pulls its issues in through the same
+`upsertRepoProject` a normal sync uses: `upsertRepoProject` already finds a project by
+`repoFullName` before creating one (`state.projects.find(...)` at the top of the function), so
+linking never creates a second project for the same repo — this was already true of the sync path
+and PR 7 added a regression test for it (`js/github-sync.test.mjs`).
+
+## Invariants
+
+- A category first seen as a GitHub label takes that label's colour. From then on the
+  colour only flows Focus Deck to GitHub: recolouring a label on GitHub is never pulled
+  back.
+- `RESERVED_LABELS` (priority/status/provenance labels) never become categories in
+  `applyLabels`.
+- `applyLabels` must be called *after* `task.status` is set, because `claudeCompleted`
+  depends on it.
+- `pushCategoriesToIssue` only adds the labels a task gained and removes the ones it lost;
+  `pushPriorityToIssue` only swaps the priority label. Neither touches other labels.
+- `syncIssueCompletion` never rolls back local state on failure — GitHub failing to
+  follow is surfaced as an error, not undone locally.
+- `unlinkTask` never mutates the GitHub issue; it only changes local task fields and
+  records the issue in `state.excludedIssues`.
+- Deleting a linked task closes its issue as `not_planned` and never deletes it; the issue goes
+  into `state.excludedIssues` first, so it can't be re-imported.
+- Every task linked to an issue outside the currently-synced repo candidate set must
+  still get its status/category reconciled each `syncGithub()` run (see the
+  standalone-linked-tasks pass above).
+- `createGithubIssueFromTask` refuses to run on a task that's already linked
+  (`task.source === 'github'`) — unlink it first.
+
+## Traps
+
+- **2026-09-28 — a sync while a transfer is in flight.** The moved task keeps its old link until
+  `transferIssue` returns, so a sync already running when the transfer started could list the old
+  repo after the issue had left it and mark the task done. Fixed the same day, before merge: tasks
+  with a transfer in flight (`transfersInFlight` in js/github-sync.js) are skipped by both close
+  paths (`upsertRepoProject` and the reconciliation pass). Auto-sync already waited on `ui.syncing`;
+  this covered the sync that was already running. Test: js/task-move.test.mjs, "a sync that lists the
+  old repo while a transfer is in flight".
+- **2026-09-26 — a linked issue without labels closed its task on the next sync.** `upsertRepoProject`
+  built its "still open" set from labelled issues only, so a task whose issue had no labels (for
+  example one made with **+ Issue** from an unlabelled task) was marked done while the issue stayed
+  open. It also compared issue numbers without the repo, so a task linked to another repo's issue
+  could be closed by this repo's list. Fixed when automatic issue creation (#9) would have hit it
+  on every unlabelled task; regression tests are in `js/github-sync.test.mjs`.
+
+- Don't assume `syncGithub()`'s main repo loop covers every linked task — a task can
+  be linked to an issue in a repo that isn't pinned, isn't in the open-issue
+  candidate set, or has since been excluded; it only gets reconciled by the
+  standalone pass.
+- `applyLabels` can silently create new categories as a side effect of
+  syncing labels — this is intentional, not a bug, but it means syncing can grow
+  `state.categories` without any explicit user action.
+- `createGithubIssueFromTask` persists the newly-linked task *before* the done-task
+  close-issue call; if that close call fails, the task is still linked locally even
+  though the GitHub issue is left open.
+- Color resolution depends on `cssColorToHex` (`js/state.js:121`), which needs a
+  live DOM/stylesheet to resolve a category's CSS color — including the
+  `var(--proj-sat)`/`var(--proj-light)` custom properties, which literally differ
+  between light/dark theme. So the color GitHub ends up seeing is whatever theme is
+  active in the browser at the moment of the push, and there's no single "true" hex
+  value independent of that.
