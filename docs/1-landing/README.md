@@ -48,6 +48,7 @@ Claude integration. Full description: root [`README.md`](../../README.md).
 | [local-storage.md](../4-systems/local-storage.md) | saving/loading state, the Gist ID, backups |
 | [gist-sync.md](../4-systems/gist-sync.md) | merging local and remote Gist state, tombstones |
 | [styling.md](../4-systems/styling.md) | the stylesheet's contract with the markup |
+| [blockers.md](../4-systems/blockers.md) | what is in the way of a task, and holding it out of the pick |
 
 ## Everything else
 

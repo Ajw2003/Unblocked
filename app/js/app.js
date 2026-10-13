@@ -975,6 +975,10 @@ function onAppSubmit(e) {
     M.editTask(editForm.getAttribute('data-task'), editForm.getAttribute('data-project'), {
       title: fd.get('title'), deadline: fd.get('deadline'), categoryIds: labelsFromForm(fd), steps: fd.get('steps'), priority: fd.get('priority'), dueStages: dueStagesFromForm(fd),
     });
+    String(fd.get('blockers') || '').split('\n').forEach((line) => {
+      const blocker = M.addBlocker(editForm.getAttribute('data-task'), line);
+      if (blocker) createIssueIfGithubProject(blocker, editForm.getAttribute('data-project'));
+    });
     return;
   }
 }

@@ -1,5 +1,5 @@
 // unblock/js/render.js
-import { state, esc, cssColorToHex, relTime, deadlineChip, formatLabelName, PRIORITY, PRIORITY_ORDER, UNLABELLED } from './state.js';
+import { state, esc, cssColorToHex, relTime, deadlineChip, formatLabelName, PRIORITY, PRIORITY_ORDER, UNLABELLED, openBlockers, tasksBlockedBy } from './state.js';
 import { ICON_SYNC, ICON_SETTINGS, ICON_GRIP, ICON_CLAUDE_CREATED, ICON_CLAUDE_COMPLETED } from './icons.js';
 import { sortTasks } from './task-move.js';
 import { leadChoices, suggestLead, normalizeDueDefaults } from './due-stage.js';
@@ -83,7 +83,7 @@ function openWhere(st, catId, projId) {
   const out = [];
   st.projects.forEach((p) => {
     if (projId && p.id !== projId) return;
-    p.tasks.forEach((t) => { if (t.status !== 'done' && (!catId || (t.categoryIds || []).includes(catId))) out.push({ t, p }); });
+    p.tasks.forEach((t) => { if (t.status !== 'done' && !openBlockers(t).length && (!catId || (t.categoryIds || []).includes(catId))) out.push({ t, p }); });
   });
   return out;
 }
@@ -192,6 +192,7 @@ export function renderFocus(st, findTaskWithProject, ui) {
       + '</div>'
       + '<h2 class="focus-title"><span class="ink">' + esc(t.title) + '</span></h2>'
     + '</div></div>'
+    + focusBlockers(t, findTaskWithProject)
     + (t.status === 'next' ? '<div class="focus-doing"><button type="button" class="btn-text focus-doing-btn" data-action="focus-doing">Mark in progress</button></div>'
       : t.status === 'doing' ? '<div class="focus-doing"><span class="focus-doing-mark">In progress</span></div>' : '')
     + '<div class="desk-acts' + (canReroll ? '' : ' is-single') + '">'
@@ -203,6 +204,19 @@ export function renderFocus(st, findTaskWithProject, ui) {
     + '</div>'
     + '<div class="desk-clear"><button type="button" class="btn-text" data-action="clear-focus">Clear</button></div>'
     + '</section>';
+}
+
+// A focused task that is blocked (#3) says what is in the way, and each blocker can be focused on
+// instead with one tap: the way out of "I can't do this now" is the smaller thing in front of it.
+function focusBlockers(t, findTaskWithProject) {
+  const open = openBlockers(t);
+  if (!open.length) return '';
+  return '<div class="focus-blockers"><span>In the way:</span>'
+    + open.map((b) => {
+      const f = findTaskWithProject(b.id);
+      return '<button type="button" class="btn-text" data-action="focus-task" data-task="' + b.id + '" data-project="' + (f ? f.project.id : '') + '">' + esc(b.title) + ', do that first</button>';
+    }).join('')
+    + '</div>';
 }
 
 // The note's line after the project: the task's labels (or why it was picked when it has none), then
@@ -319,10 +333,32 @@ function renderTaskEditActions(t, p) {
     + '<button type="button" class="btn-text danger" data-action="delete-task" data-task="' + t.id + '" data-project="' + p.id + '">Delete</button></div>';
 }
 
+// "What's in the way?" (#3): what already blocks the task, and one line per new blocker. Each line
+// becomes its own task on Save (app.js), so the field always starts empty.
+function renderBlockerField(t) {
+  const open = openBlockers(t);
+  return (open.length ? '<p class="blocker-list">In the way: ' + open.map((b) => esc(b.title)).join(', ') + '</p>' : '')
+    + '<textarea name="blockers" placeholder="What’s in the way? (optional, one per line)…" rows="2" aria-label="What’s in the way"></textarea>';
+}
+
+// A row's blocker chips (#3): what is in the way of this task, and which tasks this one is in the
+// way of. One name fits in a chip; several are counted, with every name in the tooltip.
+function blockerChips(t) {
+  if (t.status === 'done') return '';
+  const chip = (cls, lead, list) => {
+    if (!list.length) return '';
+    const names = list.map((x) => x.title).join(', ');
+    const shown = list.length === 1 ? list[0].title : list.length + ' tasks';
+    return '<span class="chip ' + cls + ' small" title="' + esc(lead + names) + '" aria-label="' + esc(lead + names) + '">' + esc(lead + shown) + '</span>';
+  };
+  return chip('blocked-chip', 'In the way: ', openBlockers(t)) + chip('unblocks-chip', 'Unblocks: ', tasksBlockedBy(t));
+}
+
 export function renderTaskEditForm(t, p, categories) {
   return '<form class="task-edit-form" data-action="save-task-edit" data-task="' + t.id + '" data-project="' + p.id + '">'
     + '<input type="text" name="title" value="' + esc(t.title) + '" maxlength="280" required autofocus>'
     + '<textarea name="steps" placeholder="Steps (optional, one per line)…" rows="2">' + esc((t.steps || []).join('\n')) + '</textarea>'
+    + renderBlockerField(t)
     + renderPrioritySelect(t.priority)
     + '<input type="date" name="deadline" value="' + (t.deadline || '') + '">'
     + renderLabelPicker(categories, t.categoryIds, p)
@@ -377,7 +413,7 @@ export function renderTaskRow(t, p, categories, ui) {
     // two zones beside the checkbox: the title in the left 75%, the chips right-anchored in the
     // right 25% (kept even when there are no chips, so the title never grows into it) -- #97, #92
     + '<span class="task-title" data-action="edit-task" data-task="' + t.id + '" data-project="' + p.id + '" role="button" tabindex="0">' + esc(t.title) + claudeMarks(t) + '</span>'
-    + '<div class="task-chips">' + priorityChip + catChips + claudeChip
+    + '<div class="task-chips">' + blockerChips(t) + priorityChip + catChips + claudeChip
     + (t.deadline ? deadlineChip(t.deadline, t) : '')
     + '</div>'
     + '</div>';

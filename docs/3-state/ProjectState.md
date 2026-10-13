@@ -15,8 +15,8 @@ saves a captured thought under its own key).
 
 | # | Unblock milestone | % | Status |
 |---|---|---|---|
-| U1 | Separate copy of Focus Deck | ~85% | Pushed, checked in Chromium; not deployed: no `main`, and GitHub Pages on a free plan needs a public repo |
-| U2 | Blockers | 0% | Not started |
+| U1 | Separate copy of Focus Deck | 100% | Merged (#1), deployed, checked by the user on an S26 alongside Focus Deck in the same Chrome |
+| U2 | Blockers (#3) | ~85% | Built on `AjsAgent/blockers`, pull request pending; checked in Chromium at 390 and 1440 wide; GitHub issue body and Board not covered (`docs/4-systems/blockers.md`) |
 | U3 | "What can I do right now" by energy | 0% | Not started |
 | U4 | Voice capture | 0% | Not started |
 | U5 | Life overview | 0% | Not started |
