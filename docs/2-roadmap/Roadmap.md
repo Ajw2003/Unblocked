@@ -5,7 +5,7 @@
 The goal, in the user's words: break the loop where a task has too many blockers, gets deferred,
 falls out of sight, and boils over.
 
-- **U1. Separate copy of Focus Deck.** 100% when `Ajw2003/unblock` exists, the copy is pushed, the
+- **U1. Separate copy of Focus Deck.** 100% when `Ajw2003/Unblocked` exists, the copy is pushed, the
   deployed app installs, and using it leaves Focus Deck's data untouched in the same browser.
 - **U2. Blockers.** Any task can carry blockers ("no soap"); adding one is one tap while creating or
   working a task; a blocked task shows what blocks it at a glance; a blocker can itself be picked as

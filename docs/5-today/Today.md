@@ -18,7 +18,7 @@ Not checked in a browser yet.
 
 ## Next, in order
 
-1. The user creates the empty `Ajw2003/unblock` repo; push, enable Pages, check it installs.
+1. The user creates the empty `Ajw2003/Unblocked` repo; push, enable Pages, check it installs.
 2. Issues for U2-U7, then build U2 (blockers) first.
 
 ---
