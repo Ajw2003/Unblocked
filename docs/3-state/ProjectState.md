@@ -4,9 +4,11 @@
 
 Unblock was copied from Focus Deck `main` (`f231bfd`) on 2026-10-13 and renamed so the two apps
 cannot share data. All 176 inherited tests pass after the rename (`node --test app/js/*.test.mjs`).
-On GitHub as `Ajw2003/Unblocked` (private), branch `AjsAgent/start-unblock`, which is the repo's
-only branch; no `main` yet, so the deploy workflow (`.github/workflows/deploy.yml`, push to `main`)
-has not run. Checked in real Chromium on 2026-10-13: `scripts/check-service-worker-browser.mjs`
+On GitHub as `Ajw2003/Unblocked`. The agent never works on `main`: `AjsAgent/main-seed` is one empty
+commit for the user to create `main` from, and the copy arrives as a pull request from
+`AjsAgent/first-version`, which the user tests and merges. Until then the deploy workflow
+(`.github/workflows/deploy.yml`, push to `main`) has not run. `AjsAgent/start-unblock` holds the same
+files on the old base and is no longer used. Checked in real Chromium on 2026-10-13: `scripts/check-service-worker-browser.mjs`
 4/4 (installs, works offline), `scripts/check-onboarding-browser.mjs` 49/49 (first run), and the new
 `scripts/check-isolation-browser.mjs` 9/9 twice (Focus Deck's keys and cache untouched while Unblock
 saves a captured thought under its own key).
