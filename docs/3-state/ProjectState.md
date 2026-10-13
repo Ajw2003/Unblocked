@@ -16,7 +16,7 @@ saves a captured thought under its own key).
 | # | Unblock milestone | % | Status |
 |---|---|---|---|
 | U1 | Separate copy of Focus Deck | 100% | Merged (#1), deployed, checked by the user on an S26 alongside Focus Deck in the same Chrome |
-| U2 | Blockers (#3) | ~85% | Built on `AjsAgent/blockers`, pull request pending; checked in Chromium at 390 and 1440 wide; GitHub issue body and Board not covered (`docs/4-systems/blockers.md`) |
+| U2 | Blockers (#3) | ~30% | Back in design: the first build put each blocker in the list as its own task, which the user rejected (2 chores with 7 blockers became 9 rows). Three directions in `docs/plans/hidden-not-forgotten.html`; pull request #9 stays unmerged until one is picked |
 | U3 | "What can I do right now" by energy | 0% | Not started |
 | U4 | Voice capture | 0% | Not started |
 | U5 | Life overview | 0% | Not started |
