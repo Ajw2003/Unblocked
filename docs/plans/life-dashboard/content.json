@@ -27,7 +27,7 @@
       ["flask", "Claude", "Claude for the notes that need it", "",
        "An optional Send to Claude button for notes the simple rules cannot make sense of. It is hidden until you set up a Claude connection.",
        "Nothing from you unless you want it.",
-       {"src": "docs/plans/life-dashboard/pics/ai-line.png", "alt": "Two cards listing the jobs that need no AI and the jobs that need AI", "caption": "Where the line between rules and AI falls."}],
+       {"src": "docs/plans/life-dashboard/pics/ai-line.png", "alt": "Two cards: jobs simple rules can do, and jobs only AI can do", "caption": "Where the line between rules and AI falls."}],
       ["lock", "Approve", "You pick and approve", "you",
        "The picks go into the roadmap, and one GitHub issue opens per step under a parent issue.",
        "You pick an answer to each of the six choices and send the reply."]
@@ -99,7 +99,7 @@
     "summary": "A proposal to add an Overview screen, a note importer and a triage card to Unblock, with Claude as an optional helper.",
     "changing": "Five new pieces: the Overview screen, the Notes library, the importer, the triage card and an optional Send to Claude button. The capture inbox, projects and sync stay as they are.",
     "blocking": "Your six picks, plus three answers: which phone you use day to day, roughly how many notes each app holds, and which Claude plan you are on.",
-    "next": "Your picks go into the roadmap, one GitHub issue opens per step under a parent issue, and work starts with the piece you pick in choice 1.",
+    "next": "Your picks go into the roadmap, one GitHub issue opens per step under a parent issue, and work starts with the piece you pick under \"Which piece comes first?\".",
     "todo": ["Pick an answer to each of the six choices.", "Tap <b>Copy my reply</b>.", "Send it, along with your phone, rough note counts and Claude plan, or say what to change."]
   }
 }
