@@ -1,3 +1,31 @@
+# Today — 2026-10-15 (Unblock)
+
+## What today was
+
+Finished the importer (U7): the real-browser check and the write-up, issue #19.
+
+## What was done
+
+- Added `scripts/check-importer-browser.mjs`: builds a Takeout-shaped zip (140 Keep notes, 6 trashed, 10
+  archived), 48 text/Markdown files and 24 .docx files, imports them at 1440 and 390 wide and offline.
+  65 PASS, 0 FAIL on two runs; screenshots in `docs/generated/importer/`.
+- Rewrote `docs/4-systems/importer.md` against the code, with Traps; updated the systems index,
+  `README.md` (Import notes paragraph, file list) and `docs/3-state/ProjectState.md` (U7).
+- Re-ran `check-overview-browser.mjs` (all passed), `check-service-worker-browser.mjs` (4 passed) and
+  `node --test app/js/*.test.mjs` (220 pass).
+
+## What was deliberately not done
+
+The "archived in Keep" badge never shows (`notes-view.js:52` tests `status`, the readers set `archived`);
+reported, not fixed. A real Takeout export was not tried; PDFs are not read; triage (U8) is not built.
+
+## Next, in order
+
+1. aj imports a real Keep Takeout zip and a Samsung/Word export.
+2. Decide the archived-badge fix, then plan U8.
+
+---
+
 # Today — 2026-10-13 (Unblock)
 
 ## What today was

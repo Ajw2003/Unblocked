@@ -36,6 +36,13 @@ test('unsorted strip only when something is unsorted', () => {
   assert.ok(html.includes('1 to sort') && html.includes('data-action="set-screen" data-screen="sort"'));
 });
 
+test('strip counts waiting notes and omits a zero part', () => {
+  const both = renderOverview(base(), 3, NOW, 212);
+  assert.ok(both.includes('3 to sort · 212 notes to triage') && both.includes('data-screen="sort"'));
+  const only = renderOverview(base(), 0, NOW, 1);
+  assert.ok(only.includes('1 note to triage') && !only.includes('to sort') && only.includes('data-action="open-notes"'));
+});
+
 test('empty states', () => {
   const none = renderOverview(base({ projects: [] }), 0, NOW);
   assert.ok(none.includes('data-screen="projects"') && !none.includes('overview-strip'));

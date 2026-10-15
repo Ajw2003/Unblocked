@@ -44,7 +44,7 @@ function areaCard(a) {
 
 // unsortedCount comes from the caller (app.js already has it for the rail badge), which keeps this
 // module from importing render.js, the module that re-exports it.
-export function renderOverview(st, unsortedCount = 0, now = Date.now()) {
+export function renderOverview(st, unsortedCount = 0, now = Date.now(), waitingNotes = 0) {
   if (!(st.projects || []).length) {
     return '<div class="overview-none"><h2 class="overview-head">Overview</h2>'
       + '<p class="overview-empty">Nothing here yet. Add a project and its tasks and deadlines show up on this screen.</p>'
@@ -57,6 +57,18 @@ export function renderOverview(st, unsortedCount = 0, now = Date.now()) {
     + strip(weekDays(st, now, st.dueDefaults), now)
     + '<div class="overview-top"><h2 class="overview-head">Life areas</h2><p class="overview-counts">tap an area to open its projects</p></div>'
     + '<div class="overview-areas">' + areaSummaries(st, now).map(areaCard).join('') + '</div>'
-    + (unsorted > 0 ? '<div class="overview-sort"><b>' + unsorted + ' to sort</b>'
-      + '<button type="button" class="btn" data-action="set-screen" data-screen="sort">Sort them</button></div>' : '');
+    + sortStrip(unsorted, waitingNotes);
+}
+
+// "3 to sort · 212 notes to triage"; a zero part is left out. With only notes waiting the button opens
+// the Notes tab instead of the Unsorted card.
+function sortStrip(unsorted, waitingNotes) {
+  if (!(unsorted > 0) && !(waitingNotes > 0)) return '';
+  const parts = [];
+  if (unsorted > 0) parts.push(unsorted + ' to sort');
+  if (waitingNotes > 0) parts.push(n(waitingNotes, 'note', 'notes') + ' to triage');
+  const btn = unsorted > 0
+    ? '<button type="button" class="btn" data-action="set-screen" data-screen="sort">Sort them</button>'
+    : '<button type="button" class="btn" data-action="open-notes">Open notes</button>';
+  return '<div class="overview-sort"><b>' + parts.join(' · ') + '</b>' + btn + '</div>';
 }

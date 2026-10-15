@@ -4,6 +4,46 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-15 — Importer build plan: a Notes tab on Sort, our own Word reader, no PDFs yet
+
+**Context.** The build plan `docs/plans/importer-build-plan.html` (built from
+`docs/plans/importer-build-plan/content.json`) split the importer into four issues under Imports
+(#8): reading exports (#16), the on-device library (#17), the Import screen and notes list (#18), and
+a browser check with docs (#19). aj replied "Build plan approved: Importer: 1A 2A 3A 4A 5A".
+
+**Decision.**
+- **Where (1A):** Import and the notes list live on the Sort screen, as a Notes tab beside the
+  Unsorted card; the rail keeps five buttons.
+- **Word files (2A):** read with JSZip 3.10.1 (97,630 bytes, vendored under `app/vendor/`) and a small
+  reader of our own that keeps paragraphs, headings and bullet lists and drops tables and formatting.
+  Mammoth (642,194 bytes) is not added.
+- **PDFs (3A):** not readable in the first version. Samsung Notes exports Word or Text and Apple Notes
+  exports Markdown instead, and handwriting in a PDF needs AI anyway. pdf.js (1.8 MB) is not added.
+- **Re-importing an edited note (4A):** a note still `waiting` is updated to the new text; a note
+  already `triaged` or `archived` is left alone.
+- **Testing order (5A):** aj uses a Samsung phone, so Samsung Notes' Word and Text exports are tested
+  first.
+
+**Status.** Standing.
+
+## 2026-10-15 — The Overview screen passed aj's test; the importer is next
+
+**Context.** The Overview screen (#6, built in #10-#13) was merged in #15 and deployed to
+https://ajw2003.github.io/Unblocked/app/. aj tried it and wrote: "the overview screen works well time
+to move on".
+
+**Decision.**
+- The Overview screen counts as passed. Its issues stay open until aj agrees to close them.
+- Next, per the approved order (Overview, then importer, then triage), is the importer (#8). Its
+  approved design (2026-10-15 life dashboard entry: files read on the device into a separate Notes
+  library) gets its own build plan, `docs/plans/importer-build-plan.html`.
+- Measured 2026-10-15 for that plan: JSZip 3.10.1 is 97,630 bytes, mammoth 1.8.0 is 642,194 bytes,
+  and pdf.js 4.10.38 is 398,237 + 1,417,586 bytes (main file + worker), against 422,149 bytes for all
+  of the app's own JS, CSS and `index.html`. The build plan asks whether to read Word files with a
+  small reader of our own instead of mammoth, and whether PDFs are worth their size.
+
+**Status.** Standing.
+
 ## 2026-10-15 — Label setup moves into the house-rules plugin, built by a handed-off session
 
 **Context.** Unblock's issues stalled because the repo had no `in progress` or `needs review` labels,

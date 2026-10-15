@@ -22,6 +22,9 @@ import { ONBOARDING_KEY, shouldShowOnboarding, nextStep } from './onboarding.js'
 import { renderOnboarding } from './onboarding-view.js';
 import { normalizeBoardCol } from './board-view.js';
 import { applyNoteFace } from './note-face.js';
+import { renderSortTabs, renderNotesPanel } from './notes-view.js';
+import { readFiles, browserJSZip } from './import-read.js';
+import { openLibrary, importIntoLibrary, mergeImport, listNotes, waitingCount, notesBySource } from './notes-library.js';
 import { filterAndSortProjects, resolveSelectedProject, resolveProjectView, moveProject } from './project-filter.js';
 
 // Which projects are minimised is a per-device layout choice, so it lives in this browser's
@@ -152,7 +155,23 @@ function setBoardProject(id) {
   } catch (e) { console.error('Could not save the board project:', e); }
 }
 
+// Which tab the Sort screen shows (Unsorted or Notes), remembered on this device.
+const SORT_TAB_KEY = 'unblock-sort-tab';
+function loadSortTab() {
+  try { return localStorage.getItem(SORT_TAB_KEY) === 'notes' ? 'notes' : 'unsorted'; }
+  catch (e) { console.error('Could not read the Sort tab:', e); return 'unsorted'; }
+}
+function setSortTab(tab) {
+  ui.sortTab = tab === 'notes' ? 'notes' : 'unsorted';
+  try { localStorage.setItem(SORT_TAB_KEY, ui.sortTab); }
+  catch (e) { console.error('Could not save the Sort tab:', e); }
+}
+
 export const ui = {
+  sortTab: loadSortTab(),
+  // The Notes library lives in its own IndexedDB, never in synced state. notes stays in memory so a
+  // repaint never waits on the database.
+  notes: [], notesWaiting: 0, notesQuery: '', notesSource: '', importPreview: null, importBusy: false, importError: null,
   screen: loadScreen(),
   boardProject: loadBoardProject(),
   boardCol: 'next', // the phone's one visible Board column; memory only (#144)
@@ -255,9 +274,16 @@ export function renderApp(st) {
   const toast = R.renderToast(ui.syncError || ui.notice, ui.syncError ? 'error' : 'info');
   if (ui.screen === 'focus') return rail + '<div class="screen screen-focus">' + R.renderFocus(st, findTaskWithProject, ui) + '</div>' + toast;
   // the Sort screen is the tray, always open (its header can't fold it away here)
-  if (ui.screen === 'sort') return rail + '<div class="screen screen-sort">' + renderInTrayCard(st, Object.assign({}, ui, { inboxOpen: true })) + '</div>' + toast;
+  if (ui.screen === 'sort') {
+    const tabs = renderSortTabs(ui.sortTab, { unsortedCount, waitingNotes: ui.notesWaiting });
+    const body = ui.sortTab === 'notes'
+      ? renderNotesPanel({ notes: listNotes(ui.notes, { source: ui.notesSource, query: ui.notesQuery }), counts: notesBySource(ui.notes), waiting: ui.notesWaiting,
+        query: ui.notesQuery, source: ui.notesSource, preview: ui.importPreview, busy: ui.importBusy, error: ui.importError })
+      : renderInTrayCard(st, Object.assign({}, ui, { inboxOpen: true }));
+    return rail + '<div class="screen screen-sort">' + tabs + body + '</div>' + toast;
+  }
   if (ui.screen === 'board') return rail + '<div class="screen screen-board">' + R.renderBoard(st, ui) + '</div>' + toast;
-  if (ui.screen === 'overview') return rail + '<div class="screen screen-overview">' + R.renderOverview(st, unsortedCount) + '</div>' + toast;
+  if (ui.screen === 'overview') return rail + '<div class="screen screen-overview">' + R.renderOverview(st, unsortedCount, Date.now(), ui.notesWaiting) + '</div>' + toast;
   return rail + R.renderProjectSidebar(st, ui, visibleProjects, hasToken)
     + '<div class="main-col view-' + ui.projectView + '">'
       + R.renderProjectsMain(st, ui, visibleProjects, isWideScreen(), hasToken)
@@ -396,6 +422,66 @@ function drawCompletePhase(phase) {
   const note = document.querySelector('.focus-active .note');
   if (button) button.classList.toggle('is-ticked', want.button.includes('is-ticked'));
   if (note) ['is-crossed', 'is-peeling'].forEach((c) => note.classList.toggle(c, want.note.includes(c)));
+}
+
+// ---- Notes library (js/notes-library.js): import files, preview, save ----
+let libPromise = null;
+function library() {
+  if (!libPromise) libPromise = openLibrary();
+  return libPromise;
+}
+async function loadNotes() {
+  try {
+    ui.notes = await (await library()).all();
+    ui.notesWaiting = waitingCount(ui.notes);
+  } catch (e) {
+    libPromise = null;
+    console.error('Could not load the Notes library:', e);
+    ui.importError = e.message;
+  }
+  paint();
+}
+
+function readAsFile(file) {
+  const binary = /\.(zip|docx)$/i.test(file.name);
+  return (binary ? file.arrayBuffer() : file.text()).then((data) => ({ name: file.name, data }));
+}
+
+async function startImport(fileList) {
+  const files = Array.from(fileList || []);
+  if (!files.length) return;
+  ui.importBusy = true; ui.importError = null; paint();
+  try {
+    const now = Date.now();
+    const read = await readFiles(await Promise.all(files.map(readAsFile)), { JSZip: browserJSZip(), now });
+    // preview only: mergeImport is pure, nothing is saved until Import is pressed
+    const merged = mergeImport(ui.notes, read.notes, now);
+    ui.importPreview = { notes: read.notes, skipped: read.skipped, counts: notesBySource(read.notes), already: merged.skipped + merged.updated };
+    if (!read.notes.length && !read.skipped.length) ui.importError = 'No notes were found in those files.';
+  } catch (e) {
+    console.error('Import: could not read the chosen files:', e);
+    ui.importError = 'Could not read those files: ' + (e && e.message ? e.message : e);
+  }
+  ui.importBusy = false;
+  paint();
+}
+
+async function confirmImport() {
+  const p = ui.importPreview;
+  if (!p) return;
+  ui.importBusy = true; ui.importError = null; paint();
+  try {
+    const r = await importIntoLibrary(await library(), p.notes, Date.now());
+    ui.notes = await (await library()).all();
+    ui.notesWaiting = waitingCount(ui.notes);
+    ui.importPreview = null;
+    ui.notice = 'Imported ' + r.added + ' notes (' + r.updated + ' updated, ' + r.skipped + ' skipped)';
+  } catch (e) {
+    console.error('Import: could not save to the Notes library:', e);
+    ui.importError = 'Could not save the notes: ' + (e && e.message ? e.message : e);
+  }
+  ui.importBusy = false;
+  paint();
 }
 
 function onAppClick(e) {
@@ -550,6 +636,11 @@ function onAppClick(e) {
       paint();
     });
   }
+  else if (action === 'sort-tab') { setSortTab(el.getAttribute('data-tab')); paint(); }
+  else if (action === 'open-notes') { setSortTab('notes'); setScreen('sort'); paint(); }
+  else if (action === 'notes-source') { ui.notesSource = el.getAttribute('data-source') || ''; paint(); }
+  else if (action === 'import-confirm') confirmImport();
+  else if (action === 'import-cancel') { ui.importPreview = null; ui.importError = null; paint(); }
   else if (action === 'open-add-task') { ui.addingTask[projectId] = true; paint(); scrollOpenedFormIntoView('.add-task-form'); }
   else if (action === 'cancel-add-task') { delete ui.addingTask[projectId]; paint(); }
   else if (action === 'dismiss-toast') {
@@ -680,6 +771,7 @@ function onColorChange(el) {
 }
 
 function onAppChange(e) {
+  if (e.target.id === 'import-files') { startImport(e.target.files); return; }
   const colorEl = colorInputTarget(e);
   if (colorEl) { onColorChange(colorEl); return; }
   if (e.target.matches && e.target.matches('.add-task-form input[name="deadline"], .task-edit-form input[name="deadline"]')) { syncDueStageStep(e.target); return; }
@@ -713,6 +805,14 @@ function onAppChange(e) {
 }
 
 function onAppInput(e) {
+  if (e.target.id === 'notes-query') {
+    ui.notesQuery = e.target.value;
+    const pos = e.target.selectionStart;
+    paint();
+    const box = document.getElementById('notes-query');
+    if (box) { box.focus(); box.setSelectionRange(pos, pos); }
+    return;
+  }
   const colorEl = colorInputTarget(e);
   if (colorEl) { onColorInput(colorEl); return; }
   // keep typed-in new labels across the repaints that toggling a pick causes
@@ -1149,6 +1249,12 @@ function init() {
   app.addEventListener('submit', onAppSubmit);
   app.addEventListener('keydown', onAppKeydown);
   app.addEventListener('contextmenu', onAppContextMenu);
+  // drag and drop onto the Notes tab's drop zone (the zone is repainted, so listen on #app)
+  const dropZone = (e) => e.target.closest && e.target.closest('.import-drop');
+  app.addEventListener('dragover', (e) => { const z = dropZone(e); if (z) { e.preventDefault(); z.classList.add('is-over'); } });
+  app.addEventListener('dragleave', (e) => { const z = dropZone(e); if (z) z.classList.remove('is-over'); });
+  app.addEventListener('drop', (e) => { if (dropZone(e)) { e.preventDefault(); startImport(e.dataTransfer.files); } });
+  loadNotes(); // after the first paint above, so the library never delays it
   initProjectDrag(app, {
     move: moveProjectTo,
     moveTask: moveTaskTo,

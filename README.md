@@ -96,6 +96,17 @@ how much is done. Tap a task to open its project; tap an area card to see just t
 When thoughts are waiting, a yellow "to sort" strip at the bottom opens Sort. It only shows things;
 nothing on it changes your data.
 
+**Import notes** — the Sort screen has a second tab, **Notes**, for bringing notes in from other apps.
+Export from Google Keep with Google Takeout (tick only Keep, then drop the zip in as it is); from
+Samsung Notes with Save as file, choosing Word or Text; from Apple Notes with Export to Markdown on a
+Mac; from Google Docs by downloading as Word. Drop the files (or the zip) on the Notes tab, check the
+preview ("Found 206 notes: Keep 134 · Word 24 · Text 48"), and press Import. Notes you binned in Keep
+are left out, importing the same files again skips what is already there, and an edited Keep note is
+updated. You can filter by source and search. Nothing is uploaded: the files are read in your browser
+and kept on this device only, so a second device has its own empty library. PDFs are not read yet. The
+Overview's yellow strip counts the notes waiting ("206 notes to triage"). Turning notes into tasks is
+not built yet.
+
 **Inbox capture** — a single always-visible input at the top of the page for getting a thought
 out of your head. The **Unsorted** card below guides it (and any task with no labels) through one
 at a time: a captured thought picks a project, then both pick labels the same way, ranked for that
@@ -160,12 +171,16 @@ app/
     project-drag.js        the drag gesture (projects and tasks): pointer + keyboard, ghost, drop line, auto-scroll
     overview.js            the Overview screen's week strip and area-card numbers (pure)
     overview-view.js       the Overview screen's markup
+    import-read.js         reads Keep JSON, text/Markdown, Word and zip exports into one note shape (pure)
+    notes-library.js       merges imported notes and stores them in IndexedDB on this device
+    notes-view.js          the Sort screen's Notes tab markup
     task-move.js           where a dragged task lands, and what moving it to another project means for GitHub
     move-dialog.js         the confirmation shown before a task move that touches GitHub
     *.test.mjs             plain node:test files alongside the modules they test
 generate_icons.py       generates the PWA icons at deploy time (not committed to the repo)
 scripts/
   guard-file-churn.mjs   blocks a commit that silently deletes most of an existing file
+  check-importer-browser.mjs   real-Chromium check of the importer with generated sample exports
 .githooks/               optional local hooks (commit-msg runs the guard above); see below
 docs/4-systems/          deep-dive docs for the trickier subsystems (currently: GitHub sync,
                          PWA shell, GitHub-Issues provenance, Gist sync, styling)

@@ -23,6 +23,7 @@ const SHELL_ASSETS = [
   './js/board-view.js',
   './js/overview.js',
   './js/overview-view.js',
+  './js/notes-view.js',
   './js/move-dialog.js',
   './js/mutations.js',
   './js/sync.js',
@@ -43,6 +44,9 @@ const SHELL_ASSETS = [
   './js/category-filter.js',
   './js/render.js',
   './js/app.js',
+  './vendor/jszip.min.js',
+  './js/import-read.js',
+  './js/notes-library.js',
 ];
 
 const CACHE_INFO_MESSAGE = 'INSTALL_PROMPT_READY';
