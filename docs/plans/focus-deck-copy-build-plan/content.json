@@ -4,7 +4,7 @@
   "replyPrefix": "Build plan approved: Focus Deck copy",
   "reply": "",
   "short": {
-    "lead": "This is how the approved design gets built: a GitHub issues switch that starts off, then a button that copies Focus Deck's data into Unblock with the issue links cut, then a check in a real browser. Each step has its own GitHub issue under #21, \"Copy Focus Deck's data into Unblock without touching Focus Deck\".",
+    "lead": "This is how the approved design gets built: a GitHub issues switch that starts off, then a button that copies Focus Deck's data into Unblock with the issue links cut, then a check in a real browser. Each step has its own GitHub issue under the parent issue Copy Focus Deck's data into Unblock without touching Focus Deck (#21).",
     "hint": "Tap a step to see what it does and what it needs from you.",
     "key": [["I build it", ""], ["You act on it", "you"], ["Already exists", "done"]],
     "items": [
