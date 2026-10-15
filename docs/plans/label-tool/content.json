@@ -1,0 +1,59 @@
+{
+  "title": "Repo Label Setup",
+  "eyebrow": "Proposal · 15 October 2026 · for the house-rules plugin, not Unblock",
+  "replyPrefix": "Design approved: Label setup",
+  "reply": "",
+  "short": {
+    "lead": "Today a new repo has none of the labels the house rules expect, so issues stall until someone creates them by hand. On Unblock I created them with the gh command-line tool, which worked. This proposal makes that automatic for every repo. The change belongs in the house-rules plugin, in the Ajw2003/AjsClaudeCodeTools repo, because that plugin is what checks for the labels.",
+    "hint": "Tap a step to see what it does and what it needs from you.",
+    "key": [["I build it", ""], ["You act on it", "you"], ["Already exists", "done"]],
+    "items": [
+      ["search", "Today", "What exists today", "done",
+       "The house-rules plugin checks that issues carry \"in progress\" or \"needs review\" and refuses to move on when they don't, but it never creates a missing label. The GitHub connector used in a cloud session cannot create labels at all, but the gh command-line tool can.",
+       "Nothing from you."],
+      ["hammer", "Create", "Missing labels get created", "",
+       "When the label check finds a label missing on the repo, it creates it with gh, using a fixed colour and description, and says in the reply which labels it created.",
+       "Nothing from you."],
+      ["list", "Command", "A command to set up a repo on purpose", "",
+       "A /house-rules:labels command that creates every house label on the current repo, or on a repo you name, and lists what already existed.",
+       "Nothing from you, unless you want to run the command yourself."],
+      ["lock", "Approve", "You pick and approve", "you",
+       "I record your picks as a decisions entry in the AjsClaudeCodeTools repo, then write a build plan for you to approve.",
+       "You pick an answer to each of the three choices and send the reply."]
+    ]
+  },
+  "changes": [
+    ["new", "Automatic label creation", "The label check creates missing house labels instead of only refusing.", null,
+     "The labels are \"AjsAgent created this\" (grey, \"Opened by AJ's agent\"), \"in progress\" (yellow, \"AJ's agent is working on it\") and \"needs review\" (green, \"Waiting on aj\"), matching the ones now on Unblock. An existing label is never changed or deleted. If gh is missing or not signed in, the check says so plainly instead of failing silently.",
+     ["Labels are created by hand, repo by repo.", "The plugin creates any missing house label the first time it needs it.", "A new repo works with the issue workflow from its first issue."],
+     null],
+    ["new", "/house-rules:labels command", "Sets up a repo's labels on demand.", null,
+     "Useful before opening the first issues on a new project, or to fix a repo where someone deleted a label. It prints each label as created or already present.",
+     ["No way to prepare a repo in one step.", "One command per repo.", "You can ready a repo before any work starts."],
+     null],
+    ["keep", "The label check itself", "Still refuses to move on while an issue is wrongly labelled.", null,
+     "Only the case where a label is missing changes. An issue that carries the wrong label is still reported to you, and is not quietly relabelled.", null, null]
+  ],
+  "choices": [
+    ["where", "Where should the label tool live?", [
+      ["A", "Inside the house-rules plugin", 1, "It runs in every repo the plugin runs in, at the moment the label check needs it."],
+      ["B", "A standalone script in AjsClaudeCodeTools/tools", 0, "Simpler, but someone has to remember to run it for each new repo."],
+      ["C", "A GitHub Actions workflow copied into each repo", 0, "Runs on GitHub when you first push, but every repo needs the file added first."]
+    ], "The plugin already knows when a label is missing, so creating it there removes the stall without anyone remembering a step."],
+    ["which", "Which labels should it create?", [
+      ["A", "The three house labels only", 1, "AjsAgent created this, in progress and needs review."],
+      ["B", "The three house labels plus GitHub's usual category labels", 0, "Adds enhancement, bug and documentation when a repo lacks them. New GitHub repos already come with these, so this only helps repos where they were deleted."]
+    ], "New repos already have GitHub's category labels, so the house labels are the only ones that go missing."],
+    ["when", "When should I build it?", [
+      ["A", "Right after the Unblock Overview screen ships", 1, "Keeps one piece of work going at a time. Unblock already has its labels, so nothing here is blocked meanwhile."],
+      ["B", "Now, before the Overview screen", 0, "It is small, but it means pausing Unblock and working in a different repo first."]
+    ], "Unblock is not blocked by the missing tool any more, so there is no cost to finishing the Overview screen first."]
+  ],
+  "wrapup": {
+    "summary": "A proposal to have the house-rules plugin create missing GitHub labels itself, plus a command to set up a repo's labels on demand.",
+    "changing": "The house-rules plugin in Ajw2003/AjsClaudeCodeTools gains automatic label creation and a /house-rules:labels command. Unblock does not change.",
+    "blocking": "Your three picks. To build it, I also need a session with push access to Ajw2003/AjsClaudeCodeTools. This session can only read that repo.",
+    "next": "Your picks go into a decisions entry in AjsClaudeCodeTools, followed by a short build plan for you to approve.",
+    "todo": ["Pick an answer to each of the three choices.", "Tap <b>Copy my reply</b>.", "Send it, or say what to change."]
+  }
+}

@@ -4,6 +4,30 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-15 — Overview screen build plan: areas are project categories, the week starts today
+
+**Context.** The build plan `docs/plans/overview-build-plan.html` (built from
+`docs/plans/overview-build-plan/content.json`) split the Overview screen into four issues under
+Life overview (#6): the week and area calculations (#10), the screen and its rail button (#11), a
+real-browser check (#12) and the docs (#13). It asked three questions; the user replied
+"Build plan approved: Life dashboard: 1A 2A 3A", meaning the suggested answer to all three.
+
+**Decision.**
+- **Life areas are project categories** (`state.projectCategories`, Work, Personal and Learning by
+  default and renamable in Settings). Each area card sums the projects in that category, and a last
+  card collects projects with no category. One card per project was rejected because 19 projects
+  (the scale of the Board's test data) stop being a glance; task labels were rejected because they
+  describe the kind of work rather than an area of life, and one task can carry several.
+- **The bottom strip shows the Unsorted count** and opens the Sort screen, until the importer (#8)
+  exists; it then counts imported notes waiting for triage.
+- **The week strip starts today** and runs seven days, with overdue open tasks on today. A
+  Monday-to-Sunday week was rejected because by Friday most of it is in the past.
+- Overview is the fifth and last rail button, so the existing four keep their places.
+- The `in progress` and `needs review` labels were created on the repo on 2026-10-15 with the `gh`
+  command-line tool, after the GitHub connector here proved unable to create labels.
+
+**Status.** Standing.
+
 ## 2026-10-15 — Life dashboard: Overview screen first, on-device imports, rules-first triage, Claude through GitHub
 
 **Context.** The user asked for one screen to see their life, projects and due dates; a way to
