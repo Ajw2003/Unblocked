@@ -10,7 +10,7 @@ line to `Superseded` when a later entry replaces it.
 import notes from Google Keep, Samsung Notes, Apple Notes, Google Docs and Word; and a way to triage
 hundreds of loose notes into tasks and projects. They allowed AI only where it is optional and the job
 is impossible without it. The proposal is `docs/plans/life-dashboard.html` (built from
-`docs/plans/life-dashboard/content.json`); the user replied "Life dashboard approved: 1A 2A 3A 4A 5B 6A".
+`docs/plans/life-dashboard/content.json`); the user replied "Life dashboard approved: 1A 2A 3A 4A 5B 6A", meaning option A on questions 1 to 4 and 6, and option B on question 5.
 
 **Decision.**
 - **Order (1A):** the Overview screen first, then the importer, then triage.
@@ -19,8 +19,8 @@ is impossible without it. The proposal is `docs/plans/life-dashboard.html` (buil
 - **Import (3A):** the user exports from each app and drops the file or zip into Unblock, which reads
   it on the device and uploads nothing. This needs JSZip, mammoth and pdf.js, vendored into the app
   so imports work offline. Google Keep, Word and Google Docs export everything at once; Apple Notes
-  only with a Mac; Samsung Notes many notes at a time but not all (checked 2026-10-15, sources in the
-  proposal's export table).
+  exports in bulk only from a Mac; Samsung Notes exports many notes at a time but not all of them
+  (checked 2026-10-15; sources are in the export table on the proposal page).
 - **Where notes live (4A):** a separate Notes library, kept on the importing device in the first
   version. Tasks made from a note link back to it and sync as tasks do now. The capture inbox stays
   for quick thoughts.
@@ -30,7 +30,7 @@ is impossible without it. The proposal is `docs/plans/life-dashboard.html` (buil
 - **Claude connection (6A):** through GitHub. Send to Claude files the note as a `needs triage`
   issue in a private repo; Claude, in a chat with its GitHub connector, proposes tasks and creates
   them as labelled issues under the rules in `docs/4-systems/claude-integration.md`. A hosted Unblock
-  MCP connector (option 6B) and an in-app API key (option 6C) were not chosen; 6B can be added later.
+  MCP connector (option 6B) and an in-app API key (option 6C) were not chosen; the hosted connector can be added later.
 
 **Status.** Standing.
 
