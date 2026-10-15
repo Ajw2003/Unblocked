@@ -164,7 +164,7 @@ th{font:700 .76rem var(--font-ui); letter-spacing:.06em; text-transform:uppercas
 <section>
   <span class="eyebrow">The suggested dashboard</span>
   <h2>How the Overview screen would look</h2>
-  <p>This is the suggestion for question 2, drawn with the app's own colours. The example tasks are made up. The week strip uses the same deadline colours as the rest of the app, and the yellow strip at the bottom is the way into triage.</p>
+  <p>This is the suggested dashboard shape, option 2A in question 2, drawn with the app's own colours. The example tasks are made up. The week strip uses the same deadline colours as the rest of the app, and the yellow strip at the bottom is the way into triage.</p>
   <div class="shell" aria-label="Mockup of the Overview screen">
     <nav class="rail">
       <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>Focus</div>
@@ -176,7 +176,7 @@ th{font:700 .76rem var(--font-ui); letter-spacing:.06em; text-transform:uppercas
     <div class="main">
       <div class="mhead"><h3>This week</h3><span style="font-size:.82rem; color:var(--ink-soft)">2 overdue · 7 due in the next 7 days · 31 with no date</span></div>
       <div class="week">
-        <div class="day today"><b>WED 15</b><span class="chip r">Car tax renewal · 1d overdue</span><span class="chip r">Return library books</span></div>
+        <div class="day today"><b>WED 15</b><span class="chip r">Car tax renewal · 1 day overdue</span><span class="chip r">Return library books</span></div>
         <div class="day"><b>THU 16</b><span class="chip y">Bins out</span></div>
         <div class="day"><b>FRI 17</b><span class="chip y">History essay draft</span></div>
         <div class="day"><b>SAT 18</b></div>
@@ -231,12 +231,12 @@ th{font:700 .76rem var(--font-ui); letter-spacing:.06em; text-transform:uppercas
   <div class="dq"><span class="dnum">3</span><h2>How should notes come in?</h2></div>
   <div class="options">
     <div class="opt pick"><h3><span class="letter">3A</span> Export a file, drop it into Unblock <span class="star">Suggested</span></h3><p>You export from each app, then drop the file (or a whole zip) onto an Import page. Unblock reads it on your device and uploads nothing. It works for all five sources, costs nothing, and works offline.</p><p class="cost">Needs three open-source libraries, which I am asking about rather than adding: JSZip to open zip files, mammoth to read Word files, and pdf.js to read PDFs. All three would be stored inside the app so imports still work offline.</p></div>
-    <div class="opt"><h3><span class="letter">3B</span> Connect your accounts</h3><p>Sign in to Google and Microsoft and pull documents directly. Apple Notes and Samsung Notes offer no way to do this, so you would still need 3A for them.</p><p class="cost">Needs Google and Microsoft developer app registrations and their approval reviews. It is free, but it is weeks of setup for two of the five sources.</p></div>
+    <div class="opt"><h3><span class="letter">3B</span> Connect your accounts</h3><p>Sign in to Google and Microsoft and pull documents directly. Apple Notes and Samsung Notes offer no way to do this, so you would still need to export a file (3A) for them.</p><p class="cost">Needs Google and Microsoft developer app registrations and their approval reviews. It is free, but it is weeks of setup for two of the five sources.</p></div>
     <div class="opt"><h3><span class="letter">3C</span> Paste text only</h3><p>Copy a note, paste it into a box. Needs no libraries and is built in a day, but doing it hundreds of times is exactly the chore you want to avoid.</p></div>
   </div>
   <div class="paper tablebox">
     <table>
-      <thead><tr><th>Source</th><th>How you would export it under 3A</th><th>What survives</th></tr></thead>
+      <thead><tr><th>Source</th><th>How you would export it under 3A (export a file, drop it into Unblock)</th><th>What survives</th></tr></thead>
       <tbody>
         <tr><td><b>Google Keep</b></td><td>Google Takeout, Keep only, gives one zip of every note.</td><td class="fid hi">Everything: titles, checklists with ticks, labels, pinned and archived notes.</td></tr>
         <tr><td><b>Samsung Notes</b></td><td>Select notes, then Share as a Word, PDF or text file. There is no single export of every note.</td><td class="fid mid">Text and lists. Handwriting only survives as the PDF picture, which Unblock cannot read.</td></tr>
@@ -285,14 +285,14 @@ maybe repaint? the green is grim</p>
   <div class="options">
     <div class="opt pick"><h3><span class="letter">5A</span> Simple rules on your device <span class="star">Suggested</span></h3><p>Checklists, bullets and numbered lines become task suggestions. Phrases like "by Friday", "20 Oct" or "end of month" become deadlines. Words matching a project name or label pick the project. It is free, private, offline and predictable, but it cannot understand a rambling paragraph.</p></div>
     <div class="opt"><h3><span class="letter">5B</span> Claude reads each note</h3><p>You add your own Claude API key in Settings, and Claude splits prose into steps and suggests projects. It is far better with messy notes, but every note costs money and leaves your device. I would price it with real figures before building it.</p></div>
-    <div class="opt"><h3><span class="letter">5C</span> 5A now, 5B as an optional button later</h3><p>Rules handle the easy majority straight away. A "Ask Claude about this note" button is added later for the hard cases, and only if you want it after using 5A.</p></div>
+    <div class="opt"><h3><span class="letter">5C</span> Simple rules now (5A), then Claude as an optional button later (5B)</h3><p>Rules handle the easy majority straight away. An "Ask Claude about this note" button is added later for the hard cases, and only if you still want it after trying the simple rules (5A).</p></div>
   </div>
 </section>
 
 <section class="reply">
   <span class="eyebrow">How to answer</span>
   <h2>Reply with your picks</h2>
-  <p>To take every suggestion, reply <code>approved 1A 2A 3A 4A 5A</code>. To change one, swap its letter, or tell me what to change about it. Once you approve, I will write the picks into the roadmap, open one GitHub issue per step under a parent issue, and start with the first piece.</p>
+  <p>To take every suggestion, reply <code>approved 1A 2A 3A 4A 5A</code>. To change one, swap that question's letter for the one you prefer (for example 2B), or tell me what to change about it. Once you approve, I will write the picks into the roadmap, open one GitHub issue per step under a parent issue, and start with the first piece.</p>
   <p>It would also help to know two things: which phone you use day to day, since that decides whether Samsung Notes or Apple Notes matters more, and roughly how many notes you have in each app.</p>
 </section>
 
