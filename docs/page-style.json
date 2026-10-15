@@ -1,0 +1,22 @@
+{
+  "themes": ["light"],
+  "colors": {
+    "background": "#E4E8EF",
+    "surface": "#FBFAF7",
+    "text": "#1C2438",
+    "text_muted": "#59627A",
+    "line": "#C7CEDB"
+  },
+  "roles": {
+    "accent": "#8F5A06",
+    "you_act": "#1F3F99",
+    "blocking": "#A83E3E",
+    "done": "#3F6E53"
+  },
+  "fonts": {
+    "display": "Young Serif",
+    "body": "Figtree",
+    "load": "https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;600;700&display=swap"
+  },
+  "pictures": "optional"
+}

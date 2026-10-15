@@ -18,6 +18,11 @@ falls out of sight, and boils over.
   dated and undated tasks clearly apart.
 - **U6. Markdown copies.** One readable `.md` per task or note in the sync Gist, beside the JSON.
 - **U7. Imports.** Bring in Google Keep (Takeout), Samsung Notes exports, Docs, PDFs and text files.
+- **U8. Triage.** Turn imported notes into tasks and projects one note at a time, with on-device
+  rules first and an optional Send to Claude for the notes rules cannot read.
+
+U5, U7 and U8 were designed together on 2026-10-15 and are built in that order: see the
+2026-10-15 entry in `docs/6-decisions/Decisions.md` and the proposal `docs/plans/life-dashboard.html`.
 
 ---
 

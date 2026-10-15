@@ -1,0 +1,74 @@
+{
+  "title": "Overview Build Plan",
+  "eyebrow": "Build plan · 15 October 2026 · code stays closed until you approve",
+  "replyPrefix": "Build plan approved: Life dashboard",
+  "reply": "",
+  "short": {
+    "lead": "This is how the Overview screen, the piece you chose to build first, gets built: four steps, each a GitHub issue under the parent issue Life overview (#6). It reuses the Board screen's pattern, so it adds two new code files and touches four existing ones. Three small choices are left for you.",
+    "hint": "Tap a step to see what it builds and how it is checked.",
+    "key": [["I build it", ""], ["You act on it", "you"]],
+    "items": [
+      ["list", "Model", "Step 1: work out the week and the areas (issue #10)", "",
+       "A file of plain calculations with no screen code, app/js/overview.js. It sorts open tasks into seven days starting today, puts overdue tasks on today, and totals the tasks in each life area. It has unit tests for due today, overdue, done, undated, no area, and a week crossing a month end.",
+       "Nothing from you."],
+      ["hammer", "Screen", "Step 2: add the screen to the rail (issue #11)", "",
+       "The Overview screen itself: an Overview button in the rail and the phone bottom bar, the week strip, the area cards and the bottom strip. Taps only move you to existing screens; nothing on this screen changes your data. Both new files join the offline file list.",
+       "Nothing from you.",
+       {"src": "docs/plans/life-dashboard/pics/overview-screen.png", "alt": "Mockup of the Overview screen", "caption": "The approved design this step builds."}],
+      ["eye", "Check", "Step 3: check it in a real browser (issue #12)", "",
+       "A script that opens the app in Chromium, a real browser, with realistic test data I write for it: 19 projects and 60 tasks, the same scale as the Board's browser check. It tries desktop and phone widths, in light and dark. It checks that the page never scrolls sideways, that overdue tasks show on today in red, that taps work, and that the bottom bar fits five buttons. It runs twice in a row, and I look at its screenshots alongside the existing screens' screenshots from before the change.",
+       "Nothing from you."],
+      ["file", "Docs", "Step 4: write it up (issue #13)", "",
+       "The systems doc rewritten against the real code, a README entry, and the project state and Today notes updated.",
+       "Nothing from you."],
+      ["lock", "Try it", "You try it and decide", "you",
+       "A pull request from my branch. It links to the Life overview issue (#6) but does not close it.",
+       "You open the screen on your phone and computer, then merge the pull request or tell me what to change."]
+    ]
+  },
+  "changes": [
+    ["new", "app/js/overview.js", "Works out the week strip and the area cards, with no screen code.", null,
+     "It follows app/js/board.js: pure functions, given the state and the time, return plain data. Deadline colours come from dueStage() in app/js/due-stage.js, so the strip always matches the deadline chips elsewhere.",
+     ["Due dates are scattered across project tiles and the Board.", "One function that lists the week's tasks and sums each area.", "The Overview screen can show your week without new data."],
+     null],
+    ["new", "app/js/overview-view.js", "Draws the Overview screen as HTML.", null,
+     "It follows app/js/board-view.js. Empty states are covered: with no dated tasks the strip says so, and with no projects the screen points to adding one.",
+     ["No screen shows the week ahead.", "The Overview screen's markup.", "One calm screen of your week and areas."],
+     null,
+     {"src": "docs/plans/life-dashboard/pics/overview-screen.png", "alt": "Mockup of the Overview screen", "caption": "The approved design."}],
+    ["new", "app/js/overview.test.mjs and scripts/check-overview-browser.mjs", "Unit tests and a real-browser check for the screen.", null,
+     "The unit tests run with the rest (node --test app/js/*.test.mjs, 176 passing today). The browser script follows scripts/check-board-browser.mjs and saves screenshots to docs/generated/overview/.",
+     ["Nothing checks a screen that does not exist yet.", "Tests for each rule, plus a browser run at two widths and two themes.", "A broken week strip fails a check before you ever see it."],
+     null],
+    ["chg", "app/js/render.js", "The rail gets a fifth button, Overview.", ["Focus, Sort, Board, Projects", "Focus, Sort, Board, Projects, Overview"],
+     "Overview goes last, so the buttons you already use stay where your thumb expects them. The browser check confirms that all five buttons fit in the phone's bottom bar.", null, null],
+    ["chg", "app/js/app.js", "Shows the Overview screen and wires its taps.", null,
+     "A task chip opens its project on the Projects screen. An area card opens Projects filtered to that area, using the existing project filter. The bottom strip opens the Sort screen.", null, null],
+    ["chg", "app/css/app.css and app/service-worker.js", "Styles for the screen, and both new files added to the offline list.", null,
+     "The styles reuse the existing colour tokens, so dark mode and the dyslexia-friendly font settings carry over. The offline list test fails if a new file is left out.", null, null],
+    ["keep", "Everything that stores or syncs data", "Untouched.", null,
+     "The Overview screen only reads. Saving and editing tasks, GitHub sync and Gist sync do not change.", null, null]
+  ],
+  "choices": [
+    ["area", "What counts as a life area on the cards?", [
+      ["A", "A project category", 1, "Projects already carry a category set in Settings (Work, Personal and Learning by default, renamable). One card per category, plus a card for projects with none."],
+      ["B", "Each project", 0, "One card per project. Simple, but at the 19 projects in the Board's test data the cards stop being a glance."],
+      ["C", "Task labels", 0, "One card per label such as Chore or Art. Labels describe the kind of work, not an area of life, and one task can carry several."]
+    ], "It groups projects the way you already sorted them, and the card count stays small."],
+    ["strip", "What should the yellow strip at the bottom show before the importer exists?", [
+      ["A", "The Unsorted count, opening the Sort screen", 1, "It is useful straight away, and it becomes the imported-notes count once the importer ships."],
+      ["B", "Nothing until the importer ships", 0, "A cleaner first version, with one less thing on screen."]
+    ], "It gives the strip a job from day one, and swapping its source later changes one line."],
+    ["week", "Where should the week strip start?", [
+      ["A", "Today, then the next six days", 1, "Always shows a full week ahead, with overdue tasks on today."],
+      ["B", "Monday to Sunday of this week", 0, "Matches a paper calendar, but by Friday most of the strip is in the past."]
+    ], "It always shows a full week ahead, and overdue tasks sit on today, where you will act on them."]
+  ],
+  "wrapup": {
+    "summary": "A four-step build plan for the Overview screen, the first piece of the approved life dashboard design.",
+    "changing": "Two new code files, two test files, and small changes to app/js/render.js, app/js/app.js, app/css/app.css and app/service-worker.js. Stored data and sync are untouched.",
+    "blocking": "Your three picks on this page.",
+    "next": "Steps 1 to 4 are built in order on my branch, each checked before the next, and a pull request links Life overview (#6) for you to try.",
+    "todo": ["Pick an answer to each of the three choices.", "Tap <b>Copy my reply</b>.", "Send it, or say what to change."]
+  }
+}

@@ -87,6 +87,15 @@ brand-new repo on GitHub and track it straight away. A hand-made project's Edit 
 **Link to GitHub repo**, turning it into a repo project in place — same id, name, colour, category,
 and hand-made tasks — while pulling the repo's issues in as tasks.
 
+**Overview** — the fifth screen in the rail, one calm look at the week and at every part of your
+life. A strip of seven days starts at today, and each open task with a deadline sits on its day,
+coloured the same white, yellow and red as its deadline chip elsewhere; anything overdue sits on
+today, marked "Nd overdue", so it cannot slip out of sight. Below it is a card for each project
+category (plus **No area**) with its open tasks, how many are due this week or overdue, and a bar of
+how much is done. Tap a task to open its project; tap an area card to see just that area's projects.
+When thoughts are waiting, a yellow "to sort" strip at the bottom opens Sort. It only shows things;
+nothing on it changes your data.
+
 **Inbox capture** — a single always-visible input at the top of the page for getting a thought
 out of your head. The **Unsorted** card below guides it (and any task with no labels) through one
 at a time: a captured thought picks a project, then both pick labels the same way, ranked for that
@@ -149,6 +158,8 @@ app/
     sync.js                cross-device sync via a GitHub Gist
     project-filter.js      project search/sort/filter logic, and where a dragged project lands
     project-drag.js        the drag gesture (projects and tasks): pointer + keyboard, ghost, drop line, auto-scroll
+    overview.js            the Overview screen's week strip and area-card numbers (pure)
+    overview-view.js       the Overview screen's markup
     task-move.js           where a dragged task lands, and what moving it to another project means for GitHub
     move-dialog.js         the confirmation shown before a task move that touches GitHub
     *.test.mjs             plain node:test files alongside the modules they test

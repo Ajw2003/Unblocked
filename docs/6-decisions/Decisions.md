@@ -4,6 +4,83 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-15 — Label setup moves into the house-rules plugin, built by a handed-off session
+
+**Context.** Unblock's issues stalled because the repo had no `in progress` or `needs review` labels,
+and the GitHub connector in a cloud session cannot create labels. The `gh` command-line tool could
+(`gh label create`, 2026-10-15). The user asked for a tool so future repos never stall this way. The
+proposal is `docs/plans/label-tool.html` (built from `docs/plans/label-tool/content.json`); the user
+replied "Design approved: Label setup: 1A 2A 3*" with their own answer to question 3: "handoff".
+
+**Decision.**
+- **Where (1A):** inside the house-rules plugin (`claude-house-rules/plugins/house-rules` in
+  `Ajw2003/AjsClaudeCodeTools`). The plugin's label check (`LOOP_WORKING, LOOP_REVIEW` and
+  `_loop_labels` in `scripts/hook.py`, read at commit `e879981`) already knows when a label is missing,
+  so it creates the missing house label there instead of only refusing. A `/house-rules:labels`
+  command sets up a repo's labels on demand.
+- **Which (2A):** only the three house labels: `AjsAgent created this`, `in progress`, `needs review`,
+  with the colours and descriptions now on `Ajw2003/Unblocked`. GitHub's category labels are left
+  alone because new repos already have them.
+- **When (own answer, "handoff"):** this session does not build it. It writes a self-contained handoff,
+  `docs/plans/label-setup-handoff.md`, for a session that has push access to
+  `Ajw2003/AjsClaudeCodeTools`; this session can only read that repo.
+
+**Status.** Standing. The build itself follows the house-rules repo's own design loop there.
+
+## 2026-10-15 — Overview screen build plan: areas are project categories, the week starts today
+
+**Context.** The build plan `docs/plans/overview-build-plan.html` (built from
+`docs/plans/overview-build-plan/content.json`) split the Overview screen into four issues under
+Life overview (#6): the week and area calculations (#10), the screen and its rail button (#11), a
+real-browser check (#12) and the docs (#13). It asked three questions; the user replied
+"Build plan approved: Life dashboard: 1A 2A 3A", meaning the suggested answer to all three.
+
+**Decision.**
+- **Life areas are project categories** (`state.projectCategories`, Work, Personal and Learning by
+  default and renamable in Settings). Each area card sums the projects in that category, and a last
+  card collects projects with no category. One card per project was rejected because 19 projects
+  (the scale of the Board's test data) stop being a glance; task labels were rejected because they
+  describe the kind of work rather than an area of life, and one task can carry several.
+- **The bottom strip shows the Unsorted count** and opens the Sort screen, until the importer (#8)
+  exists; it then counts imported notes waiting for triage.
+- **The week strip starts today** and runs seven days, with overdue open tasks on today. A
+  Monday-to-Sunday week was rejected because by Friday most of it is in the past.
+- Overview is the fifth and last rail button, so the existing four keep their places.
+- The `in progress` and `needs review` labels were created on the repo on 2026-10-15 with the `gh`
+  command-line tool, after the GitHub connector here proved unable to create labels.
+
+**Status.** Standing.
+
+## 2026-10-15 — Life dashboard: Overview screen first, on-device imports, rules-first triage, Claude through GitHub
+
+**Context.** The user asked for one screen to see their life, projects and due dates; a way to
+import notes from Google Keep, Samsung Notes, Apple Notes, Google Docs and Word; and a way to triage
+hundreds of loose notes into tasks and projects. They allowed AI only where it is optional and the job
+is impossible without it. The proposal is `docs/plans/life-dashboard.html` (built from
+`docs/plans/life-dashboard/content.json`); the user replied "Life dashboard approved: 1A 2A 3A 4A 5B 6A", meaning option A on questions 1 to 4 and 6, and option B on question 5.
+
+**Decision.**
+- **Order (1A):** the Overview screen first, then the importer, then triage.
+- **Dashboard shape (2A):** a seven-day strip of dated tasks using the existing deadline stages
+  (`app/js/due-stage.js`), plus one card per life area, plus a count of imported notes waiting.
+- **Import (3A):** the user exports from each app and drops the file or zip into Unblock, which reads
+  it on the device and uploads nothing. This needs JSZip, mammoth and pdf.js, vendored into the app
+  so imports work offline. Google Keep, Word and Google Docs export everything at once; Apple Notes
+  exports in bulk only from a Mac; Samsung Notes exports many notes at a time but not all of them
+  (checked 2026-10-15; sources are in the export table on the proposal page).
+- **Where notes live (4A):** a separate Notes library, kept on the importing device in the first
+  version. Tasks made from a note link back to it and sync as tasks do now. The capture inbox stays
+  for quick thoughts.
+- **Triage (5B):** simple on-device rules for every note (checklists, bullets, dates, Keep labels,
+  project-name matches). A Send to Claude button appears only for notes the rules cannot make sense
+  of, and only once a Claude connection exists.
+- **Claude connection (6A):** through GitHub. Send to Claude files the note as a `needs triage`
+  issue in a private repo; Claude, in a chat with its GitHub connector, proposes tasks and creates
+  them as labelled issues under the rules in `docs/4-systems/claude-integration.md`. A hosted Unblock
+  MCP connector (option 6B) and an in-app API key (option 6C) were not chosen; the hosted connector can be added later.
+
+**Status.** Standing.
+
 ## 2026-10-13 — Unblock is a separate copy of Focus Deck; energy comes back as "how much I have now"
 
 **Context.** The user asked for one place for every idea, task and reminder, with visible blockers,
