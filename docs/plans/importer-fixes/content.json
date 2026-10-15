@@ -1,0 +1,62 @@
+{
+  "title": "Importer Fixes",
+  "eyebrow": "Proposal · from your test on 15 October 2026 · nothing changes until you pick",
+  "replyPrefix": "QA failed: Importer",
+  "reply": "",
+  "short": {
+    "lead": "Your notes import, but there are three problems. You can't read a long note in full, the titles are wrong, and you can't do anything with a note yet. The first two are bugs in what I built. The third is triage, the next piece after the importer. This page fixes the two bugs first and asks how triage should start.",
+    "hint": "Tap a step to see what it changes.",
+    "key": [["I build it", ""], ["You act on it", "you"]],
+    "items": [
+      ["search", "Found", "What your test found", "",
+       "A card stops after 140 characters (app/js/notes-view.js:50) and nothing opens the rest. A text file's whole first line becomes the title (the readText function in app/js/import-read.js), so a Samsung note written as one paragraph gets one very long title. Nothing shows the original file, so you can't check what came through.",
+       "Nothing to do here; I found these by reading the code."],
+      ["eye", "Open", "Open any note in full", "",
+       "Tapping a card opens the whole note: its full text, its checklist, its labels, the file it came from and when it was imported. This is also how you check that an import came through correctly.",
+       "Nothing to do here."],
+      ["file", "Titles", "Short, sensible titles", "",
+       "A title is a short heading, never the whole note. When the first line is a long sentence, the title becomes its first few words, and the full sentence stays in the note's text. You can also rename any note.",
+       "Nothing to do here."],
+      ["list", "Triage", "Start making notes usable", "you",
+       "The triage card you approved in the original design: one note at a time, with buttons to make tasks, make a project, keep as reference or archive. How much of it comes first is the last choice below.",
+       "You pick how triage starts."],
+      ["hand", "Files", "Send me two or three real exports", "you",
+       "Every test so far uses files I wrote to match each app's published format. Two or three of your real Samsung Notes text files would become test files, so the title rule is built for your notes rather than my guess at them.",
+       "Attach two or three Samsung Notes text files you don't mind me reading, in your next message, if you're happy to. They stay out of the public repo unless you say otherwise."]
+    ]
+  },
+  "changes": [
+    ["new", "A note view", "Tap a card to read the whole note.", null,
+     "Shows the full text, every checklist item, the labels, the source file name and the import date, with a way back to the list. Where it opens is the first choice below.",
+     ["Cards stop at 140 characters with no way to read the rest.", "A view of the whole note, opened from its card.", "You can read every note and check it imported correctly."], null],
+    ["chg", "Text and Markdown titles", "A title is a short heading, not the whole note.", ["Whole first line", "A short heading; the rest stays in the text"],
+     "If the first line is short and more text follows, it stays the title, as now. If the first line is long, the title becomes its first few words, cut between words and ending in \"...\". The whole first line is kept at the start of the note's text, so nothing is lost. How many words is the second choice below.", null, null],
+    ["new", "Rename a note", "Edit a note's title in its note view.", null,
+     "Saved to the Notes library on that device. A later re-import of the same note won't overwrite a title you changed.",
+     ["Titles can't be changed.", "An editable title in the note view.", "Your notes read the way you think of them."], null],
+    ["keep", "The import itself", "Reading files, the preview, skipping duplicates and the Overview count stay as they are.", null,
+     "Your test showed 15 notes came in and were counted; only how they are shown and titled changes.", null, null]
+  ],
+  "choices": [
+    ["view", "Where should a note open?", [
+      ["A", "Its own full screen, with a Back button", 1, "Fits a long note on a phone, and leaves room for the triage buttons at the bottom later."],
+      ["B", "Expand in place inside the list", 0, "Quick for short notes, but a long note pushes the rest of the list a long way down."]
+    ], "Your notes are long, and the same screen becomes the triage card later, so nothing is built twice."],
+    ["title", "How long should a title be when the first line is long?", [
+      ["A", "About eight words, cut at a word boundary", 1, "Reads like a heading on a phone card. The cut is counted in words, so long words don't break it."],
+      ["B", "The first sentence, however long", 0, "Keeps whole thoughts together, but the first note in your screenshot has a first sentence too long to fit on its card."],
+      ["C", "No title: the card shows \"Untitled\" with the first line underneath", 0, "No guessing, but every long note looks the same until you rename it."]
+    ], "It gives every card a scannable heading without losing a word of the note."],
+    ["triage", "How should triage start?", [
+      ["A", "Fix the importer first, then design triage on its own page", 1, "The fixes are small and you can check them quickly. Triage then gets its build plan, using the note view as its starting point."],
+      ["B", "Add simple triage buttons to the note view now", 0, "Buttons for Make a task, Archive and Keep, with no sorting rules and no Claude help yet. You can start sorting sooner, but the rules from the approved design come later."]
+    ], "The note view is shared ground, so fixing it first means triage builds on something you have already checked."]
+  ],
+  "wrapup": {
+    "summary": "Fixes for what your test found (no way to read a long note, wrong titles), and a choice about how triage starts.",
+    "changing": "A note view, shorter titles for text files, and renaming. The import itself stays as it is.",
+    "blocking": "Your three picks, and optionally two or three real Samsung Notes text files to test with.",
+    "next": "Your picks go into the decisions log, the fixes are built and checked with your real files if you send them, and then you test again.",
+    "todo": ["Pick an answer to each of the three choices.", "Tap <b>Copy my reply</b> and send it, attaching two or three Samsung Notes files if you're happy to."]
+  }
+}
