@@ -125,7 +125,7 @@ th{font:700 .76rem var(--font-ui); letter-spacing:.06em; text-transform:uppercas
 <header style="display:grid; gap:12px">
   <span class="eyebrow">Proposal · 15 October 2026 · waiting on your picks</span>
   <h1>Turning Unblock into a life dashboard</h1>
-  <p class="lede">You asked for three things. The first is one screen that shows your life, projects and upcoming due dates. The second is bringing in notes from Keep, Samsung Notes, Apple Notes, Google Docs and Word. The third is triaging those hundreds of loose notes into real tasks and projects. This page shows how each would sit inside the Unblock you already have, and asks five questions. Nothing is built until you answer.</p>
+  <p class="lede">You asked for three things. The first is one screen that shows your life, projects and upcoming due dates. The second is bringing in notes from Keep, Samsung Notes, Apple Notes, Google Docs and Word. The third is triaging those hundreds of loose notes into real tasks and projects. This page shows how each would sit inside the Unblock you already have, and asks six questions. Nothing is built until you answer.</p>
 </header>
 
 <section>
@@ -234,19 +234,21 @@ th{font:700 .76rem var(--font-ui); letter-spacing:.06em; text-transform:uppercas
     <div class="opt"><h3><span class="letter">3B</span> Connect your accounts</h3><p>Sign in to Google and Microsoft and pull documents directly. Apple Notes and Samsung Notes offer no way to do this, so you would still need to export a file (3A) for them.</p><p class="cost">Needs Google and Microsoft developer app registrations and their approval reviews. It is free, but it is weeks of setup for two of the five sources.</p></div>
     <div class="opt"><h3><span class="letter">3C</span> Paste text only</h3><p>Copy a note, paste it into a box. Needs no libraries and is built in a day, but doing it hundreds of times is exactly the chore you want to avoid.</p></div>
   </div>
+  <h3>Can every note be exported in one go?</h3>
+  <p>I checked each app's bulk export on 15 October 2026. Google Keep, Word and Google Docs can hand over everything at once. Apple Notes can too if you have a Mac. Samsung Notes is the awkward one: it can export many notes at once, but not all of them.</p>
   <div class="paper tablebox">
     <table>
-      <thead><tr><th>Source</th><th>How you would export it under 3A (export a file, drop it into Unblock)</th><th>What survives</th></tr></thead>
+      <thead><tr><th>Source</th><th>Everything at once?</th><th>How</th><th>What Unblock can read</th></tr></thead>
       <tbody>
-        <tr><td><b>Google Keep</b></td><td>Google Takeout, Keep only, gives one zip of every note.</td><td class="fid hi">Everything: titles, checklists with ticks, labels, pinned and archived notes.</td></tr>
-        <tr><td><b>Samsung Notes</b></td><td>Select notes, then Share as a Word, PDF or text file. There is no single export of every note.</td><td class="fid mid">Text and lists. Handwriting only survives as the PDF picture, which Unblock cannot read.</td></tr>
-        <tr><td><b>Apple Notes</b></td><td>On a Mac, File → Export as PDF, one note at a time. On iPhone, Share or copy the text. A free Mac app called Exporter can save every note as text files at once.</td><td class="fid mid">Text and lists. Checklist ticks are lost from PDFs.</td></tr>
-        <tr><td><b>Google Docs</b></td><td>File → Download → Word, or Google Takeout of Drive for every document at once.</td><td class="fid hi">Text, headings, bullet and numbered lists.</td></tr>
-        <tr><td><b>Microsoft Word</b></td><td>Drop the .docx file in directly.</td><td class="fid hi">Text, headings, bullet and numbered lists.</td></tr>
+        <tr><td><b>Google Keep</b></td><td class="fid hi">Yes</td><td>Google Takeout, with only Keep ticked, gives one zip holding a JSON file for each note.</td><td class="fid hi">Everything: titles, text, checklist items with their ticks, labels, created and edited dates, and archived or deleted flags.</td></tr>
+        <tr><td><b>Microsoft Word</b></td><td class="fid hi">Yes</td><td>The .docx files already are the export. Drop a folder of them, or a zip.</td><td class="fid hi">Text, headings, bullet and numbered lists.</td></tr>
+        <tr><td><b>Google Docs</b></td><td class="fid hi">Yes</td><td>Google Takeout with only Drive ticked gives one zip of every document. Claude's Google Drive connector can also read Docs directly, if you pick a Claude route in question 6.</td><td class="fid hi">Text, headings and lists. Which file format Takeout uses for Docs is not confirmed yet, so the importer will be tested on a real Takeout zip.</td></tr>
+        <tr><td><b>Apple Notes</b></td><td class="fid mid">With a Mac</td><td>On macOS Tahoe or iOS 26 and later, select many notes on a Mac and use File → Export to Markdown. On older systems, the free open-source Mac app apple-notes-exporter exports the whole library with its folders. An iPhone alone exports one note at a time through Share.</td><td class="fid mid">Text, lists and folders. Images and handwriting do not come through the built-in export.</td></tr>
+        <tr><td><b>Samsung Notes</b></td><td class="fid lo">Many, not all</td><td>Long-press a note, tick the others (or Select all), then Save as file, choosing Word or Text. You get one file per note. Samsung's own .sdocx format cannot be read outside its app.</td><td class="fid mid">Text and lists from the Word or Text files. Handwriting is lost unless Claude reads a PDF or image of it.</td></tr>
       </tbody>
     </table>
   </div>
-  <p class="cost">These export routes come from my knowledge of each app and have not been checked against your phone or apps yet. Before the importer is built, I would test each one with a real export file of yours.</p>
+  <p class="cost">These come from Samsung's and Apple's support pages and from open-source tools that read Keep's Takeout files; the sources are listed in my chat reply. Export menus vary by phone model and app version, so the importer's first step tests one real export from each app you use.</p>
 </section>
 
 <section class="decision">
@@ -283,17 +285,31 @@ maybe repaint? the green is grim</p>
     </div>
   </div>
   <div class="options">
-    <div class="opt pick"><h3><span class="letter">5A</span> Simple rules on your device <span class="star">Suggested</span></h3><p>Checklists, bullets and numbered lines become task suggestions. Phrases like "by Friday", "20 Oct" or "end of month" become deadlines. Words matching a project name or label pick the project. It is free, private, offline and predictable, but it cannot understand a rambling paragraph.</p></div>
-    <div class="opt"><h3><span class="letter">5B</span> Claude reads each note</h3><p>You add your own Claude API key in Settings, and Claude splits prose into steps and suggests projects. It is far better with messy notes, but every note costs money and leaves your device. I would price it with real figures before building it.</p></div>
-    <div class="opt"><h3><span class="letter">5C</span> Simple rules now (5A), then Claude as an optional button later (5B)</h3><p>Rules handle the easy majority straight away. An "Ask Claude about this note" button is added later for the hard cases, and only if you still want it after trying the simple rules (5A).</p></div>
+    <div class="opt"><h3><span class="letter">5A</span> Simple rules on your device, no AI at all</h3><p>Checklists, bullets and numbered lines become task suggestions. Phrases like "by Friday", "20 Oct" or "end of month" become deadlines. A Keep label or a word matching a project name picks the project. It is free, private and offline, but it cannot make sense of a rambling paragraph.</p></div>
+    <div class="opt pick"><h3><span class="letter">5B</span> Simple rules for every note, Claude only when you ask <span class="star">Suggested</span></h3><p>The rules from 5A run on every note. A note the rules cannot make sense of gets a <b>Send to Claude</b> button, which uses whichever connection you pick in question 6. With no connection set up, the button is hidden and nothing else changes.</p></div>
   </div>
+</section>
+
+<section class="decision">
+  <div class="dq"><span class="dnum">6</span><h2>How should Claude connect, for the parts that need it?</h2></div>
+  <p>You said AI is fine where it is optional and the job is impossible without it. Here is where that line falls.</p>
+  <div class="grid3">
+    <div class="paper" style="display:grid; gap:8px"><span class="tag reuse">No AI needed</span><ul><li>Reading checklists, bullets and ticks.</li><li>Spotting dates like "by Friday" or "20 Oct".</li><li>Matching Keep labels and project names.</li><li>Finding duplicate notes with the same text.</li></ul></div>
+    <div class="paper" style="display:grid; gap:8px"><span class="tag new">Needs AI</span><ul><li>Splitting a rambling paragraph into steps.</li><li>Telling an idea from a task when no word gives it away.</li><li>Suggesting a project when no words match one.</li><li>Reading handwriting or a photo of a note.</li></ul></div>
+  </div>
+  <div class="options">
+    <div class="opt pick"><h3><span class="letter">6A</span> Through GitHub, which Unblock already syncs <span class="star">Suggested first</span></h3><p><b>Send to Claude</b> files the note as an issue labelled <code>needs triage</code> in a private repo, for example <code>life-inbox</code>. In a Claude chat, Claude reads those issues through its GitHub connector and proposes tasks. Once you say yes, Claude creates the tasks as labelled issues, which Unblock pulls in on its next sync. Claude can also read Google Docs through its Google Drive connector, and you can attach export files to the chat.</p><p class="cost">There is no new server and no cost beyond your Claude plan. It follows the existing Claude rules in <code>docs/4-systems/claude-integration.md</code>: create, comment, close and reopen, never delete. The limit is that Claude's tasks land only in projects linked to a GitHub repo.</p></div>
+    <div class="opt"><h3><span class="letter">6B</span> Unblock's own Claude connector</h3><p>A small MCP server (the standard way Claude plugs into other tools) is hosted on a free service such as Cloudflare Workers. Its tools would list waiting notes, list projects, add tasks and mark a note done, by reading and writing your sync Gist. You add it once on claude.ai, and it then works in Claude on the web, the desktop app and your phone. Tasks can land in any project.</p><p class="cost">It is new code to host and keep secure. It holds a token to your Gist, so it needs a sign-in step to stop anyone else using it. The Claude free plan allows one custom connector.</p></div>
+    <div class="opt"><h3><span class="letter">6C</span> A Claude API key inside Unblock</h3><p>The button calls Claude straight from the app, with no chat and no repo. It is the quickest to use.</p><p class="cost">API use is billed per note, separately from any Claude subscription, and the key is stored in your browser. I would price it with real figures before building it.</p></div>
+  </div>
+  <p>The GitHub route (6A) works with what exists today, so it can start straight away. The connector (6B) can be added on top later if typing in a Claude chat turns out to be too slow.</p>
 </section>
 
 <section class="reply">
   <span class="eyebrow">How to answer</span>
   <h2>Reply with your picks</h2>
-  <p>To take every suggestion, reply <code>approved 1A 2A 3A 4A 5A</code>. To change one, swap that question's letter for the one you prefer (for example 2B), or tell me what to change about it. Once you approve, I will write the picks into the roadmap, open one GitHub issue per step under a parent issue, and start with the first piece.</p>
-  <p>It would also help to know two things: which phone you use day to day, since that decides whether Samsung Notes or Apple Notes matters more, and roughly how many notes you have in each app.</p>
+  <p>To take every suggestion, reply <code>approved 1A 2A 3A 4A 5B 6A</code>. To change one, swap that question's letter for the one you prefer (for example 2B), or tell me what to change about it. Once you approve, I will write the picks into the roadmap, open one GitHub issue per step under a parent issue, and start with the piece you pick in question 1.</p>
+  <p>Three answers would also help. Which phone do you use day to day? That decides whether Samsung Notes or Apple Notes matters more. Roughly how many notes do you have in each app? And which Claude plan are you on?</p>
 </section>
 
 </div>
