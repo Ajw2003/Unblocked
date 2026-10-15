@@ -4,6 +4,23 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-15 — Unblock's GitHub issue sync gets a switch, off to start with
+
+**Context.** While planning the Focus Deck copy (entry below), Unblock's own GitHub auto-sync turned
+out to import every open issue that has a label, from up to 20 of aj's repos
+(`app/js/github-sync.js:549-582`), which are the same repos Focus Deck pulls. Cutting the copied links
+alone would let the next auto-sync re-link the same issues. The revised page
+`docs/plans/focus-deck-copy.html` asked how to stop that; aj replied "Design approved: Focus Deck
+copy: 1A 2A" (1A: cut the links in the copy, 2A: a GitHub issues switch).
+
+**Decision.** Settings gains a GitHub issues switch, off by default. While it is off, the token is
+used only for Unblock's own sync Gist: auto-sync and the manual GitHub sync do not run, and no issue
+is written to. aj turns it on when Unblock replaces Focus Deck. Rejected: leaving only the copied
+repos out of auto-sync (every other repo would still be shared), and a read-only GitHub mode (each
+issue would appear twice, once unlinked and once newly imported).
+
+**Status.** Standing. Adds to the entry below; does not replace it.
+
 ## 2026-10-15 — Copy Focus Deck's data into Unblock once, with issue links cut
 
 **Context.** aj wants Unblock to start from Focus Deck's data, synced with the same GitHub token,
