@@ -1,0 +1,299 @@
+<title>Unblock Life Dashboard</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Young+Serif&family=Figtree:wght@400;600;700&family=Atkinson+Hyperlegible:wght@400;700&display=swap">
+<style>
+/* Layout: one reading column on Unblock's blue-grey desk; mockups sit on paper "screens" drawn with the app's own tokens. */
+:root{
+  --bg:#E4E8EF; --surface:#FBFAF7; --surface-2:#EEF1F6; --ink:#1C2438; --ink-soft:#59627A; --ink-faint:#6E7790;
+  --line:#C7CEDB; --accent:#8F5A06; --accent-ink:#FFFFFF; --accent-tint:#F3E6CF;
+  --due-white:#59627A; --due-soon:#4F5A00; --due-now:#9F0C3D; --good:#3F6E53;
+  --note:#FFE27A; --note-ink:#2B2412; --note-soft:#6B5520;
+  --home:#3F8F5A; --school:#3F63B8; --money:#B8573F; --art:#8B55B8; --car:#2F8A88;
+  --font-display:'Young Serif', Georgia, serif;
+  --font-ui:'Figtree', system-ui, -apple-system, sans-serif;
+  --font-paper:'Atkinson Hyperlegible', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --bg:#111829; --surface:#18213A; --surface-2:#212C4A; --ink:#E9E4D8; --ink-soft:#9BA3B8; --ink-faint:#7F89A3;
+  --line:#2A3555; --accent:#F2B45A; --accent-ink:#2A1B05; --accent-tint:#3A2E1A;
+  --due-white:#9BA3B8; --due-soon:#C8D46A; --due-now:#F58FAE; --good:#8FC7A3;
+  --note:#E8CC66; --note-ink:#2B2412; --note-soft:#5E4A1A; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --bg:#111829; --surface:#18213A; --surface-2:#212C4A; --ink:#E9E4D8; --ink-soft:#9BA3B8; --ink-faint:#7F89A3;
+  --line:#2A3555; --accent:#F2B45A; --accent-ink:#2A1B05; --accent-tint:#3A2E1A;
+  --due-white:#9BA3B8; --due-soon:#C8D46A; --due-now:#F58FAE; --good:#8FC7A3;
+  --note:#E8CC66; --note-ink:#2B2412; --note-soft:#5E4A1A; color-scheme:dark;
+}
+body{background:var(--bg); color:var(--ink); font:16px/1.55 var(--font-ui);}
+.wrap{max-width:980px; margin:0 auto; padding-block:40px 80px; padding-left:max(16px, env(safe-area-inset-left, 0px)); padding-right:max(16px, env(safe-area-inset-right, 0px)); display:grid; gap:44px;}
+h1,h2,h3{font-family:var(--font-display); font-weight:400; margin:0; text-wrap:balance;}
+h1{font-size:2.3rem; line-height:1.1}
+h2{font-size:1.55rem}
+h3{font-size:1.1rem}
+p{margin:0; max-width:68ch}
+.eyebrow{font:700 .74rem var(--font-ui); letter-spacing:.09em; text-transform:uppercase; color:var(--accent)}
+section{display:grid; gap:16px; min-width:0}
+.lede{color:var(--ink-soft); font-size:1.08rem}
+.paper{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:20px; min-width:0}
+.grid3{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px}
+.tag{display:inline-block; font:700 .72rem var(--font-ui); letter-spacing:.04em; padding:2px 8px; border-radius:99px; border:1.5px solid currentColor}
+.reuse{color:var(--good)} .new{color:var(--accent)} .cut{color:var(--due-now)}
+ul{margin:0; padding-left:1.1em; display:grid; gap:4px}
+li{max-width:66ch}
+code{font-size:.88em; background:var(--surface-2); padding:1px 5px; border-radius:4px}
+
+/* decisions */
+.decision{display:grid; gap:14px}
+.dq{display:flex; gap:12px; align-items:baseline; flex-wrap:wrap}
+.dnum{font:700 .8rem var(--font-ui); color:var(--accent-ink); background:var(--accent); border-radius:6px; padding:2px 8px}
+.options{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:12px}
+.opt{background:var(--surface); border:1.5px solid var(--line); border-radius:10px; padding:16px; display:grid; gap:8px; align-content:start; min-width:0}
+.opt.pick{border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-tint)}
+.opt h3{display:flex; gap:8px; align-items:baseline; flex-wrap:wrap}
+.letter{font:700 .9rem var(--font-ui); color:var(--ink-soft)}
+.star{font:700 .7rem var(--font-ui); letter-spacing:.05em; text-transform:uppercase; color:var(--accent-ink); background:var(--accent); padding:2px 7px; border-radius:99px}
+.opt p, .opt li{font-size:.94rem}
+.cost{font-size:.86rem; color:var(--ink-soft)}
+
+/* app-shell mockup */
+.shell{background:var(--bg); border:1px solid var(--line); border-radius:12px; padding:14px; display:grid; grid-template-columns:64px 1fr; gap:14px; overflow:hidden}
+.rail{background:var(--surface); border:1px solid var(--line); border-radius:12px; display:grid; gap:4px; padding:8px 4px; align-content:start}
+.rail div{display:grid; justify-items:center; gap:2px; font-size:.66rem; color:var(--ink-soft); padding:6px 0; border-radius:8px}
+.rail div.on{background:var(--surface-2); color:var(--ink); font-weight:700}
+.rail svg{width:18px; height:18px; stroke:currentColor; fill:none; stroke-width:1.7}
+.main{display:grid; gap:14px; min-width:0}
+.mhead{display:flex; justify-content:space-between; align-items:baseline; gap:8px; flex-wrap:wrap}
+.mhead h3{font-size:1.35rem}
+.week{display:grid; grid-template-columns:repeat(7,minmax(0,1fr)); gap:6px}
+.day{background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:6px; display:grid; gap:4px; align-content:start; min-height:96px; min-width:0}
+.day b{font:700 .7rem var(--font-ui); color:var(--ink-soft); letter-spacing:.04em}
+.day.today{outline:2px solid var(--accent)}
+.chip{font:.7rem/1.25 var(--font-paper); border-radius:5px; padding:3px 5px; border:1.5px solid; background:var(--surface); overflow-wrap:anywhere}
+.chip.w{border-color:var(--due-white); color:var(--ink)}
+.chip.y{border-color:var(--due-soon); color:var(--due-soon); font-weight:700}
+.chip.r{border-color:var(--due-now); color:var(--due-now); font-weight:700}
+.areas{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px}
+.area{background:var(--surface); border:1px solid var(--line); border-left:5px solid var(--c); border-radius:8px; padding:8px 10px; display:grid; gap:4px}
+.area strong{font-size:.9rem}
+.area span{font-size:.76rem; color:var(--ink-soft)}
+.bar{height:5px; border-radius:3px; background:var(--surface-2); overflow:hidden}
+.bar i{display:block; height:100%; background:var(--c)}
+.inboxline{display:flex; gap:10px; align-items:center; flex-wrap:wrap; background:var(--note); color:var(--note-ink); border-radius:8px; padding:8px 12px; font:700 .86rem var(--font-paper)}
+.inboxline span{font-weight:400; color:var(--note-soft)}
+.btn{font:700 .8rem var(--font-ui); border:1.5px solid var(--ink); color:var(--ink); background:var(--surface); border-radius:7px; padding:5px 10px; white-space:nowrap}
+.btn.solid{background:var(--accent); border-color:var(--accent); color:var(--accent-ink)}
+.inboxline .btn{border-color:var(--note-ink); color:var(--note-ink); background:transparent; margin-left:auto}
+
+/* mini schematic thumbnails */
+.thumb{background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px; height:110px; display:grid; gap:4px}
+.thumb .row{display:grid; gap:3px}
+.tb{background:var(--surface); border:1px solid var(--line); border-radius:3px}
+.month{grid-template-columns:repeat(7,1fr); grid-auto-rows:1fr}
+.month .tb.dot{background:linear-gradient(var(--due-soon),var(--due-soon)) 4px 4px/6px 6px no-repeat, var(--surface)}
+.month .tb.red{background:linear-gradient(var(--due-now),var(--due-now)) 4px 4px/6px 6px no-repeat, var(--surface)}
+.tl{position:relative; background:var(--surface); border:1px solid var(--line); border-radius:3px}
+.tl i{position:absolute; height:10px; border-radius:3px; background:var(--c)}
+
+/* source table */
+.tablebox{overflow-x:auto}
+table{border-collapse:collapse; width:100%; min-width:640px; font-size:.92rem}
+th,td{text-align:left; padding:9px 10px; border-bottom:1px solid var(--line); vertical-align:top}
+th{font:700 .76rem var(--font-ui); letter-spacing:.06em; text-transform:uppercase; color:var(--ink-soft)}
+.fid{font-weight:700} .fid.hi{color:var(--good)} .fid.mid{color:var(--due-soon)} .fid.lo{color:var(--due-now)}
+
+/* triage mockup */
+.triage{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:16px}
+@media (max-width:720px){ .triage{grid-template-columns:1fr} .shell{grid-template-columns:1fr} .rail{display:none} .week{grid-template-columns:repeat(4,minmax(0,1fr))} }
+.slip{background:var(--note); color:var(--note-ink); border-radius:4px; padding:16px 18px 20px; font:1rem/1.45 var(--font-paper); transform:rotate(-1deg); box-shadow:0 8px 14px rgba(20,30,60,.18); display:grid; gap:8px; align-content:start}
+.slip .src{font:700 .72rem var(--font-ui); letter-spacing:.05em; text-transform:uppercase; color:var(--note-soft)}
+.slip p{white-space:pre-line}
+.found{display:grid; gap:8px}
+.cand{display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:center; background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:8px 10px; font-size:.9rem}
+.box{width:16px; height:16px; border:1.5px solid var(--ink-soft); border-radius:4px; display:grid; place-items:center; font-size:.7rem; color:var(--accent)}
+.why{display:block; font-size:.74rem; color:var(--ink-faint)}
+.actions{display:flex; gap:8px; flex-wrap:wrap}
+
+.reply{background:var(--surface); border:2px dashed var(--accent); border-radius:12px; padding:20px; display:grid; gap:10px}
+.reply code{font-size:1rem; padding:4px 8px}
+:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+</style>
+
+<div class="wrap">
+
+<header style="display:grid; gap:12px">
+  <span class="eyebrow">Proposal · 15 October 2026 · waiting on your picks</span>
+  <h1>Turning Unblock into a life dashboard</h1>
+  <p class="lede">You asked for three things. The first is one screen that shows your life, projects and upcoming due dates. The second is bringing in notes from Keep, Samsung Notes, Apple Notes, Google Docs and Word. The third is triaging those hundreds of loose notes into real tasks and projects. This page shows how each would sit inside the Unblock you already have, and asks five questions. Nothing is built until you answer.</p>
+</header>
+
+<section>
+  <span class="eyebrow">What already exists</span>
+  <h2>Most of the foundation is already in Unblock</h2>
+  <p>Two of your three asks are already on the roadmap as <b>U5 Life overview</b> and <b>U7 Imports</b> (<code>docs/2-roadmap/Roadmap.md</code>). Here is what each new piece reuses, and what it adds.</p>
+  <div class="grid3">
+    <div class="paper" style="display:grid; gap:8px">
+      <span class="tag reuse">Reused as is</span>
+      <ul>
+        <li>Projects, labels and colours, which become the dashboard's life areas.</li>
+        <li>Deadlines and their white, yellow and red stages (<code>app/js/due-stage.js</code>).</li>
+        <li>The Unsorted card's one-at-a-time flow (<code>app/js/in-tray.js</code>), which becomes the triage card.</li>
+        <li>Priority, GitHub sync and Gist sync, untouched.</li>
+      </ul>
+    </div>
+    <div class="paper" style="display:grid; gap:8px">
+      <span class="tag new">New</span>
+      <ul>
+        <li>An <b>Overview</b> screen in the left rail, beside Focus, Sort, Board and Projects.</li>
+        <li>A <b>Notes library</b> that holds imported notes, each tagged with where it came from.</li>
+        <li>An <b>importer</b> that reads exported files on your device.</li>
+        <li>A <b>triage helper</b> that spots tasks and dates inside a note.</li>
+      </ul>
+    </div>
+    <div class="paper" style="display:grid; gap:8px">
+      <span class="tag cut">Changed or cut</span>
+      <ul>
+        <li>Nothing is cut.</li>
+        <li>The capture inbox stays for quick thoughts. Bulk imports go to the Notes library instead, so a few hundred notes never bury the Unsorted card.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <span class="eyebrow">The suggested dashboard</span>
+  <h2>How the Overview screen would look</h2>
+  <p>This is the suggestion for question 2, drawn with the app's own colours. The example tasks are made up. The week strip uses the same deadline colours as the rest of the app, and the yellow strip at the bottom is the way into triage.</p>
+  <div class="shell" aria-label="Mockup of the Overview screen">
+    <nav class="rail">
+      <div><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/></svg>Focus</div>
+      <div><svg viewBox="0 0 24 24"><path d="M5 7h14M5 12h10M5 17h6"/></svg>Sort</div>
+      <div><svg viewBox="0 0 24 24"><rect x="4" y="5" width="4" height="14" rx="1"/><rect x="10" y="5" width="4" height="9" rx="1"/><rect x="16" y="5" width="4" height="11" rx="1"/></svg>Board</div>
+      <div><svg viewBox="0 0 24 24"><path d="M3 7h7l2 2h9v10H3z"/></svg>Projects</div>
+      <div class="on"><svg viewBox="0 0 24 24"><rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="4" rx="1"/><rect x="13" y="10" width="7" height="10" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/></svg>Overview</div>
+    </nav>
+    <div class="main">
+      <div class="mhead"><h3>This week</h3><span style="font-size:.82rem; color:var(--ink-soft)">2 overdue · 7 due in the next 7 days · 31 with no date</span></div>
+      <div class="week">
+        <div class="day today"><b>WED 15</b><span class="chip r">Car tax renewal · 1d overdue</span><span class="chip r">Return library books</span></div>
+        <div class="day"><b>THU 16</b><span class="chip y">Bins out</span></div>
+        <div class="day"><b>FRI 17</b><span class="chip y">History essay draft</span></div>
+        <div class="day"><b>SAT 18</b></div>
+        <div class="day"><b>SUN 19</b><span class="chip w">Call Gran</span></div>
+        <div class="day"><b>MON 20</b><span class="chip w">Book boiler service</span><span class="chip w">Pay rent</span></div>
+        <div class="day"><b>TUE 21</b><span class="chip w">Portfolio review</span></div>
+      </div>
+      <div class="mhead"><h3>Life areas</h3><span style="font-size:.82rem; color:var(--ink-soft)">tap an area to open its projects</span></div>
+      <div class="areas">
+        <div class="area" style="--c:var(--home)"><strong>Home</strong><span>14 open · 3 due this week</span><div class="bar"><i style="width:40%"></i></div></div>
+        <div class="area" style="--c:var(--school)"><strong>School</strong><span>9 open · 1 due this week</span><div class="bar"><i style="width:62%"></i></div></div>
+        <div class="area" style="--c:var(--money)"><strong>Money &amp; paperwork</strong><span>6 open · 2 overdue</span><div class="bar"><i style="width:25%"></i></div></div>
+        <div class="area" style="--c:var(--art)"><strong>Art</strong><span>11 open · no dates</span><div class="bar"><i style="width:15%"></i></div></div>
+        <div class="area" style="--c:var(--car)"><strong>Car</strong><span>3 open · 1 overdue</span><div class="bar"><i style="width:50%"></i></div></div>
+      </div>
+      <div class="inboxline">212 imported notes waiting <span>from Keep 140 · Samsung Notes 48 · Word 24</span><span class="btn">Triage next note</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="decision">
+  <div class="dq"><span class="dnum">1</span><h2>Which piece comes first?</h2></div>
+  <p>The three pieces depend on each other only loosely, so each can ship and be tested on its own.</p>
+  <div class="options">
+    <div class="opt pick"><h3><span class="letter">1A</span> Dashboard, then import, then triage <span class="star">Suggested</span></h3><p>The Overview screen uses only data Unblock already holds, so it needs no new libraries and is the smallest piece. Triaged notes then have a place to show up.</p></div>
+    <div class="opt"><h3><span class="letter">1B</span> Import and triage first, dashboard last</h3><p>Starts with the part you called game changing. The catch is that your notes arrive before there is a calm screen to see the tasks they turn into.</p></div>
+  </div>
+</section>
+
+<section class="decision">
+  <div class="dq"><span class="dnum">2</span><h2>What shape should the dashboard take?</h2></div>
+  <div class="options">
+    <div class="opt pick">
+      <h3><span class="letter">2A</span> Week strip and life areas <span class="star">Suggested</span></h3>
+      <div class="thumb" aria-hidden="true"><div class="row" style="grid-template-columns:repeat(7,1fr); height:44px"><i class="tb" style="border-color:var(--due-now)"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i></div><div class="row" style="grid-template-columns:repeat(3,1fr)"><i class="tb" style="border-left:4px solid var(--home)"></i><i class="tb" style="border-left:4px solid var(--school)"></i><i class="tb" style="border-left:4px solid var(--money)"></i></div></div>
+      <p>The mockup above. The next seven days show every dated task, and one card per area shows how much is open. It answers "what is coming and where am I behind" in one glance.</p>
+    </div>
+    <div class="opt">
+      <h3><span class="letter">2B</span> Month calendar</h3>
+      <div class="thumb month" aria-hidden="true"><i class="tb"></i><i class="tb dot"></i><i class="tb"></i><i class="tb"></i><i class="tb red"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i><i class="tb dot"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i><i class="tb dot"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i><i class="tb"></i></div>
+      <p>A familiar grid of dots, good for seeing a busy fortnight ahead. Undated tasks, which are most of a backlog, have nowhere to appear.</p>
+    </div>
+    <div class="opt">
+      <h3><span class="letter">2C</span> Project timeline</h3>
+      <div class="thumb" aria-hidden="true"><div class="tl" style="height:100%"><i style="--c:var(--home); left:4%; width:40%; top:10px"></i><i style="--c:var(--school); left:30%; width:55%; top:30px"></i><i style="--c:var(--money); left:10%; width:20%; top:50px"></i><i style="--c:var(--art); left:50%; width:44%; top:70px"></i></div></div>
+      <p>One bar per project from start to deadline. It looks impressive, but it needs start dates nobody records, and it is the hardest to read on a phone.</p>
+    </div>
+  </div>
+</section>
+
+<section class="decision">
+  <div class="dq"><span class="dnum">3</span><h2>How should notes come in?</h2></div>
+  <div class="options">
+    <div class="opt pick"><h3><span class="letter">3A</span> Export a file, drop it into Unblock <span class="star">Suggested</span></h3><p>You export from each app, then drop the file (or a whole zip) onto an Import page. Unblock reads it on your device and uploads nothing. It works for all five sources, costs nothing, and works offline.</p><p class="cost">Needs three open-source libraries, which I am asking about rather than adding: JSZip to open zip files, mammoth to read Word files, and pdf.js to read PDFs. All three would be stored inside the app so imports still work offline.</p></div>
+    <div class="opt"><h3><span class="letter">3B</span> Connect your accounts</h3><p>Sign in to Google and Microsoft and pull documents directly. Apple Notes and Samsung Notes offer no way to do this, so you would still need 3A for them.</p><p class="cost">Needs Google and Microsoft developer app registrations and their approval reviews. It is free, but it is weeks of setup for two of the five sources.</p></div>
+    <div class="opt"><h3><span class="letter">3C</span> Paste text only</h3><p>Copy a note, paste it into a box. Needs no libraries and is built in a day, but doing it hundreds of times is exactly the chore you want to avoid.</p></div>
+  </div>
+  <div class="paper tablebox">
+    <table>
+      <thead><tr><th>Source</th><th>How you would export it under 3A</th><th>What survives</th></tr></thead>
+      <tbody>
+        <tr><td><b>Google Keep</b></td><td>Google Takeout, Keep only, gives one zip of every note.</td><td class="fid hi">Everything: titles, checklists with ticks, labels, pinned and archived notes.</td></tr>
+        <tr><td><b>Samsung Notes</b></td><td>Select notes, then Share as a Word, PDF or text file. There is no single export of every note.</td><td class="fid mid">Text and lists. Handwriting only survives as the PDF picture, which Unblock cannot read.</td></tr>
+        <tr><td><b>Apple Notes</b></td><td>On a Mac, File → Export as PDF, one note at a time. On iPhone, Share or copy the text. A free Mac app called Exporter can save every note as text files at once.</td><td class="fid mid">Text and lists. Checklist ticks are lost from PDFs.</td></tr>
+        <tr><td><b>Google Docs</b></td><td>File → Download → Word, or Google Takeout of Drive for every document at once.</td><td class="fid hi">Text, headings, bullet and numbered lists.</td></tr>
+        <tr><td><b>Microsoft Word</b></td><td>Drop the .docx file in directly.</td><td class="fid hi">Text, headings, bullet and numbered lists.</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="cost">These export routes come from my knowledge of each app and have not been checked against your phone or apps yet. Before the importer is built, I would test each one with a real export file of yours.</p>
+</section>
+
+<section class="decision">
+  <div class="dq"><span class="dnum">4</span><h2>Where should imported notes live?</h2></div>
+  <div class="options">
+    <div class="opt pick"><h3><span class="letter">4A</span> In a separate Notes library <span class="star">Suggested</span></h3><p>Each note keeps its full text and its source. Triage turns parts of it into tasks that link back to the note, and the note stays as reference, so nothing is lost when one line becomes a task.</p><p class="cost">In the first version the library stays on the device you imported on. Tasks made from it sync to your other devices as they do now. Syncing the notes themselves is a later choice, because a few hundred notes would make the sync file several times larger.</p></div>
+    <div class="opt"><h3><span class="letter">4B</span> Straight into the capture inbox</h3><p>No new screen: every note becomes one Unsorted item. It is simpler to build, but 200 items would bury the quick thoughts you capture day to day, and a long note can only become one task.</p></div>
+  </div>
+</section>
+
+<section class="decision">
+  <div class="dq"><span class="dnum">5</span><h2>Who does the first pass of triage?</h2></div>
+  <p>Triage works the same way as the Unsorted card: one note at a time, with suggestions you accept or change. The question is who writes the suggestions. Here is the triage card with on-device suggestions; the note is a made-up example.</p>
+  <div class="triage" aria-label="Mockup of the triage card">
+    <div class="slip">
+      <span class="src">Google Keep · 12 April 2025 · label: house</span>
+      <p><b>Bathroom stuff</b>
+☐ new extractor fan (the loud one)
+☐ regrout by the bath
+☑ buy silicone
+ask landlord about damp before end of Oct
+maybe repaint? the green is grim</p>
+    </div>
+    <div class="paper" style="display:grid; gap:12px">
+      <h3>Found in this note</h3>
+      <div class="found">
+        <div class="cand"><span class="box">✓</span><span>Install new extractor fan<span class="why">from an unticked checklist line</span></span><span class="chip w">Home</span></div>
+        <div class="cand"><span class="box">✓</span><span>Regrout by the bath<span class="why">from an unticked checklist line</span></span><span class="chip w">Home</span></div>
+        <div class="cand"><span class="box">✓</span><span>Ask landlord about damp<span class="why">"before end of Oct" read as a deadline</span></span><span class="chip y">due 31 Oct</span></div>
+        <div class="cand"><span class="box"></span><span>Maybe repaint<span class="why">"maybe" reads as an idea, so it is left unticked</span></span><span class="chip w">idea</span></div>
+      </div>
+      <p style="font-size:.86rem; color:var(--ink-soft)">"Buy silicone" was already ticked, so it is skipped. The project "Home" was picked because the note's Keep label is "house".</p>
+      <div class="actions"><span class="btn solid">Make 3 tasks in Home</span><span class="btn">Make a new project</span><span class="btn">Keep as reference</span><span class="btn">Later</span><span class="btn">Archive</span></div>
+    </div>
+  </div>
+  <div class="options">
+    <div class="opt pick"><h3><span class="letter">5A</span> Simple rules on your device <span class="star">Suggested</span></h3><p>Checklists, bullets and numbered lines become task suggestions. Phrases like "by Friday", "20 Oct" or "end of month" become deadlines. Words matching a project name or label pick the project. It is free, private, offline and predictable, but it cannot understand a rambling paragraph.</p></div>
+    <div class="opt"><h3><span class="letter">5B</span> Claude reads each note</h3><p>You add your own Claude API key in Settings, and Claude splits prose into steps and suggests projects. It is far better with messy notes, but every note costs money and leaves your device. I would price it with real figures before building it.</p></div>
+    <div class="opt"><h3><span class="letter">5C</span> 5A now, 5B as an optional button later</h3><p>Rules handle the easy majority straight away. A "Ask Claude about this note" button is added later for the hard cases, and only if you want it after using 5A.</p></div>
+  </div>
+</section>
+
+<section class="reply">
+  <span class="eyebrow">How to answer</span>
+  <h2>Reply with your picks</h2>
+  <p>To take every suggestion, reply <code>approved 1A 2A 3A 4A 5A</code>. To change one, swap its letter, or tell me what to change about it. Once you approve, I will write the picks into the roadmap, open one GitHub issue per step under a parent issue, and start with the first piece.</p>
+  <p>It would also help to know two things: which phone you use day to day, since that decides whether Samsung Notes or Apple Notes matters more, and roughly how many notes you have in each app.</p>
+</section>
+
+</div>
