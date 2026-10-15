@@ -1,0 +1,48 @@
+{
+  "title": "Focus Deck Copy Build Plan",
+  "eyebrow": "Build plan · 15 October 2026 · Unblock · issue #21",
+  "replyPrefix": "Build plan approved: Focus Deck copy",
+  "reply": "",
+  "short": {
+    "lead": "This is how the approved design gets built: a GitHub issues switch that starts off, then a button that copies Focus Deck's data into Unblock with the issue links cut, then a check in a real browser. Each step has its own GitHub issue under #21, \"Copy Focus Deck's data into Unblock without touching Focus Deck\".",
+    "hint": "Tap a step to see what it does and what it needs from you.",
+    "key": [["I build it", ""], ["You act on it", "you"], ["Already exists", "done"]],
+    "items": [
+      ["lock", "Switch", "#22: a GitHub issues switch, off to start with", "",
+       "One check inside ghFetch (app/js/github.js:11), the function that every GitHub request goes through. While the switch is off, it refuses every issue, label and repo request, and lets Unblock's own Gist sync through. Auto-sync does not start and shows no error, and Settings gets a checkbox for turning the switch on.",
+       "Nothing from you."],
+      ["download", "Copy", "#23: the Copy from Focus Deck button", "",
+       "It finds the Gist that holds focus-deck-state.json, reads it without writing to it, cuts the issue links in the copy, and merges the result into Unblock's own Gist. Settings then says how many projects and tasks were copied and how many links were cut.",
+       "Nothing from you."],
+      ["search", "Check", "#24: a real-browser check and the write-up", "",
+       "A script runs the app in Chromium (a browser) against a fake Focus Deck Gist and records every request. The check fails if anything other than a read touches that Gist, or if any issue request goes out while the switch is off.",
+       "Nothing from you."],
+      ["check", "Try it", "You copy your real data", "you",
+       "Once the three steps pass, open Unblock with your own data and press Copy from Focus Deck.",
+       "Copy your data, then confirm Focus Deck still shows everything unchanged."]
+    ]
+  },
+  "changes": [
+    ["new", "GitHub issues switch", "Off to start with, so Unblock stays away from the GitHub issues that Focus Deck also uses.", null,
+     "The setting is stored on each device under the name unblock-github-issues, so a new device also starts with it off.",
+     ["Today, Unblock imports issues from up to 20 of your repos whenever you save a GitHub token.", "No issue is read or written until you turn the switch on.", "Unblock and Focus Deck can't change each other's GitHub issues."],
+     null],
+    ["new", "Copy from Focus Deck", "Copies your projects and tasks once, with the issue links cut.", null,
+     "Each unlinked task is also added to Unblock's list of excluded issues, so if you turn the switch on later, Unblock does not import the same issue a second time next to the copied task.",
+     ["Today, Unblock starts with no projects or tasks.", "After the copy, Unblock has all of Focus Deck's projects and tasks.", "Focus Deck's Gist is only ever read."],
+     null]
+  ],
+  "choices": [
+    ["ref", "Where should an unlinked task keep its issue reference?", [
+      ["A", "At the end of the title", 1, "The title becomes, for example, \"Fix login (Ajw2003/focus-deck-app#12)\". You can see the reference straight away, and no new screen code is needed."],
+      ["B", "In a hidden field", 0, "The title stays clean, but the reference is invisible until a later change shows it somewhere."]
+    ], "I recommend the end of the title. Tasks have no notes field, so the title is the only place where you would see the reference without new screen code. A hidden field would keep it out of sight until a later change adds a place to show it."]
+  ],
+  "wrapup": {
+    "summary": "A build plan in three steps for the approved Focus Deck copy: the GitHub issues switch, the copy button, and a real-browser check.",
+    "changing": "Unblock's GitHub code, its sync code and its Settings page. Focus Deck does not change.",
+    "blocking": "Your approval of this plan, with your pick for where the issue reference goes.",
+    "next": "I build the switch first, then the copy button, then the browser check, and hand it over so you can try the copy on your own data.",
+    "todo": ["Pick the end of the title or a hidden field for where the issue reference goes.", "Tap <b>Copy my reply</b>, or type the reply if copying fails.", "Send it, or say what to change."]
+  }
+}
