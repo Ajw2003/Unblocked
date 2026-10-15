@@ -43,6 +43,8 @@ const SHELL_ASSETS = [
   './js/category-filter.js',
   './js/render.js',
   './js/app.js',
+  './vendor/jszip.min.js',
+  './js/import-read.js',
 ];
 
 const CACHE_INFO_MESSAGE = 'INSTALL_PROMPT_READY';
