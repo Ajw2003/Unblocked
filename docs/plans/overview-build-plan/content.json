@@ -16,7 +16,7 @@
        "Nothing from you.",
        {"src": "docs/plans/life-dashboard/pics/overview-screen.png", "alt": "Mockup of the Overview screen", "caption": "The approved design this step builds."}],
       ["eye", "Check", "Step 3: check it in a real browser (issue #12)", "",
-       "A script that opens the app in Chromium, a real browser, with realistic data: around 19 projects and 60 tasks. It tries desktop and phone widths, in light and dark. It checks that the page never scrolls sideways, that overdue tasks show on today in red, that taps work, and that the bottom bar fits five buttons. It runs twice in a row, and I look at its screenshots alongside the existing screens' screenshots from before the change.",
+       "A script that opens the app in Chromium, a real browser, with realistic test data I write for it: 19 projects and 60 tasks, the same scale as the Board's browser check. It tries desktop and phone widths, in light and dark. It checks that the page never scrolls sideways, that overdue tasks show on today in red, that taps work, and that the bottom bar fits five buttons. It runs twice in a row, and I look at its screenshots alongside the existing screens' screenshots from before the change.",
        "Nothing from you."],
       ["file", "Docs", "Step 4: write it up (issue #13)", "",
        "The systems doc rewritten against the real code, a README entry, and the project state and Today notes updated.",
@@ -52,7 +52,7 @@
   "choices": [
     ["area", "What counts as a life area on the cards?", [
       ["A", "A project category", 1, "Projects already carry a category set in Settings (Work, Personal and Learning by default, renamable). One card per category, plus a card for projects with none."],
-      ["B", "Each project", 0, "One card per project. Simple, but with around 19 projects the cards stop being a glance."],
+      ["B", "Each project", 0, "One card per project. Simple, but at the 19 projects in the Board's test data the cards stop being a glance."],
       ["C", "Task labels", 0, "One card per label such as Chore or Art. Labels describe the kind of work, not an area of life, and one task can carry several."]
     ], "It groups projects the way you already sorted them, and the card count stays small."],
     ["strip", "What should the yellow strip at the bottom show before the importer exists?", [
@@ -67,7 +67,7 @@
   "wrapup": {
     "summary": "A four-step build plan for the Overview screen, the first piece of the approved life dashboard design.",
     "changing": "Two new code files, two test files, and small changes to app/js/render.js, app/js/app.js, app/css/app.css and app/service-worker.js. Stored data and sync are untouched.",
-    "blocking": "Your three picks on this page. Separately, the GitHub repository has no \"in progress\" or \"needs review\" labels, and I cannot create them from here.",
+    "blocking": "Your three picks on this page.",
     "next": "Steps 1 to 4 are built in order on my branch, each checked before the next, and a pull request links Life overview (#6) for you to try.",
     "todo": ["Pick an answer to each of the three choices.", "Tap <b>Copy my reply</b>.", "Send it, or say what to change."]
   }

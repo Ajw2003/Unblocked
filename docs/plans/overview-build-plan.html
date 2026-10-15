@@ -314,7 +314,7 @@ const PAGE = {
         "Check",
         "Step 3: check it in a real browser (issue #12)",
         "",
-        "A script that opens the app in Chromium, a real browser, with realistic data: around 19 projects and 60 tasks. It tries desktop and phone widths, in light and dark. It checks that the page never scrolls sideways, that overdue tasks show on today in red, that taps work, and that the bottom bar fits five buttons. It runs twice in a row, and I look at its screenshots alongside the existing screens' screenshots from before the change.",
+        "A script that opens the app in Chromium, a real browser, with realistic test data I write for it: 19 projects and 60 tasks, the same scale as the Board's browser check. It tries desktop and phone widths, in light and dark. It checks that the page never scrolls sideways, that overdue tasks show on today in red, that taps work, and that the bottom bar fits five buttons. It runs twice in a row, and I look at its screenshots alongside the existing screens' screenshots from before the change.",
         "Nothing from you."
       ],
       [
@@ -435,7 +435,7 @@ const PAGE = {
           "B",
           "Each project",
           0,
-          "One card per project. Simple, but with around 19 projects the cards stop being a glance."
+          "One card per project. Simple, but at the 19 projects in the Board's test data the cards stop being a glance."
         ],
         [
           "C",
@@ -488,7 +488,7 @@ const PAGE = {
   "wrapup": {
     "summary": "A four-step build plan for the Overview screen, the first piece of the approved life dashboard design.",
     "changing": "Two new code files, two test files, and small changes to app/js/render.js, app/js/app.js, app/css/app.css and app/service-worker.js. Stored data and sync are untouched.",
-    "blocking": "Your three picks on this page. Separately, the GitHub repository has no \"in progress\" or \"needs review\" labels, and I cannot create them from here.",
+    "blocking": "Your three picks on this page.",
     "next": "Steps 1 to 4 are built in order on my branch, each checked before the next, and a pull request links Life overview (#6) for you to try.",
     "todo": [
       "Pick an answer to each of the three choices.",
