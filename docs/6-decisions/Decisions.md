@@ -4,6 +4,31 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-15 — Importer QA failed on real Samsung notes: add a note view, short titles, renaming
+
+**Context.** aj imported 15 real Samsung Notes text files on the live app (#20, deployed). They
+imported and were counted, but long notes were cut off with no way to read them (the card stops at
+140 characters, `app/js/notes-view.js:50`), and each note's whole first line became its title
+(`readText` in `app/js/import-read.js`), which for a note written as one paragraph is the whole note.
+aj also could not do anything with a note yet (triage, #14, is not built) and could not tell whether a
+note had imported correctly. The proposal was `docs/plans/importer-fixes.html`; aj replied
+"QA failed: Importer: 1A 2A 3A".
+
+**Decision.**
+- **Note view (1A):** tapping a card opens the whole note on its own screen with a Back button: full
+  text, every checklist item, labels, the source file name and the import date. The same screen is
+  where triage buttons go later.
+- **Titles (2A):** a short first line followed by more text stays the title. A long first line gives a
+  title of about eight words, cut between words and ending in "…"; that whole first line stays at the
+  start of the note's text, so nothing is lost. A note can be renamed in its note view, and a later
+  re-import does not overwrite a title aj changed.
+- **Order (3A):** these importer fixes ship first; triage then gets its own design page and build plan,
+  starting from the note view.
+- No real export file was shared, so the title rule is built from the shape visible in aj's
+  screenshots (one long paragraph per note); a real file would become a test case if aj shares one.
+
+**Status.** Standing.
+
 ## 2026-10-15 — Importer build plan: a Notes tab on Sort, our own Word reader, no PDFs yet
 
 **Context.** The build plan `docs/plans/importer-build-plan.html` (built from

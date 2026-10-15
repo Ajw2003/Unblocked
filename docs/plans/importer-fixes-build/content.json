@@ -1,0 +1,50 @@
+{
+  "title": "Importer Fixes Build Plan",
+  "eyebrow": "Build plan · 15 October 2026 · code stays closed until you approve",
+  "replyPrefix": "Build plan approved: Importer",
+  "reply": "",
+  "short": {
+    "lead": "This is how the three fixes you picked get built: a full-screen note view, titles of about eight words, and renaming. Each fix goes back into the importer issue it belongs to, so there are no new issues. Nothing on this page needs a choice; approve it or say what to change.",
+    "hint": "Tap a step to see what it changes and how it is checked.",
+    "key": [["I build it", ""], ["You act on it", "you"]],
+    "items": [
+      ["file", "Titles", "Short titles (issue #16, reading the exported note files)", "",
+       "In app/js/import-read.js, a long first line of a text file gives a title of about eight words, cut between words and ending in \"…\", and the whole line stays at the start of the note's text. A short first line followed by more text stays the title, as now. Word files get the same rule.",
+       "Nothing to do here.",
+       null],
+      ["list", "Rename", "Renaming that survives a re-import (issue #17, the notes library, where imported notes are stored)", "",
+       "app/js/notes-library.js gains a rename that marks the title as yours, and a re-import of the same note keeps your title while still updating the text of a note that is waiting.",
+       "Nothing to do here."],
+      ["eye", "View", "The note view (issue #18, the Import screen and notes list)", "",
+       "Tapping a card opens the whole note on its own screen: an editable title, the full text, every checklist item with its tick, labels, \"archived in Keep\" when it was, the source file name and the import date, and a Back button that returns to the same place in the list.",
+       "Nothing to do here."],
+      ["hammer", "Check", "Check it in a real browser (issue #19)", "",
+       "The importer browser check grows: a one-paragraph note of 60 words gets an eight-word title, opening it shows every word, renaming it survives a reload and a re-import, and Back returns to the list. It runs twice, at phone and desktop width, and I look at the screenshots.",
+       "Nothing to do here."],
+      ["lock", "Try it", "You test again on your phone", "you",
+       "A pull request that links the Imports issue (#8) without closing it, and a test page.",
+       "You open a few of your Samsung notes, check the titles and full text, rename one, and reply \"QA passed: Importer\" or say what is still wrong."]
+    ]
+  },
+  "changes": [
+    ["chg", "app/js/import-read.js", "Titles become short headings.", ["Whole first line", "About eight words, then \"…\""],
+     "Notes that already imported keep their old titles until you import them again, at which point a waiting note picks up the new title.", null, null],
+    ["chg", "app/js/notes-library.js", "Adds renaming that a re-import respects.", null,
+     "A renamed note is marked as having a title you chose. When you import the same note again, its text and checklist are updated, but your title is left alone.", null, null],
+    ["new", "Note view", "The full note on its own screen.", null,
+     "Opened from any card on the Notes tab. The only thing it changes is the title, and only when you rename the note.",
+     ["Cards on the Notes tab show only the first 140 characters.", "A full-screen view of every word, with an editable title.", "You can read and check every note you import."], null],
+    ["chg", "scripts/check-importer-browser.mjs and the unit tests", "Cover the new title rule, the note view and renaming.", null,
+     "Unit tests cover a 60-word one-line note, a short first line, a Word file starting with a long paragraph, renaming, and a re-import after a rename.", null, null],
+    ["keep", "The import itself", "Reading files, the preview, duplicates and the Overview count are unchanged.", null,
+     "Only how notes are titled and shown changes.", null, null]
+  ],
+  "choices": [],
+  "wrapup": {
+    "summary": "A build plan for the three importer fixes you picked, folded into the four existing importer issues.",
+    "changing": "Titles in the reader, renaming in the library, a new note view, and wider tests.",
+    "blocking": "Two messages from you, because the design lock reads them one at a time: \"Design approved: Importer\", then \"Build plan approved: Importer\".",
+    "next": "The fixes are built and checked on my branch, then a pull request and a test page come to you.",
+    "todo": ["Send <b>Design approved: Importer</b>.", "Then send <b>Build plan approved: Importer</b>, or say what to change."]
+  }
+}
