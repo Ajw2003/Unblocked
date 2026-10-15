@@ -304,15 +304,15 @@ const PAGE = {
         "Blockers",
         "My blockers branch is behind",
         "",
-        "Pull request #9 still holds the rejected design, where each blocker becomes its own task. The steps design you approved exists only as model pages and decision entries on that branch. It is 33 commits behind main. A test merge shows the code merges cleanly; only two doc files clash.",
-        "Your answer to the first choice below, on what to do with pull request #9."
+        "Pull request #9, \"Blockers: name what is in the way, and deal it instead\", still holds the rejected design, where each blocker becomes its own task. The steps design you approved exists only as model pages and decision entries on that branch. It is 33 commits behind main. A test merge shows the code merges cleanly; only two doc files clash.",
+        "Your answer to the first choice below, on what to do with the blockers pull request (#9)."
       ],
       [
         "file",
         "Notes",
         "Out-of-date notes on main",
         "",
-        "Main's state notes say blockers is \"0%, not started\" (the other session never saw my branch), that Focus Deck's data hasn't been re-checked live (you checked it on your S26 on the 13th), and that the importer is \"not yet merged\" and that the \"archived in Keep\" badge never shows. Both importer claims are wrong now: pull request #20 is merged, and the code shows the badge (app/js/notes-view.js, line 52).",
+        "Main's state notes are wrong in four places. They say blockers is \"0%, not started\", because the other session never saw my branch. They say Focus Deck's data hasn't been re-checked live, but you checked it on your S26 on the 13th. They say the importer is \"not yet merged\", but the importer pull request (#20) is merged. And they say the \"archived in Keep\" badge never shows, but the code now shows it (app/js/notes-view.js, line 52).",
         "Nothing from you; I fix these on the new branch."
       ],
       [
@@ -320,7 +320,7 @@ const PAGE = {
         "Issues",
         "Issues done but still open",
         "you",
-        "Issues #10 to #13 (Overview) and #16 to #19 (importer) are finished in code and merged, but still open.",
+        "Eight issues are finished in code and merged, but still open. The four Overview issues (#10 to #13): work out the week strip and area cards, add the screen to the rail, check it in a real browser, write it up. The four importer issues (#16 to #19): read the exports, keep notes in a library, the Import screen and notes list, check it in a real browser and write it up.",
         "You close them once you've tested; I never close issues myself."
       ]
     ]
@@ -328,7 +328,7 @@ const PAGE = {
   "changes": [
     [
       "chg",
-      "Pull request #9 (blockers)",
+      "The blockers pull request (#9)",
       "Closed without merging; its branch stays on GitHub.",
       [
         "Open, holding the rejected design",
@@ -364,7 +364,7 @@ const PAGE = {
   "choices": [
     [
       "pr9",
-      "What should happen to pull request #9?",
+      "What should happen to the blockers pull request (#9)?",
       [
         [
           "A",
@@ -403,7 +403,7 @@ const PAGE = {
   ],
   "wrapup": {
     "summary": "A catch-up on what changed since Tuesday, and a clean-up before the steps work starts.",
-    "changing": "Nothing yet. With your OK: pull request #9 closes, the design work is copied to a fresh branch, and main's out-of-date notes get fixed.",
+    "changing": "Nothing yet. With your OK: the blockers pull request (#9) closes, the design work is copied to a fresh branch, and main's out-of-date notes get fixed.",
     "blocking": "Your answers to the two choices.",
     "next": "I write the steps build plan as a page for you to approve.",
     "todo": [
