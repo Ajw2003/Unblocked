@@ -297,7 +297,7 @@ const PAGE = {
         "Today",
         "Separate sync files already",
         "done",
-        "Unblock reads and writes only its own sync file, unblock-state.json (app/js/sync.js:10), and only looks for Gists that hold that file (app/js/sync.js:83). It never finds or opens Focus Deck's Gist. Browser storage is kept apart too, and scripts/check-isolation-browser.mjs checks that.",
+        "Unblock reads and writes only its own sync file, unblock-state.json, and only looks for Gists that hold that file (app/js/sync.js lines 10 and 83). It never finds or opens Focus Deck's Gist. Browser storage is kept apart too, and scripts/check-isolation-browser.mjs checks that.",
         "Nothing from you."
       ],
       [
@@ -314,7 +314,7 @@ const PAGE = {
         "Decide what happens to issue links",
         "you",
         "Some copied tasks are linked to GitHub issues. In Unblock, completing, deleting, relabelling or reprioritising one of those tasks changes the real issue (app/js/github-sync.js:112, 131, 170, 189), and Focus Deck shows that same issue.",
-        "Pick option A, B or C in the question below."
+        "Answer the linked-issues question below: cut the links, copy them as they are, or add a read-only switch."
       ]
     ]
   },
@@ -363,10 +363,10 @@ const PAGE = {
           "C",
           "Add a 'GitHub read-only' switch",
           0,
-          "Unblock still pulls issues but never writes to them until you turn the switch off. It needs more code to build than option A, and it keeps the shared-issue risk until you turn the switch off."
+          "Unblock still pulls issues but never writes to them while the switch is on. It needs more code than cutting the links, and the shared-issue risk returns the moment the switch goes off."
         ]
       ],
-      "I recommend option A. It is the only option where an edit in Unblock can never change anything Focus Deck shows, and it is the smallest change."
+      "I recommend cutting the links. It is the only choice where an edit in Unblock can never change anything Focus Deck shows, and it is the smallest change."
     ]
   ],
   "wrapup": {
