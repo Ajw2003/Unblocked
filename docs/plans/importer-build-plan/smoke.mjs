@@ -1,5 +1,7 @@
 // Smoke test for #18 (not the real browser check, #19): import a Keep-style .json and a .md on the Sort
 // screen's Notes tab at 390 wide. Needs: python3 -m http.server 8139 from the repo root.
+// Against the live site instead: node docs/plans/importer-build-plan/smoke.mjs https://ajw2003.github.io/Unblocked/app/
+// (the screenshot then goes to smoke-live-390.png).
 import { createRequire } from 'node:module';
 import fs from 'node:fs';
 import os from 'node:os';
@@ -11,14 +13,18 @@ const md = path.join(dir, 'ideas.md');
 fs.writeFileSync(keep, JSON.stringify({ title: 'Groceries', listContent: [{ text: 'Milk', isChecked: true }, { text: 'Eggs', isChecked: false }], labels: [{ name: 'Home' }], isTrashed: false, isArchived: false, createdTimestampUsec: 1700000000000000, userEditedTimestampUsec: 1700000000000000 }));
 fs.writeFileSync(md, '# Ideas\nBuild a shed\n- [ ] buy wood\n');
 const seed = { projects: [], projectCategories: [], categories: [], inbox: [], completedLog: [], deletedTaskIds: {}, choosingMode: { mode: 'twice', updatedAt: 1 } };
-const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', args: ['--no-sandbox'] });
+const target = process.argv[2] || 'http://127.0.0.1:8139/app/';
+const live = target.startsWith('https://');
+// The live site is reached through this machine's proxy; a local server is not.
+const proxy = live && process.env.HTTPS_PROXY ? { server: process.env.HTTPS_PROXY } : undefined;
+const browser = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium', proxy, args: ['--no-sandbox', '--ignore-certificate-errors'] });
 const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, serviceWorkers: 'block' });
 const page = await ctx.newPage();
 const errs = [];
 page.on('pageerror', (e) => errs.push(e.message));
 page.on('console', (m) => { if (m.type() === 'error') errs.push(m.text()); });
 await page.addInitScript((s) => { if (localStorage.getItem('seeded')) return; localStorage.setItem('seeded', '1'); localStorage.setItem('unblock-onboarding', 'done'); localStorage.setItem('unblock-state-v1', JSON.stringify(s)); }, seed);
-await page.goto('http://127.0.0.1:8139/app/');
+await page.goto(target, { waitUntil: 'networkidle', timeout: 60000 });
 await page.click('.rail-item[data-screen="sort"]');
 await page.click('[data-action="sort-tab"][data-tab="notes"]');
 await page.setInputFiles('#import-files', [keep, md]);
@@ -26,7 +32,7 @@ await page.waitForSelector('[data-action="import-confirm"]');
 await page.click('[data-action="import-confirm"]');
 await page.waitForSelector('.note-card');
 const info = await page.evaluate(() => ({ cards: document.querySelectorAll('.note-card').length, preview: !!document.querySelector('.import-preview'), sideways: document.documentElement.scrollWidth > innerWidth, toast: (document.querySelector('.toast') || {}).textContent }));
-await page.screenshot({ path: new URL('smoke-390.png', import.meta.url).pathname });
+await page.screenshot({ path: new URL(live ? 'smoke-live-390.png' : 'smoke-390.png', import.meta.url).pathname });
 const ok = info.cards === 2 && !info.preview && !info.sideways && !errs.length;
 console.log((ok ? 'PASS ' : 'FAIL ') + JSON.stringify(info) + ' errors=' + JSON.stringify(errs));
 await browser.close();
