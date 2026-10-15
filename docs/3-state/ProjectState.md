@@ -1,6 +1,16 @@
 # Project State
 
-## Headline: Unblock is copied and renamed; none of its new features are built yet
+## Headline: Unblock is live on GitHub Pages, and its first new screen, Overview, is deployed
+
+Checked 2026-10-15: pull request #15 (the Overview screen) was merged to `main` at 08:05 UTC and the
+deploy workflow run that followed succeeded
+(https://github.com/Ajw2003/Unblocked/actions/runs/38703208088). An earlier push to `main` on
+2026-10-13 had also deployed successfully, so the "has not run" note in the next paragraph is out of
+date and kept only as history. `docs/plans/overview-build-plan/live-check.mjs` opened
+https://ajw2003.github.io/Unblocked/app/ at 390 wide, found the Overview button and a task due today
+on today's column, with no page errors (PASS twice; screenshot `docs/plans/overview-build-plan/live-390.png`).
+
+## Earlier headline (2026-10-13): Unblock is copied and renamed; none of its new features are built yet
 
 Unblock was copied from Focus Deck `main` (`f231bfd`) on 2026-10-13 and renamed so the two apps
 cannot share data. All 176 inherited tests pass after the rename (`node --test app/js/*.test.mjs`).
@@ -15,11 +25,11 @@ saves a captured thought under its own key).
 
 | # | Unblock milestone | % | Status |
 |---|---|---|---|
-| U1 | Separate copy of Focus Deck | ~85% | Pushed, checked in Chromium; not deployed: no `main`, and GitHub Pages on a free plan needs a public repo |
+| U1 | Separate copy of Focus Deck | ~95% | On `main` and deployed to https://ajw2003.github.io/Unblocked/ (deploys succeeded 2026-10-13 and 2026-10-15). Not re-checked since the copy: that using it leaves Focus Deck's data untouched on the live site; `scripts/check-isolation-browser.mjs` covers this locally |
 | U2 | Blockers | 0% | Not started |
 | U3 | "What can I do right now" by energy | 0% | Not started |
 | U4 | Voice capture | 0% | Not started |
-| U5 | Life overview | ~90% | Build plan approved 2026-10-15. Steps 1-4 of 4 built on `AjsAgent/nifty-albattani-22uvtl`: `app/js/overview.js` (#10), the Overview screen in the rail (#11), the browser check (#12) and the write-up (#13, `docs/4-systems/overview.md`). 193/193 unit tests pass; `scripts/check-overview-browser.mjs` gives 57 PASS, 0 FAIL ("all overview checks passed") on a seed of 19 projects and 60 tasks at 1440 and 390 wide, light and dark; screenshots in `docs/generated/overview/`. Waiting on aj to try it (QA); that is the remaining ~10% |
+| U5 | Life overview | ~90% | Build plan approved 2026-10-15. Steps 1-4 of 4 built, merged to `main` in #15 and deployed 2026-10-15: `app/js/overview.js` (#10), the Overview screen in the rail (#11), the browser check (#12) and the write-up (#13, `docs/4-systems/overview.md`). 193/193 unit tests pass; `scripts/check-overview-browser.mjs` gives 57 PASS, 0 FAIL ("all overview checks passed") on a seed of 19 projects and 60 tasks at 1440 and 390 wide, light and dark; screenshots in `docs/generated/overview/`. Waiting on aj to try it (QA); that is the remaining ~10% |
 | U6 | Markdown copies in the Gist | 0% | Not started |
 | U7 | Imports (Keep, Samsung Notes, Docs, PDF, text) | 0% | Design approved 2026-10-15; build plan next |
 | U8 | Triage of imported notes, optional Claude via GitHub | 0% | Design approved 2026-10-15; build plan next |
