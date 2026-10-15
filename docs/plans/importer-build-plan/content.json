@@ -19,7 +19,7 @@
        "A file picker and drop zone, a preview of how many notes each app gave and how many are already imported, an Import button, and a searchable list of your notes. The Overview's yellow strip starts counting notes waiting for triage.",
        "Nothing from you."],
       ["eye", "Check", "Step 4: check it in a real browser and write it up (issue #19)", "",
-       "A test run in Chromium, the browser engine behind Chrome, that imports 140 sample Keep notes, 48 text and Markdown files and 24 Word files through the real screen at phone and desktop width, then imports them again to prove nothing doubles. It also imports with the network off. Then the docs are written against the real code.",
+       "A test run in Chromium, the browser engine behind Chrome. It imports 140 sample Keep notes, 48 text and Markdown files and 24 Word files through the real screen at phone and desktop width. Then it imports them again to prove nothing doubles. It also imports with the network off. Then the docs are written against the real code.",
        "Nothing from you."],
       ["lock", "Try it", "You import your real notes", "you",
        "A pull request that links Imports (#8) without closing it.",
@@ -53,7 +53,7 @@
     ["word", "How should Word files be read?", [
       ["A", "With JSZip and a small reader of our own", 1, "A Word file is a zip of text files, so JSZip (98 KB) opens it and our reader pulls out paragraphs, headings and bullet lists. Tables and formatting are dropped."],
       ["B", "With the mammoth library as well", 0, "Handles more of Word's oddities, but adds 642 KB, about one and a half times the size of the app's own code."]
-    ], "Notes need text and lists, not formatting, and option A keeps the app small."],
+    ], "Notes need text and lists, not formatting, and reading them with JSZip alone keeps the app small."],
     ["pdf", "Should PDFs be readable?", [
       ["A", "Not in the first version", 1, "Samsung Notes can export Word or Text and Apple Notes can export Markdown instead, and handwriting in a PDF can't be read without AI anyway."],
       ["B", "Yes, stored in the app for offline use", 0, "Adds pdf.js, 1.8 MB, which is more than four times the app's own code, to every install."],
