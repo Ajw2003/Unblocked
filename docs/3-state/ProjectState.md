@@ -19,9 +19,10 @@ saves a captured thought under its own key).
 | U2 | Blockers | 0% | Not started |
 | U3 | "What can I do right now" by energy | 0% | Not started |
 | U4 | Voice capture | 0% | Not started |
-| U5 | Life overview | 0% | Not started |
+| U5 | Life overview | 0% | Design approved 2026-10-15; build plan next |
 | U6 | Markdown copies in the Gist | 0% | Not started |
-| U7 | Imports (Keep, Samsung Notes, Docs, PDF, text) | 0% | Not started |
+| U7 | Imports (Keep, Samsung Notes, Docs, PDF, text) | 0% | Design approved 2026-10-15; build plan next |
+| U8 | Triage of imported notes, optional Claude via GitHub | 0% | Design approved 2026-10-15; build plan next |
 
 The Focus Deck milestones below are what the copied code already does.
 
