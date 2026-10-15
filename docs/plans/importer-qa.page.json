@@ -1,6 +1,6 @@
 {
   "title": "Importer Test",
-  "eyebrow": "Ready for you to test · pull request #20",
+  "eyebrow": "Ready for you to test · pull request \"Import notes from Keep, Samsung Notes, Apple Notes, Google Docs and Word\"",
   "qa": {
     "feature": "Importer",
     "base": "origin/main",
@@ -18,12 +18,12 @@
     "key": [["Already checked", "done"], ["You do it", "you"]],
     "items": [
       ["check", "Checked", "What I checked", "done",
-       "221 code tests pass, run twice. The browser check passes 67 of 67, run twice: 206 sample notes (134 Keep, 48 text and Markdown, 24 Word) at phone and desktop width, re-import adds nothing, an edited note updates, 10 archived badges, and an import with the network off.",
+       "221 code tests pass, run twice. The browser check passes 67 of 67, run twice. It imports 206 sample notes (134 Keep, 48 text and Markdown, 24 Word) at phone and desktop width. Importing again adds nothing, an edited note updates, 10 archived badges show, and an import works with the network off.",
        "Nothing to do here; I already ran these checks.",
        {"src": "docs/generated/importer/notes-390.png", "alt": "The Notes tab at phone width after importing 206 sample notes", "caption": "The Notes tab at phone width, from the browser check."}],
-      ["hand", "Merge", "Merge pull request #20", "you",
+      ["hand", "Merge", "Merge the importer pull request", "you",
        "The importer goes live on https://ajw2003.github.io/Unblocked/app/ once the deploy finishes, in a minute or two.",
-       "On GitHub, open pull request #20 and press Merge."],
+       "On GitHub, open the pull request \"Import notes from Keep, Samsung Notes, Apple Notes, Google Docs and Word\" (https://github.com/Ajw2003/Unblocked/pull/20) and press Merge."],
       ["file", "Samsung", "Import Samsung Notes", "you",
        "In Samsung Notes, long-press a note, tick a few more notes, then choose Save as file and pick Word or Text. Then open Unblock, go to Sort, open the Notes tab, choose those files, check the preview, and press Import.",
        "You should see each note's title and text, and checklists as items. Tell me any note that came through wrong."],
@@ -41,6 +41,6 @@
     "changing": "A Notes tab on the Sort screen, an on-device Notes library, and a notes count on the Overview.",
     "blocking": "Your test with real Samsung Notes files, and a Keep Takeout if you use Keep.",
     "next": "Any note that comes through wrong becomes a fix with a test built from it; once you pass it, the next step is building triage (issue #14), which turns your imported notes into tasks.",
-    "todo": ["Merge pull request #20.", "Import a few real exports on the live app.", "Tap <b>Copy my reply</b>, or tell me what came through wrong."]
+    "todo": ["Merge the importer pull request.", "Import a few real exports on the live app.", "Tap <b>Copy my reply</b>, or tell me what came through wrong."]
   }
 }

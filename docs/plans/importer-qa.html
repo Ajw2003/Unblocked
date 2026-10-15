@@ -271,7 +271,7 @@ const EXAMPLE_PIC = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http
 const EXAMPLE_PIC_AFTER = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#dff3e8"/><rect x="100" y="50" width="120" height="80" rx="12" fill="#1f7a4d"/></svg>');
 const PAGE = {
   "title": "Importer Test",
-  "eyebrow": "Ready for you to test · pull request #20",
+  "eyebrow": "Ready for you to test · pull request \"Import notes from Keep, Samsung Notes, Apple Notes, Google Docs and Word\"",
   "qa": {
     "feature": "Importer",
     "base": "origin/main",
@@ -302,7 +302,7 @@ const PAGE = {
         "Checked",
         "What I checked",
         "done",
-        "221 code tests pass, run twice. The browser check passes 67 of 67, run twice: 206 sample notes (134 Keep, 48 text and Markdown, 24 Word) at phone and desktop width, re-import adds nothing, an edited note updates, 10 archived badges, and an import with the network off.",
+        "221 code tests pass, run twice. The browser check passes 67 of 67, run twice. It imports 206 sample notes (134 Keep, 48 text and Markdown, 24 Word) at phone and desktop width. Importing again adds nothing, an edited note updates, 10 archived badges show, and an import works with the network off.",
         "Nothing to do here; I already ran these checks.",
         {
           "src": "importer-qa-pics/notes-390.png",
@@ -313,10 +313,10 @@ const PAGE = {
       [
         "hand",
         "Merge",
-        "Merge pull request #20",
+        "Merge the importer pull request",
         "you",
         "The importer goes live on https://ajw2003.github.io/Unblocked/app/ once the deploy finishes, in a minute or two.",
-        "On GitHub, open pull request #20 and press Merge."
+        "On GitHub, open the pull request \"Import notes from Keep, Samsung Notes, Apple Notes, Google Docs and Word\" (https://github.com/Ajw2003/Unblocked/pull/20) and press Merge."
       ],
       [
         "file",
@@ -348,7 +348,7 @@ const PAGE = {
     [
       "chg",
       "Files changed, counted from git against origin/main",
-      "30 files, +2110 −9",
+      "33 files, +3021 −9",
       null,
       "The added and removed counts come from git (git diff --numstat origin/main...HEAD); the estimates beside them come from the plan.",
       null,
@@ -678,6 +678,42 @@ const PAGE = {
           ]
         ],
         [
+          "docs/plans/importer-qa-pics/notes-390.png",
+          0,
+          0,
+          [
+            [
+              "Not in the plan",
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          "docs/plans/importer-qa.html",
+          865,
+          0,
+          [
+            [
+              "Not in the plan",
+              0,
+              0
+            ]
+          ]
+        ],
+        [
+          "docs/plans/importer-qa.page.json",
+          46,
+          0,
+          [
+            [
+              "Not in the plan",
+              0,
+              0
+            ]
+          ]
+        ],
+        [
           "docs/plans/overview-build-plan/live-390.png",
           0,
           0,
@@ -731,7 +767,7 @@ const PAGE = {
     "blocking": "Your test with real Samsung Notes files, and a Keep Takeout if you use Keep.",
     "next": "Any note that comes through wrong becomes a fix with a test built from it; once you pass it, the next step is building triage (issue #14), which turns your imported notes into tasks.",
     "todo": [
-      "Merge pull request #20.",
+      "Merge the importer pull request.",
       "Import a few real exports on the live app.",
       "Tap <b>Copy my reply<\/b>, or tell me what came through wrong."
     ]
