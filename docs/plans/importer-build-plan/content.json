@@ -1,0 +1,79 @@
+{
+  "title": "Importer Build Plan",
+  "eyebrow": "Build plan · 15 October 2026 · code stays closed until you approve",
+  "replyPrefix": "Build plan approved: Importer",
+  "reply": "",
+  "short": {
+    "lead": "This is how the importer gets built: four steps, each a GitHub issue under Imports (#8). Your notes are read in the browser and kept in a Notes library on the device you import on, ready for you to sort through (this sorting is called triage). Five choices are left for you, and three of them decide how much the app grows.",
+    "hint": "Tap a step to see what it builds and what it needs from you.",
+    "key": [["I build it", ""], ["You act on it", "you"]],
+    "items": [
+      ["file", "Read", "Step 1: read the export files (issue #16)", "",
+       "A file of plain reading code with no screen, app/js/import-read.js. It turns Keep notes from a Takeout zip, text and Markdown files, and Word files into one note shape, keeping checklist ticks and Keep labels. Each kind of file gets tests built from sample files in that app's export shape.",
+       "Nothing from you.",
+       {"src": "docs/plans/life-dashboard/pics/export-table.png", "alt": "Table of what each app can export", "caption": "What each app exports, from the approved design."}],
+      ["list", "Library", "Step 2: keep notes on this device (issue #17)", "",
+       "The Notes library, stored in the browser on the device you import on, never in the synced data. Importing the same export twice skips the notes already there.",
+       "Nothing from you."],
+      ["hammer", "Screen", "Step 3: the Import screen and notes list (issue #18)", "",
+       "A file picker and drop zone, a preview of how many notes each app gave and how many are already imported, an Import button, and a searchable list of your notes. The Overview's yellow strip starts counting notes waiting for triage.",
+       "Nothing from you."],
+      ["eye", "Check", "Step 4: check it in a real browser and write it up (issue #19)", "",
+       "A test run in Chromium, the browser engine behind Chrome, that imports 140 sample Keep notes, 48 text and Markdown files and 24 Word files through the real screen at phone and desktop width, then imports them again to prove nothing doubles. It also imports with the network off. Then the docs are written against the real code.",
+       "Nothing from you."],
+      ["lock", "Try it", "You import your real notes", "you",
+       "A pull request that links Imports (#8) without closing it.",
+       "You export from each app you use, import the files on the live app, and tell me what came through wrong. My test files follow each app's published format, so your real exports are the true test."]
+    ]
+  },
+  "changes": [
+    ["new", "app/js/import-read.js", "Reads exported files into notes.", null,
+     "Plain reading code with no screen in it, like app/js/overview.js. Keep's field names come from open-source Keep converters rather than from Google, which is why your first real Takeout file is the real test.",
+     ["Notes sit in five apps.", "One reader for every export format chosen.", "Hundreds of notes can come in at once."], null],
+    ["new", "app/js/notes-library.js", "Stores imported notes on this device.", null,
+     "Kept in the browser's built-in storage (called IndexedDB), separate from the data that syncs through your Gist, so a few hundred notes never slow sync down. Syncing the library is a later choice.",
+     ["Nowhere to keep reference notes.", "A library of notes waiting for triage.", "Nothing is lost before you have sorted it."], null],
+    ["new", "The Import screen and notes list", "Where you drop files and see what came in.", null,
+     "Where it lives is the first choice below. It shows counts before anything is saved, so a wrong file is easy to back out of.",
+     ["No way to bring notes in.", "A drop zone, a preview and a notes list.", "You can see your whole backlog of ideas in one place."], null],
+    ["new", "app/vendor/jszip.min.js", "JSZip 3.10.1, an open-source zip reader, stored inside the app.", null,
+     "97,630 bytes. Takeout exports and Word files are both zips. Stored in the app and listed for offline use, so imports still work without a connection.",
+     null, null],
+    ["chg", "app/js/overview-view.js", "The yellow strip also counts notes waiting for triage.", ["N to sort", "N to sort · N notes to triage"],
+     "The strip opens the Sort screen today; once notes exist it also leads to them.", null, null],
+    ["keep", "Tasks, projects, the inbox and sync", "Untouched by any import.", null,
+     "An import only adds to the Notes library. Turning a note into tasks is triage, the next piece of work (issue #14, Triage: turn imported notes into tasks and projects).", null, null]
+  ],
+  "choices": [
+    ["where", "Where should Import and the notes list live?", [
+      ["A", "On the Sort screen, as a Notes tab beside the Unsorted card", 1, "Sort is already where loose things get handled, and the row of navigation buttons keeps its five buttons."],
+      ["B", "A sixth rail button called Notes", 0, "Easy to find, but six buttons would crowd the bar along the bottom of the phone."],
+      ["C", "In Settings", 0, "Out of the way, but you would come back to the notes list often, and Settings is a separate page."]
+    ], "Triage will happen next to the Unsorted card anyway, so the notes and the sorting stay in one place."],
+    ["word", "How should Word files be read?", [
+      ["A", "With JSZip and a small reader of our own", 1, "A Word file is a zip of text files, so JSZip (98 KB) opens it and our reader pulls out paragraphs, headings and bullet lists. Tables and formatting are dropped."],
+      ["B", "With the mammoth library as well", 0, "Handles more of Word's oddities, but adds 642 KB, about one and a half times the size of the app's own code."]
+    ], "Notes need text and lists, not formatting, and option A keeps the app small."],
+    ["pdf", "Should PDFs be readable?", [
+      ["A", "Not in the first version", 1, "Samsung Notes can export Word or Text and Apple Notes can export Markdown instead, and handwriting in a PDF can't be read without AI anyway."],
+      ["B", "Yes, stored in the app for offline use", 0, "Adds pdf.js, 1.8 MB, which is more than four times the app's own code, to every install."],
+      ["C", "Yes, downloaded only when you first drop a PDF", 0, "No cost until you use it, but that first PDF import needs a connection."]
+    ], "Every app you use has a lighter export than PDF, so PDF support can wait until a real note needs it."],
+    ["edited", "When you import a note again after editing it in Keep, what should happen?", [
+      ["A", "Update the library copy if it is still waiting; leave triaged notes alone", 1, "Your latest wording wins until you have acted on the note."],
+      ["B", "Always skip a note already imported", 0, "Simpler, but edits made after the first import are lost."]
+    ], "Re-exporting later should pick up what you changed, without undoing triage you already did."],
+    ["phone", "Which phone do you use day to day?", [
+      ["A", "Samsung (Android)", 0, "Samsung Notes' Word and Text exports get tested first."],
+      ["B", "iPhone", 0, "Apple Notes' Markdown export gets tested first."],
+      ["C", "Both", 0, "Both get equal attention."]
+    ], "This only sets which export I test first; all of them get built."]
+  ],
+  "wrapup": {
+    "summary": "A four-step build plan for the importer: read exports on your device into a Notes library ready for triage.",
+    "changing": "Two new modules, the Import screen and notes list, JSZip stored in the app, and the Overview's yellow strip. Tasks, projects, the inbox and sync are untouched.",
+    "blocking": "Your five picks on this page.",
+    "next": "The four steps are built in order on my branch, each checked before the next, then a pull request links Imports (#8) for you to try with your real exports.",
+    "todo": ["Pick an answer to each of the five choices.", "Tap <b>Copy my reply</b>.", "Send it, or say what to change."]
+  }
+}

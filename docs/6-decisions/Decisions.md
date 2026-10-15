@@ -4,6 +4,24 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-15 — The Overview screen passed aj's test; the importer is next
+
+**Context.** The Overview screen (#6, built in #10-#13) was merged in #15 and deployed to
+https://ajw2003.github.io/Unblocked/app/. aj tried it and wrote: "the overview screen works well time
+to move on".
+
+**Decision.**
+- The Overview screen counts as passed. Its issues stay open until aj agrees to close them.
+- Next, per the approved order (Overview, then importer, then triage), is the importer (#8). Its
+  approved design (2026-10-15 life dashboard entry: files read on the device into a separate Notes
+  library) gets its own build plan, `docs/plans/importer-build-plan.html`.
+- Measured 2026-10-15 for that plan: JSZip 3.10.1 is 97,630 bytes, mammoth 1.8.0 is 642,194 bytes,
+  and pdf.js 4.10.38 is 398,237 + 1,417,586 bytes (main file + worker), against 422,149 bytes for all
+  of the app's own JS, CSS and `index.html`. The build plan asks whether to read Word files with a
+  small reader of our own instead of mammoth, and whether PDFs are worth their size.
+
+**Status.** Standing.
+
 ## 2026-10-15 — Label setup moves into the house-rules plugin, built by a handed-off session
 
 **Context.** Unblock's issues stalled because the repo had no `in progress` or `needs review` labels,

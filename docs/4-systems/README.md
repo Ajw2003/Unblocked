@@ -19,6 +19,8 @@ Tier-4 documents: what each system owns, how it works, its invariants, and its t
   setting (`js/wallet.js`, `js/render.js`, `js/app.js`).
 - [overview.md](./overview.md) — the Overview screen: the week strip of dated tasks and one
   card per life area (`js/overview.js`, `js/overview-view.js`).
+- [importer.md](./importer.md) — the planned importer and Notes library: reading exported notes on
+  the device and keeping them for triage (`js/import-read.js`; not built yet).
 - [styling.md](./styling.md) — the stylesheet and its contract with the markup that references it
   (`css/app.css`, `js/render.js`), plus the guardrails against it silently breaking
   (`js/style-contract.test.mjs`, `scripts/guard-file-churn.mjs`).
