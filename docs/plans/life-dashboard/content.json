@@ -55,7 +55,7 @@
      {"src": "docs/plans/life-dashboard/pics/triage-card.png", "alt": "Mockup of the triage card", "caption": "The triage card."}],
     ["new", "Send to Claude (optional)", "Claude handles the notes the rules cannot read.", null,
      "Splitting a rambling paragraph into steps, telling an idea from a task with no cue word, and reading handwriting all need AI. The button is hidden until a Claude connection is set up, so the app works fully without AI.",
-     ["Nothing; a messy note stays messy.", "A button that hands one note to Claude.", "The hard notes get triaged too, only when you ask."],
+     ["Nothing does this today, so a messy note stays messy.", "A button that hands one note to Claude.", "The hard notes get triaged too, only when you ask."],
      null,
      {"src": "docs/plans/life-dashboard/pics/ai-line.png", "alt": "Jobs that need AI and jobs that do not", "caption": "Where AI is and is not needed."}],
     ["keep", "Capture inbox and Unsorted card", "Stays for quick thoughts typed in the moment.", null,
@@ -77,7 +77,7 @@
        {"src": "docs/plans/life-dashboard/pics/shape-timeline.png", "alt": "Sketch of coloured project bars on a timeline", "caption": "Project timeline."}]
     ], "It answers \"what is coming, and where am I behind\" in one glance, and it has room for undated tasks."],
     ["import", "How should notes come in?", [
-      ["A", "Export a file, drop it into Unblock", 1, "Works for all five apps, costs nothing, uploads nothing, and works offline. Needs JSZip, mammoth and pdf.js, which I am asking about rather than adding."],
+      ["A", "Export a file, drop it into Unblock", 1, "Works for all five apps, costs nothing, uploads nothing, and works offline. Needs three open-source libraries (JSZip, mammoth and pdf.js), which I will not add unless you pick this option."],
       ["B", "Connect Google and Microsoft accounts", 0, "Pulls documents directly, but Apple Notes and Samsung Notes offer no way to do this, and it needs weeks of developer app registration."],
       ["C", "Paste text only", 0, "No libraries and quick to build, but pasting hundreds of notes is the chore you want to avoid."]
     ], "Three of the five apps can export every note at once, and the other two can export many at once."],
@@ -86,12 +86,12 @@
       ["B", "Straight into the capture inbox", 0, "No new screen, but 200 items would bury your daily quick thoughts, and a long note could only become one task."]
     ], "A note often holds several tasks plus reference text worth keeping."],
     ["triage", "Who does the first pass of triage?", [
-      ["A", "Simple rules on your device, no AI at all", 0, "Free, private and offline, but it cannot make sense of a rambling paragraph."],
+      ["A", "Simple rules on your device, no AI at all", 0, "Free, private and offline, but the rules cannot make sense of a rambling paragraph."],
       ["B", "Simple rules for every note, Claude only when you ask", 1, "The rules run on every note. A note they cannot make sense of gets a Send to Claude button, which stays hidden until you set up a connection."]
     ], "It keeps AI optional and limited to the jobs that are impossible without it, as you asked."],
     ["claude", "How should Claude connect, for the notes that need it?", [
       ["A", "Through GitHub, which Unblock already syncs", 1, "Send to Claude files the note as a needs-triage issue in a private repo. In a Claude chat, Claude reads it through its GitHub connector, proposes tasks, and creates them as labelled issues once you agree. No new server and no cost beyond your Claude plan; tasks land only in projects linked to a repo."],
-      ["B", "Unblock's own Claude connector", 0, "A small MCP server on a free host such as Cloudflare Workers reads and writes your sync Gist. Added once on claude.ai, it works on the web, the desktop app and your phone, and tasks can land in any project. It is new code to host and secure."],
+      ["B", "Unblock's own Claude connector", 0, "A small server using MCP (the standard way Claude connects to outside tools) on a free host such as Cloudflare Workers reads and writes your sync Gist. Added once on claude.ai, it works on the web, the desktop app and your phone, and tasks can land in any project. It is new code to host and secure."],
       ["C", "A Claude API key inside Unblock", 0, "The button calls Claude straight from the app. API use is billed per note, separately from a Claude subscription, and the key is stored in your browser."]
     ], "The GitHub route works with what exists today and follows the existing Claude rules in docs/4-systems/claude-integration.md. The connector can be added on top later if a chat turns out to be too slow."]
   ],
