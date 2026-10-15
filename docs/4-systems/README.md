@@ -17,8 +17,8 @@ Tier-4 documents: what each system owns, how it works, its invariants, and its t
   step under the date field, and the Settings defaults (`js/due-stage.js`).
 - [wallets.md](./wallets.md) — the focus picker's folder and index-card wallets, the "Choosing a card"
   setting (`js/wallet.js`, `js/render.js`, `js/app.js`).
-- [overview.md](./overview.md) — the planned Overview screen: the week strip of dated tasks and one
-  card per life area (`js/overview.js`, `js/overview-view.js`; not built yet).
+- [overview.md](./overview.md) — the Overview screen: the week strip of dated tasks and one
+  card per life area (`js/overview.js`, `js/overview-view.js`).
 - [styling.md](./styling.md) — the stylesheet and its contract with the markup that references it
   (`css/app.css`, `js/render.js`), plus the guardrails against it silently breaking
   (`js/style-contract.test.mjs`, `scripts/guard-file-churn.mjs`).

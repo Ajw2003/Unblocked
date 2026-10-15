@@ -19,7 +19,7 @@ saves a captured thought under its own key).
 | U2 | Blockers | 0% | Not started |
 | U3 | "What can I do right now" by energy | 0% | Not started |
 | U4 | Voice capture | 0% | Not started |
-| U5 | Life overview | ~50% | Build plan approved 2026-10-15. Steps 1-2 of 4 built on `AjsAgent/nifty-albattani-22uvtl`: `app/js/overview.js` (#10) and the Overview screen in the rail (#11); 193/193 unit tests pass; a quick Chromium check renders it at 1440 and 390 wide with no console errors. Browser check (#12) and docs (#13) remain |
+| U5 | Life overview | ~90% | Build plan approved 2026-10-15. Steps 1-4 of 4 built on `AjsAgent/nifty-albattani-22uvtl`: `app/js/overview.js` (#10), the Overview screen in the rail (#11), the browser check (#12) and the write-up (#13, `docs/4-systems/overview.md`). 193/193 unit tests pass; `scripts/check-overview-browser.mjs` gives 57 PASS, 0 FAIL ("all overview checks passed") on a seed of 19 projects and 60 tasks at 1440 and 390 wide, light and dark; screenshots in `docs/generated/overview/`. Waiting on aj to try it (QA); that is the remaining ~10% |
 | U6 | Markdown copies in the Gist | 0% | Not started |
 | U7 | Imports (Keep, Samsung Notes, Docs, PDF, text) | 0% | Design approved 2026-10-15; build plan next |
 | U8 | Triage of imported notes, optional Claude via GitHub | 0% | Design approved 2026-10-15; build plan next |

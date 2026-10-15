@@ -495,3 +495,15 @@ and wallets 42 checks all pass. Open with the user: space below Focus, margins a
 At the user's request the wide-screen topbar is part of the desk: brand larger in the corner above
 the rail, sync and Settings at the foot of the rail, jotter unchanged, no band or rule. Phone
 unchanged. Seen in Chromium at 1366, 1440 (light), 1920 and 2560 wide and 390 (phone).
+
+# Today — 2026-10-15
+
+## Overview screen built (U5), waiting on aj
+
+The Overview screen is built on `AjsAgent/nifty-albattani-22uvtl` (#10-#13): the week strip from
+today with deadline colours and overdue tasks on today, one area card per project category plus No
+area, and the "to sort" strip that opens Sort. Checked: 193/193 unit tests pass;
+`scripts/check-overview-browser.mjs` 57 PASS, 0 FAIL ("all overview checks passed") on a seed of 19
+projects and 60 tasks, at 1440 and 390 wide, light and dark; screenshots in
+`docs/generated/overview/`. Written up in `docs/4-systems/overview.md` and the README. Not yet tried
+by aj. Next: aj tries it; then the importer (issue #8); the label tool proposal awaits aj's picks.
