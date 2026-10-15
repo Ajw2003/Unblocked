@@ -49,7 +49,7 @@ export function noteCard(n) {
   if (!body && items.length) body = items.map((i) => i.text).join(', ');
   if (body.length > 140) body = body.slice(0, 140).trimEnd() + '…';
   return '<li class="note-card"><div class="note-card-top"><span class="source-badge source-' + esc(n.source) + '">' + esc(SOURCE_NAME[n.source] || n.source) + '</span>'
-    + (n.status === 'archived' ? '<span class="note-archived">archived in Keep</span>' : '') + '</div>'
+    + (n.archived ? '<span class="note-archived">archived in Keep</span>' : '') + '</div>'
     + '<h3 class="note-card-title">' + esc(n.title || 'Untitled') + '</h3>'
     + (body ? '<p class="note-card-body">' + esc(body) + '</p>' : '')
     + (items.length ? '<p class="note-card-count">' + ticked + ' of ' + items.length + ' ticked</p>' : '')

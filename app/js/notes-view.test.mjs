@@ -28,7 +28,7 @@ test('preview shows counts, skipped reasons and buttons', () => {
 });
 
 test('note card: checklist count, labels, archived, escaping', () => {
-  const n = note({ title: '<b>Hi</b>', items: [{ text: 'a', checked: true }, { text: 'b', checked: false }, { text: 'c', checked: false }], labels: ['Home'], status: 'archived' });
+  const n = note({ title: '<b>Hi</b>', items: [{ text: 'a', checked: true }, { text: 'b', checked: false }, { text: 'c', checked: false }], labels: ['Home'], archived: true });
   const html = renderNotesPanel(view({ notes: [n], counts: { keep: 1, text: 0, word: 0 } }));
   assert.ok(html.includes('1 of 3 ticked') && html.includes('Home') && html.includes('archived in Keep'));
   assert.ok(!html.includes('<b>Hi') && html.includes('&lt;b&gt;Hi'));

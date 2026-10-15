@@ -72,14 +72,15 @@ notes count. Nothing is uploaded: files are read in the browser with `File.text(
   and callers pass the constructor in; Node tests `require` it.
 - **Keep field names come from community converters, not from Google.** Only a real Takeout file proves
   them. The browser check uses a Takeout-shaped sample built from those names, so it cannot catch a
-  difference in the real export. Real Takeouts may also hold files such as `Labels.txt`, which would be
-  read as a Text note (unverified).
+  difference in the real export. A `Keep/Labels.txt` (the label list some Takeouts include) is skipped
+  as "Keep label list, not a note" (`import-read.js`, the zip walk in `readOne`; tested in
+  `import-read.test.mjs`); other unexpected Takeout files are unverified.
 - **Notes are device-only.** Clearing the browser's site data deletes the library, and a second device
   has its own empty one.
-- **Archived badge never shows (found by the #19 check, not fixed).** The readers store
-  `archived: true` (`import-read.js:51`) but the card shows "archived in Keep" only when
-  `n.status === 'archived'` (`notes-view.js:52`), and status is always `waiting`. Archived notes import
-  correctly (10 of 10 in the sample) but are indistinguishable on the list.
+- **"Archived" is a flag, not a status.** The readers store `archived: true` (`import-read.js:51`) and
+  status stays `waiting`, so code that shows or filters archived Keep notes must read `n.archived`, as
+  the card does (`notes-view.js:52`). The #19 browser check found the card reading `status` instead; it
+  now asserts 10 "archived in Keep" badges at each width.
 - **Duplicate bodies collapse.** Two different notes with identical title, text and items are treated as
   one (`notes-library.js:31`).
 - **Word titles are the first paragraph.** A document that starts with body text gets that sentence as

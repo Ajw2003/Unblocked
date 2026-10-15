@@ -94,6 +94,17 @@ test('Takeout zip: Keep notes, trash skipped, html and text handled', async () =
   assert.strictEqual(r.skipped.length, 2);
 });
 
+// Takeout's Keep folder can hold Labels.txt, the list of label names: it is not a note.
+test('Takeout zip: Keep Labels.txt is skipped, not imported as a note', async () => {
+  const z = new JSZip();
+  z.file('Takeout/Keep/Idea.json', JSON.stringify(keepText));
+  z.file('Takeout/Keep/Labels.txt', 'Home\nWork\n');
+  const data = await z.generateAsync({ type: 'arraybuffer' });
+  const r = await readFiles([{ name: 'takeout.zip', data }], { JSZip, now: NOW });
+  assert.deepStrictEqual(r.notes.map((n) => n.id), ['keep:Idea']);
+  assert.ok(r.skipped.some((s) => s.name.endsWith('Keep/Labels.txt') && s.reason === 'Keep label list, not a note'));
+});
+
 test('corrupt zip and bad JSON are reported, never thrown', async () => {
   const r = await readFiles([
     { name: 'bad.zip', data: new Uint8Array([1, 2, 3, 4]) },

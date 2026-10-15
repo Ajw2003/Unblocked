@@ -169,7 +169,10 @@ async function readOne(file, JSZip, now, out) {
       const entries = Object.values(zip.files).filter((e) => !e.dir);
       for (const e of entries) {
         const k = ext(e.name);
-        if (k === 'json' || k === 'txt' || k === 'md') {
+        // Takeout's Keep folder can carry Labels.txt, the list of label names, which is not a note.
+        if (/(^|\/)Keep\/Labels\.txt$/i.test(e.name)) {
+          out.skipped.push({ name: e.name, reason: 'Keep label list, not a note' });
+        } else if (k === 'json' || k === 'txt' || k === 'md') {
           await readOne({ name: e.name, data: await e.async('string') }, JSZip, now, out);
         } else if (k === 'docx') {
           await readOne({ name: e.name, data: await e.async('uint8array') }, JSZip, now, out);

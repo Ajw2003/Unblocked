@@ -173,8 +173,7 @@ try {
     }));
     check(storedArchived === 10, tag + '10 imported notes are stored with archived:true', String(storedArchived));
     const archivedShown = await page.$$eval('.note-archived', (e) => e.length);
-    // KNOWN DEFECT, reported not fixed: notes-view.js:52 tests n.status === 'archived' but the readers set n.archived = true, so the badge never shows
-    console.log('NOTE ' + tag + '"archived in Keep" badges shown: ' + archivedShown + ' (10 expected by the design; see notes-view.js:52 vs import-read.js:51)');
+    check(archivedShown === 10, tag + '10 "archived in Keep" badges shown', String(archivedShown));
 
     // search
     await page.fill('#notes-query', UNIQUE);
