@@ -4,6 +4,29 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-15 — Label setup moves into the house-rules plugin, built by a handed-off session
+
+**Context.** Unblock's issues stalled because the repo had no `in progress` or `needs review` labels,
+and the GitHub connector in a cloud session cannot create labels. The `gh` command-line tool could
+(`gh label create`, 2026-10-15). The user asked for a tool so future repos never stall this way. The
+proposal is `docs/plans/label-tool.html` (built from `docs/plans/label-tool/content.json`); the user
+replied "Design approved: Label setup: 1A 2A 3*" with their own answer to question 3: "handoff".
+
+**Decision.**
+- **Where (1A):** inside the house-rules plugin (`claude-house-rules/plugins/house-rules` in
+  `Ajw2003/AjsClaudeCodeTools`). The plugin's label check (`LOOP_WORKING, LOOP_REVIEW` and
+  `_loop_labels` in `scripts/hook.py`, read at commit `e879981`) already knows when a label is missing,
+  so it creates the missing house label there instead of only refusing. A `/house-rules:labels`
+  command sets up a repo's labels on demand.
+- **Which (2A):** only the three house labels: `AjsAgent created this`, `in progress`, `needs review`,
+  with the colours and descriptions now on `Ajw2003/Unblocked`. GitHub's category labels are left
+  alone because new repos already have them.
+- **When (own answer, "handoff"):** this session does not build it. It writes a self-contained handoff,
+  `docs/plans/label-setup-handoff.md`, for a session that has push access to
+  `Ajw2003/AjsClaudeCodeTools`; this session can only read that repo.
+
+**Status.** Standing. The build itself follows the house-rules repo's own design loop there.
+
 ## 2026-10-15 — Overview screen build plan: areas are project categories, the week starts today
 
 **Context.** The build plan `docs/plans/overview-build-plan.html` (built from
