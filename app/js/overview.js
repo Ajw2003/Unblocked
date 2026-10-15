@@ -45,7 +45,7 @@ export function weekDays(st, now, dueDefaults) {
   });
   days.forEach((day) => {
     // overdue first, then deadline, then project order, then task order
-    day.items.sort((a, b) => (b.stage === 'red' && b._due < days[0].start) - (a.stage === 'red' && a._due < days[0].start)
+    day.items.sort((a, b) => (b._due < days[0].start) - (a._due < days[0].start)
       || a._due - b._due || a._p - b._p || a._t - b._t);
     day.items.forEach((it) => { delete it._due; delete it._p; delete it._t; });
     delete day._end;

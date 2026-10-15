@@ -97,3 +97,13 @@ test('missing projectCategories or projects does not throw', () => {
   assert.strictEqual(weekDays({}, NOW).length, 7);
   assert.deepStrictEqual(weekCounts({}, NOW), { overdue: 0, dueThisWeek: 0, undated: 0 });
 });
+
+// A week holding a clock change. Only meaningful where the local zone has one, so run it as
+// TZ=Europe/London node --test app/js/overview.test.mjs (UK clocks go back on Sun 25 Oct 2026).
+test('a week holding a daylight-saving change keeps each task on its own day', () => {
+  const now = new Date(2026, 9, 22, 12, 0).getTime(); // Thursday 22 Oct 2026, local
+  const st = state([task('a', 'next', '2026-10-25'), task('b', 'next', '2026-10-26'), task('c', 'next', '2026-10-28')]);
+  const days = weekDays(st, now);
+  assert.deepStrictEqual(days.map((d) => d.label), ['THU 22', 'FRI 23', 'SAT 24', 'SUN 25', 'MON 26', 'TUE 27', 'WED 28']);
+  assert.deepStrictEqual([ids(days[3]), ids(days[4]), ids(days[6])], [['a'], ['b'], ['c']]);
+});
