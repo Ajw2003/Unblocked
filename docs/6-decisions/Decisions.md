@@ -4,6 +4,27 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-15 — Copy Focus Deck's data into Unblock once, with issue links cut
+
+**Context.** aj wants Unblock to start from Focus Deck's data, synced with the same GitHub token,
+so the copy can be changed without any risk to the original. The proposal
+`docs/plans/focus-deck-copy.html` (from `docs/plans/focus-deck-copy/content.json`) showed that the
+Gists are already separate (`app/js/sync.js` lines 10 and 83), but tasks linked to GitHub issues
+would still change the real issues (`app/js/github-sync.js` lines 112, 131, 170 and 189), which
+Focus Deck shows too. aj replied "Cut the links approved".
+
+**Decision.**
+- A one-time "Copy from Focus Deck" action in Unblock's Settings finds Focus Deck's Gist by its
+  file `focus-deck-state.json` (Focus Deck `app/js/sync.js:10` at `f231bfd`), only ever reads it,
+  and merges the data into Unblock's own Gist, `unblock-state.json`.
+- Every copied task linked to a GitHub issue is unlinked in the copy and keeps its
+  `owner/repo#N` reference as plain text, so nothing Unblock does can change an issue Focus Deck
+  shows. Re-linking waits until Unblock replaces Focus Deck.
+- Rejected: copying the links as they are (edits would reach the shared issues both ways), and a
+  GitHub read-only switch (more code, and the risk returns the moment it is turned off).
+
+**Status.** Standing.
+
 ## 2026-10-15 — Importer build plan: a Notes tab on Sort, our own Word reader, no PDFs yet
 
 **Context.** The build plan `docs/plans/importer-build-plan.html` (built from
