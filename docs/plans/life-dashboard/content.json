@@ -1,0 +1,105 @@
+{
+  "title": "Unblock Life Dashboard",
+  "eyebrow": "Proposal · 15 October 2026 · nothing built until you pick",
+  "replyPrefix": "Life dashboard approved",
+  "reply": "",
+  "short": {
+    "lead": "You asked for three things: one screen that shows your life and upcoming due dates, a way to bring in notes from five apps, and a way to triage them into tasks. Most of the foundation already exists in Unblock. This page shows each new piece with a mockup and asks six questions.",
+    "hint": "Tap a step to see what it creates, what it needs from you, and its mockup.",
+    "key": [["I build it", ""], ["You act on it", "you"], ["Already in Unblock", "done"]],
+    "items": [
+      ["search", "Today", "What Unblock already has", "done",
+       "Nothing new. Projects, labels, deadline colours and the Unsorted card are reused as they are, and nothing is cut.",
+       "Nothing from you.",
+       {"src": "docs/plans/life-dashboard/pics/what-exists.png", "alt": "Three cards listing what is reused, what is new, and that nothing is cut", "caption": "What each new piece reuses and adds."}],
+      ["eye", "Overview", "An Overview screen", "",
+       "A new screen in the left rail: the next seven days of dated tasks, one card per life area, and a count of imported notes waiting.",
+       "Nothing from you.",
+       {"src": "docs/plans/life-dashboard/pics/overview-screen.png", "alt": "Mockup of the Overview screen with a week strip, life-area cards and a yellow strip of waiting notes", "caption": "The suggested Overview screen. The tasks are made-up examples."}],
+      ["file", "Import", "Import your notes", "you",
+       "An Import page that reads exported files on your device and puts each note in a Notes library, tagged with its source.",
+       "You export from each app once, as the table shows.",
+       {"src": "docs/plans/life-dashboard/pics/export-table.png", "alt": "Table of the five apps and whether each can export every note at once", "caption": "Bulk export for each app, checked on 15 October 2026."}],
+      ["list", "Triage", "Triage one note at a time", "you",
+       "A triage card that shows one note beside the tasks, dates and project it found, with buttons to make tasks, a project, keep it as reference, or archive it.",
+       "You accept or change each suggestion.",
+       {"src": "docs/plans/life-dashboard/pics/triage-card.png", "alt": "Mockup of a Keep note beside the tasks and deadline found in it", "caption": "The triage card with on-device suggestions. The note is a made-up example."}],
+      ["flask", "Claude", "Claude for the notes that need it", "",
+       "An optional Send to Claude button for notes the simple rules cannot make sense of. It is hidden until you set up a Claude connection.",
+       "Nothing from you unless you want it.",
+       {"src": "docs/plans/life-dashboard/pics/ai-line.png", "alt": "Two cards listing the jobs that need no AI and the jobs that need AI", "caption": "Where the line between rules and AI falls."}],
+      ["lock", "Approve", "You pick and approve", "you",
+       "The picks go into the roadmap, and one GitHub issue opens per step under a parent issue.",
+       "You pick an answer to each of the six choices and send the reply."]
+    ]
+  },
+  "changes": [
+    ["new", "Overview screen", "One calm screen of the week ahead and every life area.", null,
+     "Dated tasks show in a seven-day strip with the same white, yellow and red deadline colours as the rest of the app. Each life area (a project category) gets a card with its open count and how many are due or overdue. A yellow strip at the bottom counts imported notes waiting for triage.",
+     ["Due dates are spread across project tiles and the Board.", "A week strip and one card per life area.", "You see what is coming and where you are behind in one glance."],
+     null,
+     {"src": "docs/plans/life-dashboard/pics/overview-screen.png", "alt": "Mockup of the Overview screen", "caption": "The suggested Overview screen."}],
+    ["new", "Notes library", "Holds every imported note, with its source and full text.", null,
+     "Triage turns parts of a note into tasks that link back to it, so nothing is lost when one line becomes a task. In the first version the library stays on the device you imported on, and the tasks made from it sync as tasks do now. Syncing the notes themselves is a later choice, because a few hundred notes would make the sync file several times larger.",
+     ["Notes sit in five different apps.", "One library inside Unblock, tagged by source.", "Every idea is in one place, ready to triage."],
+     null],
+    ["new", "Importer", "Reads Keep, Word, Google Docs, Apple Notes and Samsung Notes exports.", null,
+     "You drop an export file or zip onto the Import page. Unblock reads it on your device and uploads nothing. It needs three open-source libraries, stored inside the app so it still works offline: JSZip for zip files, mammoth for Word files and pdf.js for PDFs. Export menus vary by phone model, so the first step tests one real export from each app you use.",
+     ["Copying notes in by hand, one at a time.", "A drop zone that reads whole exports at once.", "Hundreds of notes arrive in one go."],
+     null,
+     {"src": "docs/plans/life-dashboard/pics/export-table.png", "alt": "Bulk export table for the five apps", "caption": "What each app can export, and what Unblock can read from it."}],
+    ["new", "Triage card", "Turns a note into tasks, one note at a time.", null,
+     "Checklists, bullets and numbered lines become task suggestions. Phrases like \"by Friday\" or \"20 Oct\" become deadlines. A Keep label or a word matching a project name picks the project. Ticked checklist items are skipped, and lines starting with \"maybe\" are offered as ideas rather than tasks.",
+     ["The Unsorted card files one captured thought at a time.", "The same flow, splitting a whole note into several tasks.", "A pile of loose notes becomes a list of real next steps."],
+     null,
+     {"src": "docs/plans/life-dashboard/pics/triage-card.png", "alt": "Mockup of the triage card", "caption": "The triage card."}],
+    ["new", "Send to Claude (optional)", "Claude handles the notes the rules cannot read.", null,
+     "Splitting a rambling paragraph into steps, telling an idea from a task with no cue word, and reading handwriting all need AI. The button is hidden until a Claude connection is set up, so the app works fully without AI.",
+     ["Nothing; a messy note stays messy.", "A button that hands one note to Claude.", "The hard notes get triaged too, only when you ask."],
+     null,
+     {"src": "docs/plans/life-dashboard/pics/ai-line.png", "alt": "Jobs that need AI and jobs that do not", "caption": "Where AI is and is not needed."}],
+    ["keep", "Capture inbox and Unsorted card", "Stays for quick thoughts typed in the moment.", null,
+     "Bulk imports go to the Notes library instead, so a few hundred notes never bury the thoughts you capture day to day.", null, null],
+    ["keep", "Projects, deadlines, GitHub and Gist sync", "Untouched; the new screens read from them.", null,
+     "The Overview screen and triage card use the existing projects, labels, deadline stages (app/js/due-stage.js) and Unsorted flow (app/js/in-tray.js). Nothing in sync changes.", null, null]
+  ],
+  "choices": [
+    ["order", "Which piece comes first?", [
+      ["A", "Dashboard, then import, then triage", 1, "The Overview screen needs only data Unblock already holds and no new libraries, so it is the smallest piece, and triaged notes then have a place to show up."],
+      ["B", "Import and triage first, dashboard last", 0, "Starts with the part you called game changing, but your notes arrive before there is a calm screen to see their tasks."]
+    ], "Each piece can ship and be tested on its own. Starting with the smallest gets something usable to you soonest."],
+    ["shape", "What shape should the dashboard take?", [
+      ["A", "Week strip and life areas", 1, "The next seven days of dated tasks, plus one card per area showing how much is open.",
+       {"src": "docs/plans/life-dashboard/pics/shape-week-strip.png", "alt": "Sketch of a seven-day strip above area cards", "caption": "Week strip and life areas."}],
+      ["B", "Month calendar", 0, "A familiar grid of dots, but undated tasks, which are most of a backlog, have nowhere to appear.",
+       {"src": "docs/plans/life-dashboard/pics/shape-month.png", "alt": "Sketch of a month grid with coloured dots", "caption": "Month calendar."}],
+      ["C", "Project timeline", 0, "One bar per project from start to deadline. It needs start dates nobody records and is hard to read on a phone.",
+       {"src": "docs/plans/life-dashboard/pics/shape-timeline.png", "alt": "Sketch of coloured project bars on a timeline", "caption": "Project timeline."}]
+    ], "It answers \"what is coming, and where am I behind\" in one glance, and it has room for undated tasks."],
+    ["import", "How should notes come in?", [
+      ["A", "Export a file, drop it into Unblock", 1, "Works for all five apps, costs nothing, uploads nothing, and works offline. Needs JSZip, mammoth and pdf.js, which I am asking about rather than adding."],
+      ["B", "Connect Google and Microsoft accounts", 0, "Pulls documents directly, but Apple Notes and Samsung Notes offer no way to do this, and it needs weeks of developer app registration."],
+      ["C", "Paste text only", 0, "No libraries and quick to build, but pasting hundreds of notes is the chore you want to avoid."]
+    ], "Three of the five apps can export every note at once, and the other two can export many at once."],
+    ["library", "Where should imported notes live?", [
+      ["A", "In a separate Notes library", 1, "Each note keeps its full text and source, and the tasks made from it link back to it."],
+      ["B", "Straight into the capture inbox", 0, "No new screen, but 200 items would bury your daily quick thoughts, and a long note could only become one task."]
+    ], "A note often holds several tasks plus reference text worth keeping."],
+    ["triage", "Who does the first pass of triage?", [
+      ["A", "Simple rules on your device, no AI at all", 0, "Free, private and offline, but it cannot make sense of a rambling paragraph."],
+      ["B", "Simple rules for every note, Claude only when you ask", 1, "The rules run on every note. A note they cannot make sense of gets a Send to Claude button, which stays hidden until you set up a connection."]
+    ], "It keeps AI optional and limited to the jobs that are impossible without it, as you asked."],
+    ["claude", "How should Claude connect, for the notes that need it?", [
+      ["A", "Through GitHub, which Unblock already syncs", 1, "Send to Claude files the note as a needs-triage issue in a private repo. In a Claude chat, Claude reads it through its GitHub connector, proposes tasks, and creates them as labelled issues once you agree. No new server and no cost beyond your Claude plan; tasks land only in projects linked to a repo."],
+      ["B", "Unblock's own Claude connector", 0, "A small MCP server on a free host such as Cloudflare Workers reads and writes your sync Gist. Added once on claude.ai, it works on the web, the desktop app and your phone, and tasks can land in any project. It is new code to host and secure."],
+      ["C", "A Claude API key inside Unblock", 0, "The button calls Claude straight from the app. API use is billed per note, separately from a Claude subscription, and the key is stored in your browser."]
+    ], "The GitHub route works with what exists today and follows the existing Claude rules in docs/4-systems/claude-integration.md. The connector can be added on top later if a chat turns out to be too slow."]
+  ],
+  "wrapup": {
+    "summary": "A proposal to add an Overview screen, a note importer and a triage card to Unblock, with Claude as an optional helper.",
+    "changing": "Five new pieces: the Overview screen, the Notes library, the importer, the triage card and an optional Send to Claude button. The capture inbox, projects and sync stay as they are.",
+    "blocking": "Your six picks, plus three answers: which phone you use day to day, roughly how many notes each app holds, and which Claude plan you are on.",
+    "next": "Your picks go into the roadmap, one GitHub issue opens per step under a parent issue, and work starts with the piece you pick in choice 1.",
+    "todo": ["Pick an answer to each of the six choices.", "Tap <b>Copy my reply</b>.", "Send it, along with your phone, rough note counts and Claude plan, or say what to change."]
+  }
+}

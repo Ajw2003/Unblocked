@@ -38,7 +38,8 @@ section{display:grid; gap:16px; min-width:0}
 .lede{color:var(--ink-soft); font-size:1.08rem}
 .paper{background:var(--surface); border:1px solid var(--line); border-radius:10px; padding:20px; min-width:0}
 .grid3{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px}
-.tag{display:inline-block; font:700 .72rem var(--font-ui); letter-spacing:.04em; padding:2px 8px; border-radius:99px; border:1.5px solid currentColor}
+.grid3>.paper{align-content:start}
+.tag{display:inline-block; justify-self:start; align-self:start; font:700 .72rem var(--font-ui); letter-spacing:.04em; padding:2px 8px; border-radius:99px; border:1.5px solid currentColor}
 .reuse{color:var(--good)} .new{color:var(--accent)} .cut{color:var(--due-now)}
 ul{margin:0; padding-left:1.1em; display:grid; gap:4px}
 li{max-width:66ch}
@@ -104,7 +105,7 @@ th{font:700 .76rem var(--font-ui); letter-spacing:.06em; text-transform:uppercas
 .fid{font-weight:700} .fid.hi{color:var(--good)} .fid.mid{color:var(--due-soon)} .fid.lo{color:var(--due-now)}
 
 /* triage mockup */
-.triage{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:16px}
+.triage{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:16px; align-items:start}
 @media (max-width:720px){ .triage{grid-template-columns:1fr} .shell{grid-template-columns:1fr} .rail{display:none} .week{grid-template-columns:repeat(4,minmax(0,1fr))} }
 .slip{background:var(--note); color:var(--note-ink); border-radius:4px; padding:16px 18px 20px; font:1rem/1.45 var(--font-paper); transform:rotate(-1deg); box-shadow:0 8px 14px rgba(20,30,60,.18); display:grid; gap:8px; align-content:start}
 .slip .src{font:700 .72rem var(--font-ui); letter-spacing:.05em; text-transform:uppercase; color:var(--note-soft)}
