@@ -15,7 +15,7 @@
        "Tapping a card opens the whole note: its full text, its checklist, its labels, the file it came from and when it was imported. This is also how you check that an import came through correctly.",
        "Nothing to do here."],
       ["file", "Titles", "Short, sensible titles", "",
-       "A title is a short heading, never the whole note. When the first line is a long sentence, the title becomes its first few words, and the full sentence stays in the note's text. You can also rename any note.",
+       "A title is a short heading, never the whole note. A note that opens with a long sentence gets that sentence's first few words as its title, and the full sentence stays in the note's text. You can also rename any note.",
        "Nothing to do here."],
       ["list", "Triage", "Start making notes usable", "you",
        "The triage card you approved in the original design: one note at a time, with buttons to make tasks, make a project, keep as reference or archive. How much of it comes first is the last choice below.",
@@ -30,7 +30,7 @@
      "Shows the full text, every checklist item, the labels, the source file name and the import date, with a way back to the list. Where it opens is the first choice below.",
      ["Cards stop at 140 characters with no way to read the rest.", "A view of the whole note, opened from its card.", "You can read every note and check it imported correctly."], null],
     ["chg", "Text and Markdown titles", "A title is a short heading, not the whole note.", ["Whole first line", "A short heading; the rest stays in the text"],
-     "If the first line is short and more text follows, it stays the title, as now. If the first line is long, the title becomes its first few words, cut between words and ending in \"...\". The whole first line is kept at the start of the note's text, so nothing is lost. How many words is the second choice below.", null, null],
+     "A short first line followed by more text stays the title, as now. A long one is cut down: the title becomes its first few words, cut between words and ending in \"...\". The whole first line is kept at the start of the note's text, so nothing is lost. How many words is the second choice below.", null, null],
     ["new", "Rename a note", "Edit a note's title in its note view.", null,
      "Saved to the Notes library on that device. A later re-import of the same note won't overwrite a title you changed.",
      ["Titles can't be changed.", "An editable title in the note view.", "Your notes read the way you think of them."], null],
@@ -42,7 +42,7 @@
       ["A", "Its own full screen, with a Back button", 1, "Fits a long note on a phone, and leaves room for the triage buttons at the bottom later."],
       ["B", "Expand in place inside the list", 0, "Quick for short notes, but a long note pushes the rest of the list a long way down."]
     ], "Your notes are long, and the same screen becomes the triage card later, so nothing is built twice."],
-    ["title", "How long should a title be when the first line is long?", [
+    ["title", "How long should a title be for a note that opens with a long sentence?", [
       ["A", "About eight words, cut at a word boundary", 1, "Reads like a heading on a phone card. The cut is counted in words, so long words don't break it."],
       ["B", "The first sentence, however long", 0, "Keeps whole thoughts together, but the first note in your screenshot has a first sentence too long to fit on its card."],
       ["C", "No title: the card shows \"Untitled\" with the first line underneath", 0, "No guessing, but every long note looks the same until you rename it."]
