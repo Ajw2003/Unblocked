@@ -256,6 +256,7 @@ export function renderApp(st) {
   // the Sort screen is the tray, always open (its header can't fold it away here)
   if (ui.screen === 'sort') return rail + '<div class="screen screen-sort">' + renderInTrayCard(st, Object.assign({}, ui, { inboxOpen: true })) + '</div>' + toast;
   if (ui.screen === 'board') return rail + '<div class="screen screen-board">' + R.renderBoard(st, ui) + '</div>' + toast;
+  if (ui.screen === 'overview') return rail + '<div class="screen screen-overview">' + R.renderOverview(st) + '</div>' + toast;
   return rail + R.renderProjectSidebar(st, ui, visibleProjects, hasToken)
     + '<div class="main-col view-' + ui.projectView + '">'
       + R.renderProjectsMain(st, ui, visibleProjects, isWideScreen(), hasToken)
@@ -418,6 +419,17 @@ function onAppClick(e) {
   }
   if (action === 'set-screen') {
     setScreen(el.getAttribute('data-screen'));
+    if (ui.projectsDrawerOpen) ui.projectsDrawerOpen = false;
+    paint();
+    window.scrollTo(0, 0);
+    return;
+  }
+  // Overview taps only navigate: open the project (as the sidebar rows do) or filter Projects to an area
+  if (action === 'overview-task') { scrollToProject(el.getAttribute('data-project-id')); return; }
+  if (action === 'overview-area') {
+    const cat = el.getAttribute('data-category-id');
+    ui.projectFilter = cat === '' ? null : cat;
+    setScreen('projects');
     if (ui.projectsDrawerOpen) ui.projectsDrawerOpen = false;
     paint();
     window.scrollTo(0, 0);

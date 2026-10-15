@@ -37,16 +37,19 @@ export function renderSyncButton(st) {
 // One activity at a time (#135): the screens, and the rail that switches between them (a column
 // on the left on a wide screen, a bar along the bottom on a phone). Adding stays on every screen:
 // it is the jotter in the topbar. See docs/4-systems/styling.md#one-screen-at-a-time
-export const SCREENS = ['focus', 'sort', 'board', 'projects'];
+export const SCREENS = ['focus', 'sort', 'board', 'projects', 'overview'];
 const SCREEN_INFO = {
   focus: { label: 'Focus', icon: '<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>' },
   sort: { label: 'Sort', icon: '<path d="M4 7h16M4 12h10M4 17h6"/>' },
   board: { label: 'Board', icon: '<rect x="3" y="4" width="5" height="16" rx="1.5"/><rect x="9.5" y="4" width="5" height="11" rx="1.5"/><rect x="16" y="4" width="5" height="7" rx="1.5"/>' },
   projects: { label: 'Projects', icon: '<path d="M3 7h7l2 2h9v10H3z"/>' },
+  overview: { label: 'Overview', icon: '<rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/>' },
 };
 export function normalizeScreen(value) { return SCREENS.includes(value) ? value : 'focus'; }
 // The Board screen's markup is in js/board-view.js (#144).
 export { renderBoard } from './board-view.js';
+// The Overview screen's markup is in js/overview-view.js (#11).
+export { renderOverview } from './overview-view.js';
 // syncHTML is the sync button (renderSyncButton): on a wide screen it and Settings sit at the foot of
 // the rail instead of the topbar; .rail-tools is hidden on a phone, where the topbar keeps them.
 export function renderRail(screen, unsortedCount, syncHTML = '') {

@@ -1027,7 +1027,7 @@ body.is-dragging-task .empty-note{display:none;}
    screen is drawn. Wide: a column fixed on the left under the topbar. Phone: a bar fixed along the
    bottom. Focus and Sort are one centred column; Projects keeps the project list and folders.
    The jotter (adding) stays in the topbar on every screen. See docs/4-systems/styling.md#one-screen-at-a-time */
-.rail{position:fixed; z-index:15; left:0; right:0; bottom:0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr));
+.rail{position:fixed; z-index:15; left:0; right:0; bottom:0; display:grid; grid-template-columns:repeat(5,minmax(0,1fr));
   background:var(--surface); border-top:1px solid var(--line); padding:6px 8px calc(6px + env(safe-area-inset-bottom, 0px));}
 .rail-item{display:flex; flex-direction:column; align-items:center; gap:3px; border:0; background:none; color:var(--ink-soft); font:600 .72rem var(--font-ui); padding:6px 0; border-radius:12px; cursor:pointer;}
 .rail-item.is-on{color:var(--accent); background:var(--surface-2);}
@@ -1040,6 +1040,7 @@ body.is-dragging-task .empty-note{display:none;}
 .screen{max-width:720px; margin:0 auto;}
 .screen-focus{padding-top:12px;}
 .screen-board{padding-top:12px;}
+.screen-overview{padding-top:12px;}
 .screen-sort .inbox-card{border-top:0; padding-top:4px;}
 .screen-sort .inbox-card > .section-toggle{pointer-events:none;}
 .screen-sort .inbox-card > .section-toggle .chev{display:none;}
@@ -1058,7 +1059,7 @@ body.is-dragging-task .empty-note{display:none;}
   .rail-tools{display:flex; flex-direction:column; align-items:center; gap:6px; margin-top:4px; padding-top:10px; border-top:1px solid var(--line);}
   .toast{bottom:calc(16px + env(safe-area-inset-bottom, 0px));}
   #app:has(> .screen){display:block;}
-  .screen-focus,.screen-board{padding-top:28px;}
+  .screen-focus,.screen-board,.screen-overview{padding-top:28px;}
   /* the work area uses the screen: every screen spans the same width as the header and Projects */
   .screen{max-width:none;}
   /* Sort, laid out like its mockup: the slip (and its quiet links) on the left, the choices on the right */
@@ -1172,3 +1173,27 @@ body.is-dragging-task .empty-note{display:none;}
   .board-pills{flex-wrap:wrap; overflow-x:visible;}
 }
 /* ==== end The Board ==== */
+
+/* ==== The Overview (#11) ==================================================================
+   A seven-day strip of deadline chips, then life-area cards, then the unsorted strip (js/overview-view.js).
+   The strip scrolls inside its own box on a phone so the page never scrolls sideways. */
+.overview-top{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px 16px; margin:0 0 10px;}
+.overview-head{margin:0; font-size:1.5rem;}
+.overview-counts{margin:0; color:var(--ink-soft); font-size:var(--text-sm);}
+.overview-strip{display:grid; grid-template-columns:repeat(7,minmax(130px,1fr)); gap:8px; overflow-x:auto; padding:4px 2px 8px; margin-bottom:18px;}
+.overview-day{display:flex; flex-direction:column; gap:6px; min-height:110px; padding:8px; background:var(--surface); border:1px solid var(--line); border-radius:var(--r-control);}
+.overview-day.is-today{border:2px solid var(--accent);}
+.overview-day-head{margin:0; font:700 .78rem var(--font-ui); letter-spacing:.04em; color:var(--ink-soft);}
+.overview-chip{text-align:left; font:600 .82rem var(--font-ui); padding:6px 8px; border-radius:var(--r-control); border:1px solid var(--line); background:var(--surface); color:var(--ink); cursor:pointer; overflow-wrap:anywhere;}
+.overview-chip.due-yellow{border-color:var(--due-soon); color:var(--due-soon); background:color-mix(in srgb, var(--due-soon) 14%, transparent);}
+.overview-chip.due-red{border-color:var(--due-now); color:var(--due-now); background:color-mix(in srgb, var(--due-now) 14%, transparent);}
+.overview-chip:focus-visible,.overview-area:focus-visible{outline:2px solid var(--accent); outline-offset:2px;}
+.overview-empty{margin:0 0 14px; color:var(--ink-soft);}
+.overview-areas{display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:10px; margin-bottom:18px;}
+.overview-area{display:flex; flex-direction:column; gap:6px; text-align:left; padding:12px 14px; background:var(--surface); color:var(--ink); border:1px solid var(--line); border-left:5px solid var(--area-color,var(--line)); border-radius:var(--r-control); cursor:pointer; font:inherit;}
+.overview-area-name{font-weight:700;}
+.overview-area-line{color:var(--ink-soft); font-size:var(--text-sm);}
+.overview-bar{display:block; height:6px; border-radius:999px; background:var(--surface-2); overflow:hidden;}
+.overview-bar-fill{display:block; height:100%; background:var(--area-color,var(--accent));}
+.overview-sort{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 16px; border-radius:var(--r-control); background:var(--note); color:var(--pen);}
+/* ==== end The Overview ==== */
