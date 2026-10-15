@@ -5,8 +5,7 @@
 // set-screen in js/app.js), never a mutation. See docs/4-systems/overview.md
 import { esc } from './state.js';
 import { weekDays, weekCounts, areaSummaries, dayStart } from './overview.js';
-// render.js re-exports this module, so the import is circular; both only use each other inside functions
-import { unsortedQueue } from './render.js';
+import { dueMoment } from './due-stage.js';
 
 const n = (count, one, many) => count + ' ' + (count === 1 ? one : many);
 
@@ -17,7 +16,7 @@ function daysOverdue(task, now) {
 }
 
 function chip(it, now) {
-  const late = it.stage === 'red' && it.task.deadline && new Date(it.task.deadline + 'T23:59:59').getTime() < dayStart(now);
+  const late = dueMoment(it.task) < dayStart(now);
   return '<button type="button" class="overview-chip due-' + esc(it.stage) + '" data-action="overview-task" data-project-id="' + esc(it.project.id) + '" data-task-id="' + esc(it.task.id) + '">'
     + esc(it.task.title) + (late ? ' · ' + daysOverdue(it.task, now) + 'd overdue' : '') + '</button>';
 }
@@ -43,14 +42,16 @@ function areaCard(a) {
     + '<span class="overview-bar" role="img" aria-label="' + pct + '% done"><span class="overview-bar-fill" style="width:' + pct + '%"></span></span></button>';
 }
 
-export function renderOverview(st, now = Date.now()) {
+// unsortedCount comes from the caller (app.js already has it for the rail badge), which keeps this
+// module from importing render.js, the module that re-exports it.
+export function renderOverview(st, unsortedCount = 0, now = Date.now()) {
   if (!(st.projects || []).length) {
     return '<div class="overview-none"><h2 class="overview-head">Overview</h2>'
       + '<p class="overview-empty">Nothing here yet. Add a project and its tasks and deadlines show up on this screen.</p>'
       + '<button type="button" class="btn primary" data-action="set-screen" data-screen="projects">Go to Projects</button></div>';
   }
   const c = weekCounts(st, now);
-  const unsorted = unsortedQueue(st).length;
+  const unsorted = unsortedCount;
   return '<div class="overview-top"><h2 class="overview-head">This week</h2>'
     + '<p class="overview-counts">' + c.overdue + ' overdue · ' + n(c.dueThisWeek, 'task', 'tasks') + ' due in the next 7 days · ' + c.undated + ' with no date</p></div>'
     + strip(weekDays(st, now, st.dueDefaults), now)
