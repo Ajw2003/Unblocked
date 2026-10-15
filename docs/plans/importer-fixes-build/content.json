@@ -16,7 +16,7 @@
        "app/js/notes-library.js gains a rename that marks the title as yours, and a re-import of the same note keeps your title while still updating the text of a note that is waiting.",
        "Nothing to do here."],
       ["eye", "View", "The note view (issue #18, the Import screen and notes list)", "",
-       "Tapping a card opens the whole note on its own screen: an editable title, the full text, every checklist item with its tick, labels, \"archived in Keep\" when it was, the source file name and the import date, and a Back button that returns to the same place in the list.",
+       "Tapping a card opens the whole note on its own screen. It shows an editable title, the full text, every checklist item with its tick, the labels, \"archived in Keep\" when it was, the source file name and the import date. A Back button returns to the same place in the list.",
        "Nothing to do here."],
       ["hammer", "Check", "Check it in a real browser (issue #19)", "",
        "The importer browser check grows: a one-paragraph note of 60 words gets an eight-word title, opening it shows every word, renaming it survives a reload and a re-import, and Back returns to the list. It runs twice, at phone and desktop width, and I look at the screenshots.",
