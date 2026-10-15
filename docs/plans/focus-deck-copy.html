@@ -271,7 +271,7 @@ const EXAMPLE_PIC = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http
 const EXAMPLE_PIC_AFTER = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#dff3e8"/><rect x="100" y="50" width="120" height="80" rx="12" fill="#1f7a4d"/></svg>');
 const PAGE = {
   "title": "Copy Focus Deck Data",
-  "eyebrow": "Proposal · 15 October 2026 · Unblock",
+  "eyebrow": "Proposal, revised while planning · 15 October 2026 · Unblock",
   "replyPrefix": "Design approved: Focus Deck copy",
   "reply": "",
   "short": {
@@ -314,7 +314,15 @@ const PAGE = {
         "Decide what happens to issue links",
         "you",
         "Some copied tasks are linked to GitHub issues. In Unblock, completing, deleting, relabelling or reprioritising one of those tasks changes the real issue (app/js/github-sync.js:112, 131, 170, 189), and Focus Deck shows that same issue.",
-        "Answer the linked-issues question below: cut the links, copy them as they are, or add a read-only switch."
+        "Done: you approved cutting the links."
+      ],
+      [
+        "search",
+        "Auto-sync",
+        "Unblock pulls the same issues itself",
+        "you",
+        "Whenever a token is saved, Unblock's own GitHub auto-sync imports every open issue that carries any label from up to 20 of your repos (app/js/github-sync.js, syncGithub, lines 549 to 582). Focus Deck pulls those same repos. So after the copy, the next auto-sync would bring the issues back as new linked tasks beside the unlinked copies, and editing those would change the real issues. Cutting the copied links is not enough on its own.",
+        "Pick an answer to the auto-sync question in the choices below."
       ]
     ]
   },
@@ -324,7 +332,7 @@ const PAGE = {
       "Copy from Focus Deck",
       "Copies Focus Deck's sync data into a new Unblock Gist.",
       null,
-      "Using your token, it finds Focus Deck's Gist, reads it, and creates a separate private Gist for Unblock. If Unblock already holds data, the copied data is merged with it instead of replacing it. I have not yet checked the name of Focus Deck's sync file, because the Focus Deck repo is not attached to this session. I will read the name from that repo before building.",
+      "Using your token, it finds Focus Deck's Gist, reads it, and creates a separate private Gist for Unblock. If Unblock already holds data, the copied data is merged with it instead of replacing it. Focus Deck's sync file is focus-deck-state.json (Focus Deck app/js/sync.js:10), so the copy looks for a Gist that holds that file.",
       [
         "Today, Unblock starts empty.",
         "Unblock starts with every Focus Deck project, task and note.",
@@ -366,16 +374,41 @@ const PAGE = {
           "Unblock still pulls issues but never writes to them while the switch is on. It needs more code than cutting the links, and the shared-issue risk returns the moment the switch goes off."
         ]
       ],
-      "I recommend cutting the links. It is the only choice where an edit in Unblock can never change anything Focus Deck shows, and it is the smallest change."
+      "Approved: cut the links."
+    ],
+    [
+      "autosync",
+      "How should Unblock stop its own auto-sync from re-linking the same issues?",
+      [
+        [
+          "A",
+          "A GitHub issues switch in Settings, off to start with",
+          1,
+          "Unblock uses your token for its own sync file only, and never reads or writes issues while the switch is off. The import and every issue write check the switch. You turn it on when Unblock replaces Focus Deck, then re-link tasks."
+        ],
+        [
+          "B",
+          "Leave the copied repos out of Unblock's auto-sync",
+          0,
+          "The copy adds every repo whose tasks it unlinked to Unblock's list of excluded repos. Repos the copy did not include would still sync, and Focus Deck pulls those too, so new issues there would be shared."
+        ],
+        [
+          "C",
+          "Make GitHub read-only in Unblock",
+          0,
+          "Unblock still imports issues but never writes to them. The imported issues would still arrive as new tasks beside the unlinked copies, so each issue would appear twice."
+        ]
+      ],
+      "I recommend the switch. It is the only answer that keeps every issue apart, and it is two checks in existing code: one where auto-sync starts and one in front of the issue writes."
     ]
   ],
   "wrapup": {
     "summary": "A one-time copy of Focus Deck's sync data into a new Unblock Gist, using the same GitHub token, with Focus Deck's Gist only ever read.",
     "changing": "Unblock's Settings gains a 'Copy from Focus Deck' button. Focus Deck does not change.",
-    "blocking": "Your pick for linked issues. I also need to read the name of Focus Deck's sync file. For that, the Ajw2003/focus-deck-app repo must be attached to a session.",
+    "blocking": "Your pick for the auto-sync question. Focus Deck's sync file is focus-deck-state.json (Focus Deck app/js/sync.js:10, read from a read-only copy), so nothing else is missing.",
     "next": "Next I record your pick as an entry in the decisions log, then open the build issues, then build it.",
     "todo": [
-      "Pick an answer to the linked-issues question.",
+      "Pick an answer to the auto-sync question.",
       "Tap <b>Copy my reply<\/b>.",
       "Send it, or say what to change."
     ]
