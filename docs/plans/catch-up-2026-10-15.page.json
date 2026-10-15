@@ -3,29 +3,29 @@
   "eyebrow": "Catch-up · 15 October · nothing changed yet",
   "replyPrefix": "Catch-up",
   "short": {
-    "lead": "Another session built the Overview screen and the note importer on Wednesday, and you merged both. My blockers work from Tuesday is still on its own branch, unmerged, and its code is the first design you rejected. Before building the steps design, I want to tidy that up.",
+    "lead": "Another session built the Overview screen and the note importer on Wednesday, and you merged both. My blockers work from Tuesday is still on its own branch, unmerged, and its code is the first design you rejected. Before I build the steps design, I want to tidy that up.",
     "hint": "Tap a card for the detail behind it.",
     "key": [["Checked", "done"], ["Out of date", ""], ["Your call", "you"]],
     "items": [
       ["check", "Live", "Merged to main and live", "done",
-       "Overview screen (pull request #15): the week ahead and a card for each life area; you called it \"works well\". Note importer (pull request #20): Keep, text, Markdown and Word exports go into a notes library on your phone, in a Notes tab on the Sort screen. It merged at 08:58 UTC and the deploy after it succeeded.",
+       "Overview screen (pull request #15): the week ahead and a card for each life area; you called it \"works well\". Note importer (pull request #20): Keep, text, Markdown and Word exports go into a notes library on your phone, in a Notes tab on the Sort screen. The importer merged at 08:58 UTC and the deploy after it succeeded.",
        "Nothing. I ran main's full test suite here: 221 pass, 0 fail."],
       ["swap", "Blockers", "My blockers branch is behind", "",
-       "Pull request #9 still holds the rejected design, where each blocker becomes its own task. The steps design you approved exists only as model pages and decision entries on that branch. It is 33 commits behind main; a test merge shows the code would still merge cleanly, and only two doc files clash.",
-       "Your answer to the first choice below."],
+       "Pull request #9 still holds the rejected design, where each blocker becomes its own task. The steps design you approved exists only as model pages and decision entries on that branch. It is 33 commits behind main. A test merge shows the code merges cleanly; only two doc files clash.",
+       "Your answer to the first choice below, on what to do with pull request #9."],
       ["file", "Notes", "Out-of-date notes on main", "",
-       "Main's state notes say blockers is \"0%, not started\" (the other session never saw my branch), that Focus Deck's data hasn't been re-checked live (you checked it on your S26 on the 13th), and that the importer is \"not yet merged\" with the \"archived in Keep\" badge never showing. Both of those are wrong now: #20 is merged and the code shows the badge (app/js/notes-view.js line 52).",
-       "Nothing; I fix these on the new branch."],
+       "Main's state notes say blockers is \"0%, not started\" (the other session never saw my branch), that Focus Deck's data hasn't been re-checked live (you checked it on your S26 on the 13th), and that the importer is \"not yet merged\" and that the \"archived in Keep\" badge never shows. Both importer claims are wrong now: pull request #20 is merged, and the code shows the badge (app/js/notes-view.js, line 52).",
+       "Nothing from you; I fix these on the new branch."],
       ["hand", "Issues", "Issues done but still open", "you",
        "Issues #10 to #13 (Overview) and #16 to #19 (importer) are finished in code and merged, but still open.",
        "You close them once you've tested; I never close issues myself."]
     ]
   },
   "changes": [
-    ["chg", "Pull request #9 (blockers)", "Closed without merging; its branch stays on GitHub.", ["Open, holding the rejected design", "Closed; the design pages and decisions move to the new branch"], "Closing keeps every commit, so nothing is lost and it can be reopened. Only the code is dropped: the steps design replaces it.", null, null],
+    ["chg", "Pull request #9 (blockers)", "Closed without merging; its branch stays on GitHub.", ["Open, holding the rejected design", "Closed; the design pages and decisions are copied to the new branch"], "Closing keeps every commit, so nothing is lost and it can be reopened. Only the code is dropped: the steps design replaces it.", null, null],
     ["new", "Branch AjsAgent/catch-up", "A fresh branch from today's main for the steps work.", null, "It already holds this page. The model pages and the three decision entries from the blockers branch get copied onto it, and main's out-of-date notes get fixed.",
      ["The design work sits on a branch 33 commits behind main.", "One branch level with main that holds the design and the corrected notes.", "The next pull request you test is built on what's actually live."], null],
-    ["new", "Steps build plan", "A page with a few small issues, for you to approve before any code.", null, "Same format as the Overview and importer build plans: what each issue builds, how it's checked, and what you test at the end.", null, null]
+    ["new", "Steps build plan", "A page of small issues, each one named and counted, for you to approve before any code.", null, "Same format as the Overview and importer build plans: what each issue builds, how it's checked, and what you test at the end.", null, null]
   ],
   "choices": [
     ["pr9", "What should happen to pull request #9?", [
@@ -34,14 +34,14 @@
     ], "Merging it would put the rejected blockers-as-tasks design on your live app."],
     ["next", "What should I do after that?", [
       ["A", "Write the steps build plan", 1, "The design you approved on Tuesday, as small issues for you to approve."],
-      ["B", "Something else first", 0, "Say what in your reply, for example the triage build plan."]
-    ], "The steps design is approved and waiting; triage has no build plan yet either."]
+      ["B", "Something else first", 0, "Tell me what in your reply, for example the triage build plan."]
+    ], "The steps design is approved but has no build plan yet; triage has none either."]
   ],
   "wrapup": {
     "summary": "A catch-up on what changed since Tuesday, and a clean-up before the steps work starts.",
-    "changing": "Nothing yet. With your OK: pull request #9 closes, the design work moves to a fresh branch, and main's out-of-date notes get fixed.",
+    "changing": "Nothing yet. With your OK: pull request #9 closes, the design work is copied to a fresh branch, and main's out-of-date notes get fixed.",
     "blocking": "Your answers to the two choices.",
     "next": "I write the steps build plan as a page for you to approve.",
-    "todo": ["Pick your answers (Choices).", "Tap <b>Copy my reply</b>.", "Send it."]
+    "todo": ["Pick your answers in the Choices section.", "Tap <b>Copy my reply</b>.", "Send it."]
   }
 }
