@@ -23,6 +23,7 @@ const SHELL_ASSETS = [
   './js/board-view.js',
   './js/overview.js',
   './js/overview-view.js',
+  './js/notes-view.js',
   './js/move-dialog.js',
   './js/mutations.js',
   './js/sync.js',
