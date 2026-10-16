@@ -295,7 +295,17 @@ const PAGE = {
         "",
         "In app/js/import-read.js, a long first line of a text file gives a title of about eight words, cut between words and ending in \"…\", and the whole line stays at the start of the note's text. A short first line followed by more text stays the title, as now. Word files get the same rule.",
         "Nothing to do here.",
-        null
+        {
+          "before": {
+            "src": "importer-fixes-build-pics/card-before-light.png",
+            "alt": "A note card whose title is the whole one-paragraph note"
+          },
+          "after": {
+            "src": "importer-fixes-build-pics/card-after-light.png",
+            "alt": "The same note card with an eight-word title and the full sentence below it"
+          },
+          "caption": "Before: today's card, drawn by the app's own code. After: the same note with an eight-word title. The sample note is made up."
+        }
       ],
       [
         "list",
@@ -310,8 +320,13 @@ const PAGE = {
         "View",
         "The note view (issue #18, the Import screen and notes list)",
         "",
-        "Tapping a card opens the whole note on its own screen. It shows an editable title, the full text, every checklist item with its tick, the labels, \"archived in Keep\" when it was, the source file name and the import date. A Back button returns to the same place in the list.",
-        "Nothing to do here."
+        "Tapping a card opens the whole note on its own screen. It shows an editable title, the full text, every checklist item with its tick, the labels, \"archived in Keep\" when it was, the source file name and the import date. A Back button returns to the same place in the list. The title box is two lines tall, because an eight-word title doesn't fit on one line of a phone.",
+        "Nothing to do here.",
+        {
+          "src": "importer-fixes-build-pics/note-view-light.png",
+          "alt": "Mockup of the note view: Back button, source file, an editable two-line title, the full text, a checklist and a label",
+          "caption": "The note view at phone width, drawn in the app's own styles. The sample note is made up."
+        }
       ],
       [
         "hammer",
@@ -342,7 +357,18 @@ const PAGE = {
       ],
       "Notes that already imported keep their old titles until you import them again, at which point a waiting note picks up the new title.",
       null,
-      null
+      null,
+      {
+        "before": {
+          "src": "importer-fixes-build-pics/card-before-dark.png",
+          "alt": "Dark theme: a note card whose title is the whole note"
+        },
+        "after": {
+          "src": "importer-fixes-build-pics/card-after-dark.png",
+          "alt": "Dark theme: the same card with an eight-word title"
+        },
+        "caption": "The same change in the dark theme your phone uses."
+      }
     ],
     [
       "chg",
@@ -364,7 +390,12 @@ const PAGE = {
         "A full-screen view of every word, with an editable title.",
         "You can read and check every note you import."
       ],
-      null
+      null,
+      {
+        "src": "importer-fixes-build-pics/note-view-dark.png",
+        "alt": "Dark theme mockup of the note view",
+        "caption": "The note view in the dark theme."
+      }
     ],
     [
       "chg",
