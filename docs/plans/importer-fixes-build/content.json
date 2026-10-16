@@ -3,8 +3,9 @@
   "eyebrow": "Build plan · 15 October 2026 · code stays closed until you approve",
   "replyPrefix": "Build plan approved: Importer",
   "reply": "",
+  "approval": "Build plan approved: Importer",
   "short": {
-    "lead": "This is how the three fixes you picked get built: a full-screen note view, titles of about eight words, and renaming. Each fix goes back into the importer issue it belongs to, so there are no new issues. Nothing on this page needs a choice; approve it or say what to change.",
+    "lead": "This is how the three fixes you picked get built: a full-screen note view, titles of about eight words, and renaming. They sit under one new parent issue, #25 (Importer fixes after the first real test). The note view has its own new issue, #26, and the other two fixes go back into the importer issues they belong to: #16 for titles and #17 for renaming. Nothing on this page needs a choice; approve it or say what to change.",
     "hint": "Tap a step to see what it changes and how it is checked.",
     "key": [["I build it", ""], ["You act on it", "you"]],
     "items": [
@@ -15,7 +16,7 @@
       ["list", "Rename", "Renaming that survives a re-import (issue #17, the notes library, where imported notes are stored)", "",
        "app/js/notes-library.js gains a rename that marks the title as yours, and a re-import of the same note keeps your title while still updating the text of a note that is waiting.",
        "Nothing to do here."],
-      ["eye", "View", "The note view (issue #18, the Import screen and notes list)", "",
+      ["eye", "View", "The note view (issue #26, a new issue under #25)", "",
        "Tapping a card opens the whole note on its own screen. It shows an editable title, the full text, every checklist item with its tick, the labels, \"archived in Keep\" when it was, the source file name and the import date. A Back button returns to the same place in the list. The title box is two lines tall, because an eight-word title doesn't fit on one line of a phone screen.",
        "Nothing to do here.",
        {"src": "docs/plans/importer-fixes-build/pics/note-view-light.png", "alt": "Mockup of the note view: Back button, source file, an editable two-line title, the full text, a checklist and a label", "caption": "The note view at phone width, drawn in the app's own styles. The sample note is made up."}],
@@ -23,7 +24,7 @@
        "The importer browser check grows: a one-paragraph note of 60 words gets an eight-word title, opening it shows every word, renaming it survives a reload and a re-import, and Back returns to the list. It runs twice, at phone and desktop width, and I look at the screenshots.",
        "Nothing to do here."],
       ["lock", "Try it", "You test again on your phone", "you",
-       "A pull request that links the Imports issue (#8) without closing it, and a test page.",
+       "I open a pull request that links the Imports issue (#8) and the fixes issue (#25) without closing either, and I add a test page.",
        "You open a few of your Samsung notes, check the titles and full text, rename one, and reply \"QA passed: Importer\" or say what is still wrong."]
     ]
   },
@@ -44,10 +45,10 @@
   ],
   "choices": [],
   "wrapup": {
-    "summary": "A build plan for the three importer fixes you picked, folded into the four existing importer issues.",
+    "summary": "A build plan for the three importer fixes you picked, tracked under the new parent issue #25.",
     "changing": "Titles in the reader, renaming in the library, a new note view, and wider tests.",
-    "blocking": "Two messages from you, because the design lock reads them one at a time: \"Design approved: Importer\", then \"Build plan approved: Importer\".",
+    "blocking": "Your build plan approval. Your design approval has already registered.",
     "next": "The fixes are built and checked on my branch, then a pull request and a test page come to you.",
-    "todo": ["Send <b>Design approved: Importer</b>.", "Then send <b>Build plan approved: Importer</b>, or say what to change."]
+    "todo": ["Send <b>Build plan approved: Importer</b>, or say what to change."]
   }
 }

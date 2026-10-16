@@ -1,5 +1,5 @@
 <!doctype html>
-<!-- house-rules make_page 2.67.1 -->
+<!-- house-rules make_page 2.68.0 -->
 <meta charset="utf-8">
 <title>Importer Fixes Build Plan</title><!-- also set this to PAGE.title: galleries read this tag, not the script -->
 <style>
@@ -55,7 +55,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .g{border:0;background:none;padding:0;cursor:pointer}
 .lk{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:6px;background:var(--you-soft);color:var(--you);margin-right:6px;vertical-align:-5px}
 .glance .lk .ico{width:14px;height:14px}
-.cr{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .crb{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;display:grid;gap:6px;align-content:start;min-width:0}
 .crb.you{border-color:var(--you);background:var(--you-soft)}
 .crh{display:flex;gap:6px;align-items:center;font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
@@ -101,10 +101,10 @@ details[open] > summary .more::after{content:" ▲"} details:not([open]) > summa
 .ci b{display:block}
 .ci small{color:var(--muted);font-size:.86rem}
 .ci .detail{padding:0 14px 14px 14px}
-.fromto{display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center;font-size:.88rem}
+.fromto{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;font-size:.88rem}
 .fromto span{border-radius:8px;padding:6px 8px;background:var(--bg)}
 .fromto span.to{background:var(--accent-soft)}
-.flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr;gap:6px;align-items:stretch;font-size:.84rem}
+.flow{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr);gap:6px;align-items:stretch;font-size:.84rem}
 .flow > span{border-radius:8px;padding:8px;background:var(--bg);display:grid;gap:2px;align-content:start;min-width:0}
 .flow > span.mid{background:var(--accent-soft)}
 .flow > i{align-self:center;color:var(--muted);font-style:normal}
@@ -151,7 +151,7 @@ details[open] > summary .more::after{content:" ▲"} details:not([open]) > summa
 @media (prefers-reduced-motion:no-preference){.panel{animation:in .2s ease-out}@keyframes in{from{opacity:.4;transform:translateY(4px)}}}
 </style>
 <style>
-.cr{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
 .crb{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;display:grid;gap:6px;align-content:start;min-width:0}
 .crb.you{border-color:var(--you);background:var(--you-soft)}
 .crh{display:flex;gap:6px;align-items:center;font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
@@ -175,7 +175,10 @@ details[open] > summary .more::after{content:" ▲"} details:not([open]) > summa
 .pic figcaption,.cmp figcaption{font-size:.86rem;color:var(--muted)}
 .pic,.cmp{margin:0}
 .cmp{display:grid;gap:6px;min-width:0}
-.cmp-side{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.cmp-side{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}
+body{overflow-wrap:anywhere}
+.crb p,.fromto span,.flow > span,.ci .detail p,.sd{overflow-wrap:anywhere;min-width:0}
+@media (max-width:479px){.cr{grid-template-columns:minmax(0,1fr)}}
 .cmp-side > div{display:grid;gap:4px;align-content:start;min-width:0;border:1px solid var(--line);border-radius:10px;padding:6px;background:var(--card)}
 .cmp-side b,.cmp-slide label{font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--muted)}
 .cmp-slide{display:none;gap:6px;min-width:0}
@@ -274,8 +277,9 @@ const PAGE = {
   "eyebrow": "Build plan · 15 October 2026 · code stays closed until you approve",
   "replyPrefix": "Build plan approved: Importer",
   "reply": "",
+  "approval": "Build plan approved: Importer",
   "short": {
-    "lead": "This is how the three fixes you picked get built: a full-screen note view, titles of about eight words, and renaming. Each fix goes back into the importer issue it belongs to, so there are no new issues. Nothing on this page needs a choice; approve it or say what to change.",
+    "lead": "This is how the three fixes you picked get built: a full-screen note view, titles of about eight words, and renaming. They sit under one new parent issue, #25 (Importer fixes after the first real test). The note view has its own new issue, #26, and the other two fixes go back into the importer issues they belong to: #16 for titles and #17 for renaming. Nothing on this page needs a choice; approve it or say what to change.",
     "hint": "Tap a step to see what it changes and how it is checked.",
     "key": [
       [
@@ -318,7 +322,7 @@ const PAGE = {
       [
         "eye",
         "View",
-        "The note view (issue #18, the Import screen and notes list)",
+        "The note view (issue #26, a new issue under #25)",
         "",
         "Tapping a card opens the whole note on its own screen. It shows an editable title, the full text, every checklist item with its tick, the labels, \"archived in Keep\" when it was, the source file name and the import date. A Back button returns to the same place in the list. The title box is two lines tall, because an eight-word title doesn't fit on one line of a phone screen.",
         "Nothing to do here.",
@@ -341,7 +345,7 @@ const PAGE = {
         "Try it",
         "You test again on your phone",
         "you",
-        "A pull request that links the Imports issue (#8) without closing it, and a test page.",
+        "I open a pull request that links the Imports issue (#8) and the fixes issue (#25) without closing either, and I add a test page.",
         "You open a few of your Samsung notes, check the titles and full text, rename one, and reply \"QA passed: Importer\" or say what is still wrong."
       ]
     ]
@@ -418,13 +422,12 @@ const PAGE = {
   ],
   "choices": [],
   "wrapup": {
-    "summary": "A build plan for the three importer fixes you picked, folded into the four existing importer issues.",
+    "summary": "A build plan for the three importer fixes you picked, tracked under the new parent issue #25.",
     "changing": "Titles in the reader, renaming in the library, a new note view, and wider tests.",
-    "blocking": "Two messages from you, because the design lock reads them one at a time: \"Design approved: Importer\", then \"Build plan approved: Importer\".",
+    "blocking": "Your build plan approval. Your design approval has already registered.",
     "next": "The fixes are built and checked on my branch, then a pull request and a test page come to you.",
     "todo": [
-      "Send <b>Design approved: Importer<\/b>.",
-      "Then send <b>Build plan approved: Importer<\/b>, or say what to change."
+      "Tap <b>Copy my reply<\/b> and send it: \"Build plan approved: Importer\", or say what to change."
     ]
   }
 };
@@ -519,10 +522,11 @@ function reply() {
     if (c && c.value === "own") { const t = document.querySelector(`.owntext[data-for=${id}]`).value.trim(); return [i + 1, t ? "own" : null, t]; }
     return [i + 1, c && c.value];
   });
+  const A = PAGE.approval || PAGE.replyPrefix;  // replyPrefix: only for pages built before approval existed
   out.textContent = picks.length
-    ? PAGE.replyPrefix + ": " + picks.map(([n, v]) => `${n}${v === "own" ? "*" : v || "?"}`).join(" ") +
+    ? A + " " + picks.map(([n, v]) => `${n}${v === "own" ? "*" : v || "?"}`).join(" ") +
       picks.filter(([, v]) => v === "own").map(([n, , t]) => `\nChoice ${n}, my own answer: ${t}`).join("")
-    : (PAGE.reply || PAGE.replyPrefix);  // no choices: the exact reply, such as "QA passed: <feature>"
+    : A;  // no choices: the approval phrase alone, such as "QA passed: <feature>"
   const m = picks.filter(([, v]) => !v).map(([n]) => n);
   miss.innerHTML = m.length ? `<span class="missing">Still to pick: choice ${m.join(", ")}.</span> <button type="button" class="secondary" style="min-height:36px;padding:4px 10px" id="goq">Go to choices</button>` : "";
   const g = document.getElementById("goq"); if (g) g.onclick = () => go(PARTS.findIndex(([id]) => id === "choices") + 1);
