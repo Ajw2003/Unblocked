@@ -1,0 +1,46 @@
+{
+  "title": "Always Re-send Page Pictures",
+  "eyebrow": "Proposal for the house-rules plugin · 16 October 2026 · built from a handoff",
+  "replyPrefix": "Design approved: Page pictures",
+  "approval": "Design approved: Page pictures",
+  "reply": "",
+  "short": {
+    "lead": "The build plan for the importer fixes showed you an out-of-date picture, because republishing the page sent only its text. On claude.ai a page's pictures are separate files, and a republish keeps the old ones unless they are sent again. This proposal makes the house-rules plugin catch a stale picture every time. The plugin lives in Ajw2003/AjsClaudeCodeTools, and this session can't push to it. So the full brief is a handoff file for a session that can, the same way the label setup was handled.",
+    "hint": "Tap a step to see what it changes.",
+    "key": [["I build it", ""], ["You act on it", "you"]],
+    "items": [
+      ["search", "Found", "What went wrong", "",
+       "The page builder copies pictures into a folder next to the page. Versions 5 to 9 of the build plan page were republished with the page text alone, so the reshot pictures never went up. Version 10 sent all six pictures, and the published after-card was downloaded and checked.",
+       "Nothing to do here.",
+       {"before": {"src": "docs/plans/page-pictures/pics/stale-page.png", "alt": "Your screenshot of version 9: the after-card still has a cut title and cut text"}, "after": {"src": "docs/plans/page-pictures/pics/fixed-after.png", "alt": "The after-card published in version 10: an eight-word title and the whole note"}, "caption": "Before: your screenshot of version 9, where the old picture contradicts its caption. After: the picture published in version 10, read back from the page."}],
+      ["file", "Print", "The page builder prints the pictures to send", "",
+       "After building a page, make_page.py prints the exact list of picture files for the publish, so sending them is a copy and paste.",
+       "Nothing to do here."],
+      ["lock", "Refuse", "The publish check refuses stale pictures", "",
+       "A republish that leaves out a picture changed since the last publish is refused. The refusal names each stale picture and prints the list to send. The plugin's own tests cover a refused republish, the same republish with the list, and a republish where no picture changed.",
+       "Nothing to do here."],
+      ["list", "Rule", "One line in the page rules", "",
+       "Republishing a page re-sends every changed picture, then reads one back from the published page to check it.",
+       "Nothing to do here."],
+      ["hand", "Start", "A session on the plugin repo builds it", "you",
+       "The brief is docs/plans/page-pictures-handoff.md in this repo. That session follows the plugin repo's own approvals.",
+       "Say \"start the plugin session\" here, and I start a separate session on Ajw2003/AjsClaudeCodeTools with the handoff. In that new session, send \"Design approved: Page pictures\". Do not send it in this session: it would replace the importer as the feature this repo's design lock is tracking."]
+    ]
+  },
+  "changes": [
+    ["chg", "scripts/make_page.py", "Prints the picture list after a build.", null,
+     "Today it only says how many pictures it copied.", null, null],
+    ["chg", "scripts/hook.py, the page publish check", "Refuses a republish with stale pictures.", null,
+     "It records what each picture looked like when it was last published, in a file that git ignores.", null, null],
+    ["keep", "Until it ships", "I re-send every picture by hand.", null,
+     "Each republish from this repo sends all of the page's pictures and reads one back.", null, null]
+  ],
+  "choices": [],
+  "wrapup": {
+    "summary": "A plugin change so a republished page never shows an out-of-date picture.",
+    "changing": "The page builder prints the pictures to send, and the publish check refuses a republish that leaves a changed one out.",
+    "blocking": "Your go-ahead to start the plugin session. The importer build plan approval is separate and still waiting.",
+    "next": "A separate session builds it on Ajw2003/AjsClaudeCodeTools from the handoff.",
+    "todo": ["Say <b>start the plugin session</b> here, or say what to change.", "Send <b>Design approved: Page pictures</b> in the new session once it has the proposal."]
+  }
+}
