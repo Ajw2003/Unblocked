@@ -4,6 +4,23 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-16 — Importer fixes design: a two-line title box in the note view
+
+**Context.** The importer fixes (previous entry) were drawn on `docs/plans/importer-fixes-build.html`,
+with before-and-after cards and a note-view mockup made by
+`docs/plans/importer-fixes-build/shoot-mockups.mjs`. The first mockup used a one-line title box, and
+an eight-word title did not fit one line at phone width (390 pixels), so the title was cut off.
+aj replied "Design approved: importer".
+
+**Decision.** The note view's title box is two lines tall. Everything else stays as the previous
+entry decided: the note view, the eight-word title rule and renaming. The title and rename fixes go
+into the existing importer issues (#16 reading the exported note files, #17 the notes library, #19
+the browser check). The design lock still names this feature "Label setup" from an earlier round, so
+approving "Importer" starts it fresh and asks for two new issues made during planning. Those are a
+parent issue for this fix round and a child issue for the note view, which is new work.
+
+**Status.** Standing.
+
 ## 2026-10-15 — Importer QA failed on real Samsung notes: add a note view, short titles, renaming
 
 **Context.** aj imported 15 real Samsung Notes text files on the live app (#20, deployed). They
