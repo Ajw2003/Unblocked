@@ -279,7 +279,7 @@ const PAGE = {
   "reply": "",
   "approval": "Build plan approved: Importer",
   "short": {
-    "lead": "This is how the fixes get built: cards that show every word of a note, eight-word titles with nothing cut off, a full-screen note view, and renaming. You denied the last plan because it still cut text; nothing is cut now. All four fixes sit under one new parent issue, \"Importer fixes after the first real test\" (#25). The note view has its own new issue, \"Note view: read a whole imported note on its own screen\" (#26). The other three go back into the importer issues they belong to: titles into \"Importer: read Keep, text, Markdown and Word exports into notes\" (#16), cards into \"Importer: the Import screen and the notes list\" (#18), and renaming into \"Importer: keep notes in a library on this device\" (#17). Nothing on this page needs a choice; approve it or say what to change.",
+    "lead": "This is how the fixes get built: cards that show every word of a note, eight-word titles with nothing cut off, a full-screen note view, and renaming. You denied the last plan because it still cut text; nothing is cut now. All four fixes sit under one new parent issue, \"Importer fixes after the first real test\" (#25). The note view has its own new issue, \"Note view: read a whole imported note on its own screen\" (#26). The other three go back into the importer issues they belong to. Titles go into \"Importer: read Keep, text, Markdown and Word exports into notes\" (#16). Cards go into \"Importer: the Import screen and the notes list\" (#18). Renaming goes into \"Importer: keep notes in a library on this device\" (#17). Nothing on this page needs a choice; approve it or say what to change.",
     "hint": "Tap a step to see what it changes and how it is checked.",
     "key": [
       [
@@ -297,7 +297,7 @@ const PAGE = {
         "Titles",
         "Short titles (issue #16, reading the exported note files)",
         "",
-        "In app/js/import-read.js, a long first line of a text file gives a title made of its first eight words, with no \"…\", and the whole line stays at the start of the note's text, so the card shows it in full. A short first line followed by more text stays the title, as now. Word files get the same rule.",
+        "In app/js/import-read.js, a long first line of a text file gives a title made of its first eight words, with no \"…\". The whole line stays at the start of the note's text, so the card shows it in full. A short first line followed by more text stays the title, as now. Word files get the same rule.",
         "Nothing to do here.",
         {
           "before": {
@@ -343,9 +343,9 @@ const PAGE = {
       [
         "hammer",
         "Check",
-        "Check it in a real browser (issue #19, Importer: check it in a real browser and write it up)",
+        "Browser check (issue #19, Importer: check it in a real browser and write it up)",
         "",
-        "The importer browser check grows: a one-paragraph note of 60 words gets an eight-word title with no \"…\", its card and its note view both show every word, a renamed title survives a reload and a re-import, and Back returns to the list. It runs twice, at phone and desktop width, and I look at the screenshots.",
+        "The importer browser check gains new checks. A one-paragraph note of 60 words gets an eight-word title with no \"…\", and its card and note view both show every word. It also checks that a renamed title survives a reload and a re-import, and that Back returns to the list. It runs twice, at phone and desktop width, and I look at the screenshots.",
         "Nothing to do here."
       ],
       [
@@ -426,7 +426,7 @@ const PAGE = {
       "scripts/check-importer-browser.mjs and the unit tests",
       "Cover the new title rule, the note view and renaming.",
       null,
-      "Unit tests check that a card shows a 300-word note in full, that a 60-word one-line note gets an eight-word title, that a short first line stays the title, that a Word file starting with a long paragraph follows the same title rule, that renaming works, and that a re-import after a rename keeps your title.",
+      "Unit tests check that a card shows a 300-word note in full and that a 60-word one-line note gets an eight-word title. They check that a short first line stays the title and that a Word file starting with a long paragraph follows the same rule. They also check that renaming works and that a re-import after a rename keeps your title.",
       null,
       null
     ],
