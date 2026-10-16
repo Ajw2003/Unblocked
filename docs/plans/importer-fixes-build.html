@@ -274,12 +274,12 @@ const EXAMPLE_PIC = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http
 const EXAMPLE_PIC_AFTER = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="320" height="180"><rect width="320" height="180" fill="#dff3e8"/><rect x="100" y="50" width="120" height="80" rx="12" fill="#1f7a4d"/></svg>');
 const PAGE = {
   "title": "Importer Fixes Build Plan",
-  "eyebrow": "Build plan · 15 October 2026 · code stays closed until you approve",
+  "eyebrow": "Build plan · revised 16 October 2026 · code stays closed until you approve",
   "replyPrefix": "Build plan approved: Importer",
   "reply": "",
   "approval": "Build plan approved: Importer",
   "short": {
-    "lead": "This is how the three fixes you picked get built: a full-screen note view, titles of about eight words, and renaming. They sit under one new parent issue, \"Importer fixes after the first real test\" (#25). The note view has its own new issue, \"Note view: read a whole imported note on its own screen\" (#26). The other two fixes go back into the importer issues they belong to: titles into \"Reading the exported note files\" (#16) and renaming into \"The notes library\" (#17). Nothing on this page needs a choice; approve it or say what to change.",
+    "lead": "This is how the fixes get built: cards that show every word of a note, eight-word titles with nothing cut off, a full-screen note view, and renaming. You denied the last plan because it still cut text; nothing is cut now. All four fixes sit under one new parent issue, \"Importer fixes after the first real test\" (#25). The note view has its own new issue, \"Note view: read a whole imported note on its own screen\" (#26). The other three go back into the importer issues they belong to: titles into \"Importer: read Keep, text, Markdown and Word exports into notes\" (#16), cards into \"Importer: the Import screen and the notes list\" (#18), and renaming into \"Importer: keep notes in a library on this device\" (#17). Nothing on this page needs a choice; approve it or say what to change.",
     "hint": "Tap a step to see what it changes and how it is checked.",
     "key": [
       [
@@ -297,7 +297,7 @@ const PAGE = {
         "Titles",
         "Short titles (issue #16, reading the exported note files)",
         "",
-        "In app/js/import-read.js, a long first line of a text file gives a title of about eight words, cut between words and ending in \"…\", and the whole line stays at the start of the note's text. A short first line followed by more text stays the title, as now. Word files get the same rule.",
+        "In app/js/import-read.js, a long first line of a text file gives a title made of its first eight words, with no \"…\", and the whole line stays at the start of the note's text, so the card shows it in full. A short first line followed by more text stays the title, as now. Word files get the same rule.",
         "Nothing to do here.",
         {
           "before": {
@@ -308,15 +308,23 @@ const PAGE = {
             "src": "importer-fixes-build-pics/card-after-light.png",
             "alt": "The same note card with an eight-word title and the full sentence below it"
           },
-          "caption": "Before: today's card, drawn by the app's own code. After: the same note with an eight-word title. The sample note is made up."
+          "caption": "Before: today's card, drawn by the app's own code. After: an eight-word title above the whole note, with nothing cut off. The sample note is made up."
         }
+      ],
+      [
+        "eye",
+        "Cards",
+        "Cards that show the whole note (issue #18, Importer: the Import screen and the notes list)",
+        "",
+        "In app/js/notes-view.js, the note card stops cutting its text at 140 characters. It shows every word of the note and every checklist item with its tick.",
+        "Nothing to do here."
       ],
       [
         "list",
         "Rename",
         "Renaming that survives a re-import (issue #17, the notes library, where imported notes are stored)",
         "",
-        "app/js/notes-library.js gains a rename that marks the title as yours, and a re-import of the same note keeps your title while still updating the text of a note that is waiting.",
+        "app/js/notes-library.js gains a rename that marks the title as yours, and a re-import of the same note keeps your title while still updating the text of a note you haven't sorted yet.",
         "Nothing to do here."
       ],
       [
@@ -335,9 +343,9 @@ const PAGE = {
       [
         "hammer",
         "Check",
-        "Check it in a real browser (issue #19)",
+        "Check it in a real browser (issue #19, Importer: check it in a real browser and write it up)",
         "",
-        "The importer browser check grows: a one-paragraph note of 60 words gets an eight-word title, opening it shows every word, renaming it survives a reload and a re-import, and Back returns to the list. It runs twice, at phone and desktop width, and I look at the screenshots.",
+        "The importer browser check grows: a one-paragraph note of 60 words gets an eight-word title with no \"…\", its card and its note view both show every word, a renamed title survives a reload and a re-import, and Back returns to the list. It runs twice, at phone and desktop width, and I look at the screenshots.",
         "Nothing to do here."
       ],
       [
@@ -353,13 +361,25 @@ const PAGE = {
   "changes": [
     [
       "chg",
+      "app/js/notes-view.js: note cards",
+      "Cards show the whole note, with nothing cut off.",
+      [
+        "Text stops at 140 characters, then \"…\"",
+        "Every word of the text and every checklist item"
+      ],
+      "A long note makes a tall card in the list. You asked for this on 16 October: no part of a note is ever hidden.",
+      null,
+      null
+    ],
+    [
+      "chg",
       "app/js/import-read.js",
       "Titles become short headings.",
       [
         "Whole first line",
-        "About eight words, then \"…\""
+        "The first eight words, with no \"…\""
       ],
-      "Notes that already imported keep their old titles until you import them again, at which point a waiting note picks up the new title.",
+      "Notes that already imported keep their old titles until you import them again, at which point a note you haven't sorted yet picks up the new title.",
       null,
       null,
       {
@@ -390,9 +410,9 @@ const PAGE = {
       null,
       "Opened from any card on the Notes tab. The only thing it changes is the title, and only when you rename the note.",
       [
-        "Cards on the Notes tab show only the first 140 characters.",
-        "A full-screen view of every word, with an editable title.",
-        "You can read and check every note you import."
+        "Notes can't be renamed, and there is no screen for one note.",
+        "A full-screen view of the note, with an editable title, its source file and import date.",
+        "You can rename a note and check where it came from. The buttons for turning a note into tasks go on this screen later."
       ],
       null,
       {
@@ -406,7 +426,7 @@ const PAGE = {
       "scripts/check-importer-browser.mjs and the unit tests",
       "Cover the new title rule, the note view and renaming.",
       null,
-      "Unit tests cover a 60-word one-line note, a short first line, a Word file starting with a long paragraph, renaming, and a re-import after a rename.",
+      "Unit tests check that a card shows a 300-word note in full, that a 60-word one-line note gets an eight-word title, that a short first line stays the title, that a Word file starting with a long paragraph follows the same title rule, that renaming works, and that a re-import after a rename keeps your title.",
       null,
       null
     ],
@@ -422,8 +442,8 @@ const PAGE = {
   ],
   "choices": [],
   "wrapup": {
-    "summary": "A build plan for the three importer fixes you picked, tracked under the new parent issue \"Importer fixes after the first real test\" (#25).",
-    "changing": "Titles in the reader, renaming in the library, a new note view, and wider tests.",
+    "summary": "A build plan for the four importer fixes, tracked under the new parent issue \"Importer fixes after the first real test\" (#25).",
+    "changing": "Cards that show every word, titles with no \"…\", renaming in the library, a new note view, and new browser and unit tests for all of these.",
     "blocking": "Your build plan approval. Your design approval has already registered.",
     "next": "The fixes are built and checked on my branch, then a pull request and a test page come to you.",
     "todo": [

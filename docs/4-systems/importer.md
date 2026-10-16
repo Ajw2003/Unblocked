@@ -60,8 +60,11 @@ notes count. Nothing is uploaded: files are read in the browser with `File.text(
 ## Planned changes (#25, not built yet)
 
 - **Short titles (#16).** In `readText` and `readDocxXml`, a short first line followed by more text stays
-  the title. A long first line gives a title of its first eight or so words, cut between words and ending
-  in "…", and the whole line stays at the start of the note's text, so nothing is lost.
+  the title. A long first line gives a title of its first eight words, with no "…", and the whole line
+  stays at the start of the note's text, so nothing is lost.
+- **Whole cards (#18).** `noteCard` in `notes-view.js` stops cutting text at 140 characters: a card shows
+  every word and every checklist item. aj ruled that no note text is ever cut off (Decisions.md,
+  2026-10-16).
 - **Renaming (#17).** `notes-library.js` gains a rename that marks the title as chosen by aj. `mergeImport`
   keeps a chosen title when the same note is imported again, while still updating a waiting note's text
   and items.

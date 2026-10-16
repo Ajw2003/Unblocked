@@ -4,6 +4,21 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-16 — Importer fixes build plan denied: no text is ever cut off
+
+**Context.** aj denied the importer fixes build plan (`docs/plans/importer-fixes-build.html`): "can't
+cut off any of the text, what is the point of a note I can't read all of". That plan still cut note
+cards at 140 characters (`app/js/notes-view.js:50`) and ended eight-word titles with "…". Asked which
+text that covered, aj chose "Cards show everything".
+
+**Decision.** Note cards on the Notes tab show every word of the note's text and every checklist item,
+with no 140-character limit; a long note makes a tall card. A title made from a long first line is its
+first eight words with no "…", and the full line stays in the note's text, so the card shows it whole.
+The note view and renaming stay as planned. The card change goes into #18 (the Import screen and notes
+list). This supersedes the "…" in the 2026-10-15 "Importer QA failed" entry.
+
+**Status.** Standing.
+
 ## 2026-10-16 — Importer fixes build plan: four steps under one parent issue
 
 **Context.** aj approved the importer fixes design ("Design approved: Importer"). The build plan is

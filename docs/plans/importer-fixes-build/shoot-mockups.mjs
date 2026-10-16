@@ -16,12 +16,16 @@ const OUT = join(HERE, 'pics');
 mkdirSync(OUT, { recursive: true });
 
 const LONG = 'Thinking about finally building the garden shed this spring, I would need to measure the corner by the fence, price up timber and a felt roof, and ask Sam whether he still has the spare door from his old shed before I order anything at all.';
-const SHORT_TITLE = LONG.split(/\s+/).slice(0, 8).join(' ').replace(/[,.;:]$/, '') + '…';
+// No "…" on the title, and the card shows the whole note: aj denied any cut-off text (Decisions.md, 2026-10-16).
+const SHORT_TITLE = LONG.split(/\s+/).slice(0, 8).join(' ').replace(/[,.;:]$/, '');
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;');
 
 const before = noteCard({ source: 'text', title: LONG, text: '', items: [], labels: [] })
   + noteCard({ source: 'text', title: 'Groceries for Sunday', text: 'Eggs, flour, the good coffee', items: [], labels: [] });
-const after = noteCard({ source: 'text', title: SHORT_TITLE, text: LONG, items: [], labels: [] })
+// The real noteCard() still cuts its body at 140 characters, so the mockup puts the full text back.
+const fullCard = noteCard({ source: 'text', title: SHORT_TITLE, text: LONG, items: [], labels: [] })
+  .replace(/<p class="note-card-body">[^<]*<\/p>/, '<p class="note-card-body">' + esc(LONG) + '</p>');
+const after = fullCard
   + noteCard({ source: 'text', title: 'Groceries for Sunday', text: 'Eggs, flour, the good coffee', items: [], labels: [] });
 
 // The note view: its own screen, opened by tapping a card (decision 1A in docs/6-decisions/Decisions.md).
