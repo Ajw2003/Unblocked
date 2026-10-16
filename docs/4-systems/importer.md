@@ -1,9 +1,11 @@
 # Importer and Notes library
 
-**Status: built on this branch (issues #16 to #19), not yet tried on a real export.** Design approved
+**Status: shipped (#20); fixes from aj's first real test are planned, not built (#25).** Design approved
 2026-10-15 (the life dashboard entry in `docs/6-decisions/Decisions.md`); build plan
-`docs/plans/importer-build-plan.html`. Checked in real Chromium by `scripts/check-importer-browser.mjs`
-with generated sample exports; waiting on aj to import a real Takeout zip. Triage (U8, #14) is not built.
+`docs/plans/importer-build-plan.html`. aj imported 15 real Samsung Notes text files on 2026-10-15: they
+came in, but long notes were cut off and whole paragraphs became titles. The fixes are drawn on
+`docs/plans/importer-fixes-build.html` and described under "Planned changes" below. Triage (U8, #14) is
+not built.
 
 ## What it owns
 
@@ -54,6 +56,21 @@ notes count. Nothing is uploaded: files are read in the browser with `File.text(
   opens the Notes tab, `app.js:640`) when only notes are waiting (`app/js/overview-view.js:63-74`).
 - **Offline**: `vendor/jszip.min.js`, `import-read.js`, `notes-library.js` and `notes-view.js` are in
   `SHELL_ASSETS` (`app/service-worker.js:26`, `:47-49`).
+
+## Planned changes (#25, not built yet)
+
+- **Short titles (#16).** In `readText` and `readDocxXml`, a short first line followed by more text stays
+  the title. A long first line gives a title of its first eight or so words, cut between words and ending
+  in "…", and the whole line stays at the start of the note's text, so nothing is lost.
+- **Renaming (#17).** `notes-library.js` gains a rename that marks the title as chosen by aj. `mergeImport`
+  keeps a chosen title when the same note is imported again, while still updating a waiting note's text
+  and items.
+- **Note view (#26).** Tapping a card opens the whole note on its own screen: a two-line editable title,
+  the full text, checklist items, labels, the "archived in Keep" flag, the source file name and the import
+  date. Back returns to the same place in the list.
+- **Checks (#19).** `scripts/check-importer-browser.mjs` imports a 60-word one-paragraph note and checks
+  its eight-word title, that the view shows every word, that a rename survives a reload and a re-import,
+  and that Back returns to the list, at 390 and 1440 pixels wide.
 
 ## Invariants
 

@@ -4,6 +4,19 @@ A running, append-mostly log of what was decided, when, why, and what it replace
 at the top. Entries are never rewritten or deleted; the one allowed edit is flipping a `Status`
 line to `Superseded` when a later entry replaces it.
 
+## 2026-10-16 — Importer fixes build plan: four steps under one parent issue
+
+**Context.** aj approved the importer fixes design ("Design approved: Importer"). The build plan is
+`docs/plans/importer-fixes-build.html`, and the planned changes are in `docs/4-systems/importer.md`.
+
+**Decision.** The fixes are tracked under a new parent issue, #25 (Importer fixes after the first real
+test). The steps are #16 for short titles, #17 for renaming that a re-import respects, #26 for the note
+view (new, a child of #25) and #19 for the browser check. Each is built by its own builder helper on the
+branch, in that order, because the note view saves titles through the rename. The pull request says
+"Refs #8, #25" and closes nothing.
+
+**Status.** Standing.
+
 ## 2026-10-16 — Importer fixes design: a two-line title box in the note view
 
 **Context.** The importer fixes (previous entry) were drawn on `docs/plans/importer-fixes-build.html`,
